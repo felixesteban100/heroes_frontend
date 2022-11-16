@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/heroes/static/css/main.a1bf8ecb.css",
-    "main.js": "/heroes/static/js/main.bc5648a2.js",
-    "static/js/787.6910b12d.chunk.js": "/heroes/static/js/787.6910b12d.chunk.js",
-    "index.html": "/heroes/index.html",
-    "main.a1bf8ecb.css.map": "/heroes/static/css/main.a1bf8ecb.css.map",
-    "main.bc5648a2.js.map": "/heroes/static/js/main.bc5648a2.js.map",
-    "787.6910b12d.chunk.js.map": "/heroes/static/js/787.6910b12d.chunk.js.map"
+    "main.css": "/heroes_frontend/static/css/main.a1bf8ecb.css",
+    "main.js": "/heroes_frontend/static/js/main.6c9f0395.js",
+    "static/js/787.6910b12d.chunk.js": "/heroes_frontend/static/js/787.6910b12d.chunk.js",
+    "index.html": "/heroes_frontend/index.html",
+    "main.a1bf8ecb.css.map": "/heroes_frontend/static/css/main.a1bf8ecb.css.map",
+    "main.6c9f0395.js.map": "/heroes_frontend/static/js/main.6c9f0395.js.map",
+    "787.6910b12d.chunk.js.map": "/heroes_frontend/static/js/787.6910b12d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a1bf8ecb.css",
-    "static/js/main.bc5648a2.js"
+    "static/js/main.6c9f0395.js"
   ]
 }
