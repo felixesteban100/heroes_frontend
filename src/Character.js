@@ -18,8 +18,8 @@ function Character() {
 
     useEffect(() => {
         if (allCharacters[0] === undefined) {
-            axios.get("http://localhost:3001/") // change the url to the one deploy in the web, and then deploy this frontend(push origin main)
-//             axios.get("https://heroes-backend.onrender.com")
+            // axios.get("http://localhost:3001/") // change the url to the one deploy in the web, and then deploy this frontend(push origin main)
+            axios.get("https://heroes-backend.onrender.com")
             .then(res => setAllCharacters(res.data.sort((a, b) => a.name.toLowerCase() - b.name.toLowerCase())))
         }
         // if (allCharacters[0] !== undefined) {
