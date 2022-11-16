@@ -1,7 +1,7 @@
 {
   "name": "heroes",
   "version": "0.1.0",
-  "homepage": "https://felixesteban100.github.io/heroes",
+  "homepage": "https://felixesteban100.github.io/heroes_frontend",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
