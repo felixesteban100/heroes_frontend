@@ -70,22 +70,27 @@ body {
   height: 5vh;
   padding: 2rem 0;
   background-color: var(--background-find-container);
+  border-radius: 0.5rem;
 }
 
 .find-by-name{
   font-size: 2vw;
+  border-radius: 0.5rem;
 }
 
 .character--button{
-
+  font-size: 2vw;
+  border-radius: 0.5rem;
 }
 
 .input-howMany{
-
+  font-size: 1.5vw;
+  border-radius: 0.5rem;
 }
 
 .select-category{
-
+  font-size: 1.5vw;
+  border-radius: 0.5rem;
 }
 /* FILTER  */
 
@@ -120,6 +125,7 @@ body {
   height: auto;
   margin: 0 auto;
   margin-top: 1.5rem;
+  border-radius: 0.5rem;
 }
 
 .character--name{
@@ -304,6 +310,17 @@ body {
     margin: 0 auto;
   }
   .find-by-name{
+    font-size: 4vw;
+  }  
+  .character--button{
+    font-size: 4vw;
+  }
+  
+  .input-howMany{
+    font-size: 4vw;
+  }
+  
+  .select-category{
     font-size: 4vw;
   }
   /* FINDER RESPONSIVE*/
