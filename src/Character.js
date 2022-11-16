@@ -18,12 +18,14 @@ function Character() {
 
     useEffect(() => {
         if (allCharacters[0] === undefined) {
-            axios.get("http://localhost:3001/")
+            // axios.get("http://localhost:3001/") // change the url to the one deploy in the web, and then deploy this frontend(push origin main)
+            axios.get("https://heroes-backend.onrender.com")
             .then(res => setAllCharacters(res.data.sort((a, b) => a.name.toLowerCase() - b.name.toLowerCase())))
         }
         // if (allCharacters[0] !== undefined) {
+            // look how to sort an array of objects javascript
             let arr = allCharacters
-
+            arr.filter(current => current !== undefined)
             console.log(arr.forEach(current => console.log(current.name)))
             
             let selectedOnes = []
@@ -399,7 +401,6 @@ function Character() {
                         <option value="Justice League">Justice League</option>
                         <option value="Suicide Squad">Suicide Squad</option>
                         <option value="Teen Titans">Teen Titans</option>
-                        <option value="Young Justice">Young Justice</option>
                         <option value="Green Lantern Corps">Green Lantern Corps</option>
                         <option value="Batman Family">Batman Family</option>
                         <option value="Flash Family">Flash Family</option>
@@ -410,6 +411,9 @@ function Character() {
                         <option value="Injustice">Injustice League</option>
                         <option value="Birds of Prey">Birds of Prey</option>
                         <option value="Secret Society of Super Villains">Secret Society of Super Villains</option>
+                        <option value="Marvel Family">Marvel Family</option>
+                        <option value="Aquaman Family">Aquaman Family</option>
+                        
                         {/* Aquaman Family */}
                         {/* Legion of Super-Villains */}
                         {/* Justice Society of America */}
