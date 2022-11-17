@@ -11,12 +11,14 @@ function CarouselC(props) {
             url: current
         }
     })
+
+    /* height={460} width={700} */
   
     return (
         <div 
             className='carousel'
         >
-            <Carousel height={460} width={700} yOrigin={42} yRadius={48} autoPlay={false}>
+            <Carousel height={460} width={680} yOrigin={42} yRadius={48} autoPlay={true}>
                 {
                     images.map((img) => {
                         return(

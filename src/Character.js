@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import Carousel from './Carousel.js'
+// import Carousel from './Carousel.js'
+import Carousel3d from './Carousel3d';
 import axios from 'axios'
 
 
@@ -531,11 +532,10 @@ function Character() {
                             </div>
                             <div className='character--withInfo'>
                                 <p className='character--withInfo--name'>Comics</p>
-                                <Carousel 
-                                    comics={current.comics}
-                                />
                             </div>
-
+                            <Carousel3d 
+                                comics={current.comics}
+                            />
                             <div className='character--withInfo--info'>
                                     
                                     <div className='character--withInfo--statSelectors'>

@@ -7,9 +7,9 @@ body {
   -moz-osx-font-smoothing: grayscale; */
   font-family: Georgia, 'Times New Roman', Times, serif;
   background-color: black;
-  /* background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'); */
+  background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80');
   /* background: url('https://64.media.tumblr.com/d6d0246ca0dffa230f03be2521b3210f/tumblr_obfjz6Bd9f1runoqyo2_r1_540.gif'); */
-  background: url('https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif');
+  /* background: url('https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif'); */
   /* https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif */
   background-size: 100vh;
 
@@ -204,22 +204,50 @@ body {
 
 
 /* CAROUSEL */
-.carousel{
+/* .character--withInfo-carousel{
+  width: 80vw;
+  background-color: var(--character--withInfo-background);
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+} */
+
+/* .carousel{
   display: flex;
   justify-content: center;
   background: rgba(101, 101, 101, 0);
-}
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+} */
 
-.carousel-img-container{
-  height: 50%;
-  width: 50%;
+/* .carousel-img-container{
+  height: 80%;
+  width: auto;
+} */
+
+
+
+.react-3d-carousel .slider-container .slider-right div {
+  border: 2px solid #0100f2;
+  /* border-right: 2px solid #001b7d;
+  border-bottom: 2px solid #fdc84b;
+  border-left: 2px solid #fdc84b; */
 }
 
 .carousel--img{
-  height: auto;
-  width: 70%;
+  height: 40vw;
+  width: auto;
   justify-self: center;
   border-radius: 0.5rem;
+}
+
+.react-3d-carousel{
+  margin-bottom: 20rem;
 }
 
 /* CAROUSEL */
@@ -377,6 +405,12 @@ body {
   .character--withInfo--alignment{
     font-size: 4vw;
   }
+
+  /* CAROUSEL RESPONSIVE */
+  .react-3d-carousel{
+    margin-bottom: 5vw;
+  }
+  /* CAROUSEL RESPONSIVE */
 
   /* ACTUAL INFO */
   .statSelectors{
