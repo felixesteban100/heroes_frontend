@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import Carousel from './Carousel.js'
-import Carousel from 'nuka-carousel';
 import Carousel3d from './Carousel3d';
 import axios from 'axios'
 
@@ -12,6 +10,8 @@ function Character() {
     let [hiddeChacter, setHiddeCharacter] = useState(true)
     const [howManyRef, setHowManyRef] = React.useState(6)
     // let [num, setNum] = useState(0)
+
+    let [imageSize, setImageSize] = React.useState(false)
 
     let [side, setSide] = useState("All")
     let [universe, setUniverse] = useState("All")
@@ -382,6 +382,12 @@ function Character() {
     function getBack(){
         setHiddeCharacters(false)
         setHiddeCharacter(true)
+        setImageSize(false)
+    }
+
+
+    function zoomImage(){
+        setImageSize(prevValue => !prevValue)
     }
 
     return (
@@ -493,7 +499,9 @@ function Character() {
                         initialCharacters.map((current, index)=> {
                             return (
                                 <div key={index} className='character' onClick={() => findByNameClick(current.id)}>
-                                    <img className='character--img' src={current.images.md} alt="logo" />
+                                    <div className='character--img--container'>
+                                        <img className='character--img' src={current.images.md} alt="logo" />
+                                    </div>
                                     <p className='character--name'>{current.name}</p>
                                 </div>
                             )
@@ -508,18 +516,19 @@ function Character() {
                     hiddeChacter === false && character.length !== 0 &&
                     character.map((current, index)=> (
                         <div>
-                            <div className='button-back' onClick={getBack}>
+                            <div className='button-back' onClick={() => getBack()}>
                                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
                             </div>
 
-                            <div key={index} className='character--withInfo'>
-                                <img className='character--withInfo--img' src={current.images.md} alt="logo" />
-                                {/* <Carousel>
-                                    <img className='character--withInfo--img' src={current.images.xs} alt="" />
-                                    <img className='character--withInfo--img' src={current.images.sm} alt="" />
-                                    <img className='character--withInfo--img' src={current.images.md} alt="" />
-                                    <img className='character--withInfo--img' src={current.images.lg} alt="" />
-                                </Carousel> */}
+                            <div key={index} className='character--withInfo' onClick={() => zoomImage()}>
+                                {
+                                    imageSize === false ? 
+                                    <img className={'character--withInfo--img'}  src={current.images.md} alt="logo" />
+                                    :
+                                    <div className='character--withInfo--img-container'>
+                                        <img className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
+                                    </div>
+                                }
                                 <div className='character--withInfo--n-f-a'>
                                     <p className='character--withInfo--name'>Name: {current.name}</p>
                                     <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
