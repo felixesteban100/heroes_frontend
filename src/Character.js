@@ -383,6 +383,7 @@ function Character() {
         setHiddeCharacters(false)
         setHiddeCharacter(true)
         setImageSize(false)
+        setUniverse("All")
     }
 
 
@@ -392,103 +393,106 @@ function Character() {
 
     return (
         <div className='character-module'>
-            <div className='find-container'>
-                
-                <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
+            {
+                hiddeChacter === true &&
+                <div className='find-container'>
+                    <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
 
-                <button className='character--button' onClick={findByName}>Find character</button>
+                    <button className='character--button' onClick={findByName}>Find character</button>
 
-                <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All" || characterRef !== "") ? 'All' : 6} max={100} min={0}/>
+                    <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All" || characterRef !== "") ? 'All' : 6} max={100} min={0}/>
 
-                <select className='select-category' name="" id="" onChange={event => changeBySide(event)}>
-                    <option value="All">All sides</option>
-                    <option value="good">Hero 🦸‍♂️</option>
-                    <option value="bad">Villain 🦹‍♂️</option>
-                    <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
-                </select>
-
-                <select className='select-category' name="" id="" onChange={event => changeByUniverse(event)}>
-                    <option className='all' value="All">All universes</option>
-                    <option className='marvel' value="Marvel Comics">Marvel</option>
-                    <option className='dc' value="DC Comics">DC</option>
-                    <option className='dark-horse' value="Dark Horse Comics">Dark Horse Comics</option>
-                    <option className='george-lucas' value="George Lucas">George Lucas</option>
-                    <option className='shueisha' value="Shueisha">Shueisha</option>
-                    <option className='idwPublishing' value="IDW Publishing">IDW Publishing</option>
-                    
-                </select>
-
-                {
-                    universe === "Marvel Comics" &&
-                    <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                        <option value="All">All Teams</option>
-                        <option value="Avengers">Avengers</option>
-                        <option value="Illuminati">Illuminati</option>
-                        <option value="Inhumans">Inhumans</option>
-                        <option value="X-Men">X-Men</option>
-                        <option value="X-Force">X-Force</option>
-                        <option value="Guardians of the Galaxy">Guardians of the Galaxy</option>
-                        <option value="Defenders">Defenders</option>
-                        <option value="Secret Avengers">Secret Avengers</option>
-                        <option value="Marvel Knights">Marvel Knights</option>
-                        <option value="Fantastic Four">Fantastic Four</option>
-                        <option value="Fantastic Four(Original)">Fantastic Four Original</option>
-                        <option value="Sinister Six">Sinister Six</option>
-                        <option value="Midnight Sons">Midnight Sons</option>
-                        <option value="Heroes For Hire">Heroes For Hire</option>
-                        <option value="Thunderbolts">Thunderbolts</option>
-                        <option value="Hulk Family">Hulk Family</option>
-                        <option value="Brotherhood of Evil Mutants">Brotherhood of Evil Mutants</option>
-                        <option value="Black Order">Black Order</option>
-                        <option value="Spider-Army">Spider-Army</option>
-                        <option value="Dark Avengers">Dark Avengers</option>
-                        {/* Hydra */}
-                        {/* Young Avengers */}
+                    <select className='select-category' name="" id="" onChange={event => changeBySide(event)}>
+                        <option value="All">All sides</option>
+                        <option value="good">Hero 🦸‍♂️</option>
+                        <option value="bad">Villain 🦹‍♂️</option>
+                        <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
                     </select>
-                }
 
-                {
-                    universe === "DC Comics" &&
-                    <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                        <option value="All">All Teams</option>
-                        <option value="Justice League">Justice League</option>
-                        <option value="Suicide Squad">Suicide Squad</option>
-                        <option value="Teen Titans">Teen Titans</option>
-                        <option value="Green Lantern Corps">Green Lantern Corps</option>
-                        <option value="Batman Family">Batman Family</option>
-                        <option value="Flash Family">Flash Family</option>
-                        <option value="Justice League Dark">Justice League Dark</option>
-                        <option value="Crimebusters">Crimebusters / Watchmen</option>
-                        <option value="Legion of Super-Heroes">Legion of Super-Heroes</option>
-                        <option value="Assorted Batman rogues">Assorted Batman rogues</option>
-                        <option value="Injustice">Injustice League</option>
-                        <option value="Birds of Prey">Birds of Prey</option>
-                        <option value="Secret Society of Super Villains">Secret Society of Super Villains</option>
-                        <option value="Marvel Family">Marvel Family</option>
-                        <option value="Aquaman Family">Aquaman Family</option>
+                    <select className='select-category' name="" id="" onChange={event => changeByUniverse(event)}>
+                        <option className='all' value="All">All universes</option>
+                        <option className='marvel' value="Marvel Comics">Marvel</option>
+                        <option className='dc' value="DC Comics">DC</option>
+                        <option className='dark-horse' value="Dark Horse Comics">Dark Horse Comics</option>
+                        <option className='george-lucas' value="George Lucas">George Lucas</option>
+                        <option className='shueisha' value="Shueisha">Shueisha</option>
+                        <option className='idwPublishing' value="IDW Publishing">IDW Publishing</option>
                         
-                        {/* Aquaman Family */}
-                        {/* Legion of Super-Villains */}
-                        {/* Justice Society of America */}
                     </select>
-                }
 
-                {
-                    universe === "Dark Horse Comics" &&
-                    <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                        <option value="All">All Teams</option>
-                        <option value="Incredible Family">Incredible Family</option>
-                    </select>
-                }
+                    {
+                        (universe === "Marvel Comics" && universe !== "All") &&
+                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                            <option value="All">All Teams</option>
+                            <option value="Avengers">Avengers</option>
+                            <option value="Illuminati">Illuminati</option>
+                            <option value="Inhumans">Inhumans</option>
+                            <option value="X-Men">X-Men</option>
+                            <option value="X-Force">X-Force</option>
+                            <option value="Guardians of the Galaxy">Guardians of the Galaxy</option>
+                            <option value="Defenders">Defenders</option>
+                            <option value="Secret Avengers">Secret Avengers</option>
+                            <option value="Marvel Knights">Marvel Knights</option>
+                            <option value="Fantastic Four">Fantastic Four</option>
+                            <option value="Fantastic Four(Original)">Fantastic Four Original</option>
+                            <option value="Sinister Six">Sinister Six</option>
+                            <option value="Midnight Sons">Midnight Sons</option>
+                            <option value="Heroes For Hire">Heroes For Hire</option>
+                            <option value="Thunderbolts">Thunderbolts</option>
+                            <option value="Hulk Family">Hulk Family</option>
+                            <option value="Brotherhood of Evil Mutants">Brotherhood of Evil Mutants</option>
+                            <option value="Black Order">Black Order</option>
+                            <option value="Spider-Army">Spider-Army</option>
+                            <option value="Dark Avengers">Dark Avengers</option>
+                            <option value="Hydra">Hydra</option>
+                            <option value="Young Avengers">Young Avengers</option>
+                            <option value="Ultimates">Ultimates</option>
+                            <option value="Weapon X">Weapon X</option>
+                        </select>
+                    }
 
-                {
-                    universe === "IDW Publishing" &&
-                    <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                        <option value="All">All Teams</option>
-                        <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
-                    </select>
-                }
-            </div>
+                    {
+                        (universe === "DC Comics"&& universe !== "All") &&
+                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                            <option value="All">All Teams</option>
+                            <option value="Justice League">Justice League</option>
+                            <option value="Suicide Squad">Suicide Squad</option>
+                            <option value="Teen Titans">Teen Titans</option>
+                            <option value="Green Lantern Corps">Green Lantern Corps</option>
+                            <option value="Batman Family">Batman Family</option>
+                            <option value="Flash Family">Flash Family</option>
+                            <option value="Justice League Dark">Justice League Dark</option>
+                            <option value="Crimebusters">Crimebusters / Watchmen</option>
+                            <option value="Legion of Super-Heroes">Legion of Super-Heroes</option>
+                            <option value="Assorted Batman rogues">Assorted Batman rogues</option>
+                            <option value="Injustice">Injustice League</option>
+                            <option value="Birds of Prey">Birds of Prey</option>
+                            <option value="Secret Society of Super Villains">Secret Society of Super Villains</option>
+                            <option value="Marvel Family">Marvel Family</option>
+                            <option value="Aquaman Family">Aquaman Family</option>
+                            
+                            {/* Legion of Super-Villains */}
+                            {/* Justice Society of America */}
+                        </select>
+                    }
+
+                    {
+                        (universe === "Dark Horse Comics"&& universe !== "All") &&
+                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                            <option value="All">All Teams</option>
+                            <option value="Incredible Family">Incredible Family</option>
+                        </select>
+                    }
+
+                    {
+                        (universe === "IDW Publishing"&& universe !== "All") &&
+                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                            <option value="All">All Teams</option>
+                            <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
+                        </select>
+                    }
+                </div>
+            }
             
             {/* characters--container */}
             {
@@ -503,6 +507,7 @@ function Character() {
                                         <img className='character--img' src={current.images.md} alt="logo" />
                                     </div>
                                     <p className='character--name'>{current.name}</p>
+                                    <li className='fa fa-arrow-right'></li>
                                 </div>
                             )
                         })
@@ -520,13 +525,13 @@ function Character() {
                                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
                             </div>
 
-                            <div key={index} className='character--withInfo' onClick={() => zoomImage()}>
+                            <div key={index} className='character--withInfo'>
                                 {
                                     imageSize === false ? 
-                                    <img className={'character--withInfo--img'}  src={current.images.md} alt="logo" />
+                                    <img onClick={() => zoomImage()} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />
                                     :
                                     <div className='character--withInfo--img-container'>
-                                        <img className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
+                                        <img onClick={() => zoomImage()} className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
                                     </div>
                                 }
                                 <div className='character--withInfo--n-f-a'>

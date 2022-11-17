@@ -127,8 +127,9 @@ body {
   /* width: 70%;
   height: auto;
   margin: 0 auto;
-  margin-top: 1.5rem;
-  border-radius: 0.5rem; */
+  margin-top: 1.5rem;*/
+ 
+  border-radius: 0.5rem; 
   width: 100%;
   height: auto;
 }
@@ -148,12 +149,13 @@ body {
   width: 70%;
   height: auto;
   margin: 0 auto;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   border-radius: 0.5rem;
 }
 
-.character--img--container:before{
-  content:"";z-index:10;
+.character--img--container::before{
+  content:"";
+  z-index:10;
   position:absolute;
   height:200%;
   width:200%;
@@ -164,9 +166,9 @@ body {
     rgba(255, 255, 255, 0.5) 50%,
     rgba(255, 255, 255, 0.1) 55%,
     transparent 100%);
-    transition:all 2s;
-    transform:rotate(-45deg);
-    animation: shine 5s infinite forwards;
+  transition:all 10s;
+  transform:rotate(-45deg);
+  animation: shine 10s infinite forwards;
 }
 /* CHARACTERS LIST */
 
@@ -241,7 +243,8 @@ body {
   cursor: pointer;
 }
 .character--withInfo--img-container::before{
-  content:"";z-index:10;
+  content:"";
+  z-index:10;
   position:absolute;
   height:200%;
   width:200%;
@@ -252,15 +255,16 @@ body {
     rgba(255, 255, 255, 0.5) 50%,
     rgba(255, 255, 255, 0.1) 55%,
     transparent 100%);
-    transition:all 2s;
-    transform:rotate(-45deg);
-    animation: shine 5s infinite forwards;
+  transition:all 10s;
+  transform:rotate(-45deg);
+  animation: shine 10s infinite forwards;
+  /* animation-delay: 150s; */
 }
   
 @keyframes shine{
   0%{top:-120%;left:-120%;}
-  10%{left:100%;top:100%;}
-  20%{left:100%;top:100%;}
+  /* 10%{left:100%;top:100%;}
+  20%{left:100%;top:100%;} */
   100%{left:100%;top:100%;}
   
 }
@@ -291,19 +295,62 @@ body {
 
 
 /* CAROUSEL */
-.react-3d-carousel .slider-container .slider-right div {
+/* .react-3d-carousel > .slider-container > .slider-right > div {
   border: 2px solid #ffffff;
-}
-
+  display: none;
+  border: none;
+} */
 .carousel--img{
-  height: auto;
-  width: 30vw;
+  /* height: auto; */
+  /* width: 30vw; */
   /* justify-self: center; */
+  height:100%;
+  width:100%;
   border-radius: 0.5rem;
 }
 
+.carousel--container{
+  height: auto;
+  width: 30vw;
+  border-radius: 0.5rem;
+  position:relative;
+  overflow:hidden;
+}
+
+.carousel--container::before{
+  content:"";
+  z-index:10;
+  position:absolute;
+  height:200%;
+  width:200%;
+  top:-120%;
+  left:-120%;
+  background:linear-gradient(transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%);
+  transition:all 10s;
+  transform:rotate(-45deg);
+  animation: shine 10s infinite forwards;
+  /* animation-delay: 150s; */
+}
+
+
+.slider-right > div {
+  border: 5px solid #ffffff;
+  display: none;
+  border: none;
+}
+
+.slider-left > div {
+  border: 5px solid #ffffff;
+  display: none;
+  border: none;
+}
+
 .react-3d-carousel{
-  margin-bottom: 5rem;
+  margin-bottom: 8rem;
 }
 /* CAROUSEL */
 
@@ -394,7 +441,7 @@ body {
 /* CHARACTER WITH HIS/HER INFO */
 
 
-
+/* MEDIA QUERY */
 @media (max-width: 1200px){
   
   /* CHARACTERS LIST RESPONSIVE */
@@ -478,10 +525,13 @@ body {
 
   /* CAROUSEL RESPONSIVE */
   .carousel--img{
-    height: auto;
-    width: 50vw;
-    /* justify-self: center; */
+    height: 90vw;
+    width: 100vw;
     border-radius: 0.5rem;
+  }
+  .carousel--container{
+    height: auto;
+    width: 80vw;
   }
   .react-3d-carousel{
     margin-bottom: 40vw;
@@ -516,3 +566,4 @@ body {
   /* ACTUAL INFO */
   /* CHARACTER WITH HIS/HER INFO RESPONSIVE*/
 }
+/* MEDIA QUERY */

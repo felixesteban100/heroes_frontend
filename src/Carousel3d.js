@@ -5,12 +5,14 @@ import "./index.css";
 function Carousel3d(props) {
     let comics = props.comics.map((img) => {
         return(
-            <img className='carousel--img' alt="" src={img} />
+            <div className='carousel--container'>
+              <img className='carousel--img' alt="" src={img} />
+            </div>
         )
     })
   return (
     <div>
-        <Carousel slides={comics} autoplay={true} interval={5000}/>
+        <Carousel slides={comics} autoplay={false} interval={5000}/>
     </div>
   )
 }
