@@ -7,8 +7,11 @@ body {
   -moz-osx-font-smoothing: grayscale; */
   font-family: Georgia, 'Times New Roman', Times, serif;
   background-color: black;
-  background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80');
-
+  /* background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'); */
+  /* background: url('https://64.media.tumblr.com/d6d0246ca0dffa230f03be2521b3210f/tumblr_obfjz6Bd9f1runoqyo2_r1_540.gif'); */
+  background: url('https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif');
+  /* https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif */
+  background-size: 100vh;
 
   /* VARIABLES */
 
@@ -198,6 +201,28 @@ body {
   font-weight: 800;
   color: var(--character--withInfo--alignment-color);
 }
+
+
+/* CAROUSEL */
+.carousel{
+  display: flex;
+  justify-content: center;
+  background: rgba(101, 101, 101, 0);
+}
+
+.carousel-img-container{
+  height: 50%;
+  width: 50%;
+}
+
+.carousel--img{
+  height: auto;
+  width: 70%;
+  justify-self: center;
+  border-radius: 0.5rem;
+}
+
+/* CAROUSEL */
 
 
 /* ACTUAL INFO */

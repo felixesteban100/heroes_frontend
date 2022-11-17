@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Carousel from './Carousel.js'
 import axios from 'axios'
 
 
@@ -25,8 +26,8 @@ function Character() {
         // if (allCharacters[0] !== undefined) {
             // look how to sort an array of objects javascript
             let arr = allCharacters
-            arr.filter(current => current !== undefined)
-            console.log(arr.forEach(current => console.log(current.name)))
+            // arr.filter(current => current !== undefined)
+            // arr.forEach(current => console.log(current.name))
             
             let selectedOnes = []
             let result = []
@@ -179,7 +180,13 @@ function Character() {
                 charactersArr.push({
                     id: charac.id,
                     name: charac.name,
-                    images: {md: charac.images.md},
+                    images: {
+                        xs: charac.images.xs,
+                        sm: charac.images.sm,
+                        md: charac.images.md,
+                        lg: charac.images.lg
+                    },
+                    comics: charac.comics,
                     appearance:{
                         gender: charac.appearance.gender,
                         race: charac.appearance.race,
@@ -280,13 +287,49 @@ function Character() {
                 }
                 // console.log(alteregos)
 
-                
+                let comics = []
+                if (charac.comics !== undefined) {
+                    comics = charac.comics
+                }else{
+                    switch(charac.biography.publisher){
+                        case "Marvel Comics":
+                            comics = [
+                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
+                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
+                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
+                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg"
+                            ]
+                        break;
+                        case "DC Comics":
+                            comics = [
+                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
+                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
+                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
+                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg"
+                            ]
+                        break;
+                        default:
+                            comics = [
+                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
+                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
+                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
+                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000"
+                            ]
+                        break;
+                    }
+                }
 
                 charactersArr.push({
                     // charac
                     id: charac.id,
                     name: charac.name,
-                    images: {md: charac.images.md},
+                    images: {
+                        xs: charac.images.xs,
+                        sm: charac.images.sm,
+                        md: charac.images.md,
+                        lg: charac.images.lg
+                    },
+                    comics: comics,
                     appearance:{
                         gender: charac.appearance.gender,
                         race: charac.appearance.race,
@@ -391,6 +434,8 @@ function Character() {
                         <option value="Black Order">Black Order</option>
                         <option value="Spider-Army">Spider-Army</option>
                         <option value="Dark Avengers">Dark Avengers</option>
+                        {/* Hydra */}
+                        {/* Young Avengers */}
                     </select>
                 }
 
@@ -484,7 +529,12 @@ function Character() {
                                     
                                 </div>
                             </div>
-
+                            <div className='character--withInfo'>
+                                <p className='character--withInfo--name'>Comics</p>
+                                <Carousel 
+                                    comics={current.comics}
+                                />
+                            </div>
 
                             <div className='character--withInfo--info'>
                                     
@@ -652,11 +702,10 @@ function Character() {
                                                     </p>
                                                 </div>
 
-
                                                 <div className='stat'>
-                                                        {/* <img className='stat--logo' src="https://cdn-icons-png.flaticon.com/512/929/929926.png" alt="" /> */}
                                                         <p className='stat--info'><strong>Publisher:</strong></p> 
                                                 </div>
+
                                                 <div className='stat-publisher'>
                                                     <img className='stat-publisher-logo' src={current.publisherIMG} alt="" />
                                                 </div>
@@ -698,8 +747,7 @@ function Character() {
                                             </div>
                                         }
                                     </div>
-
-                                </div>
+                            </div>
                         </div>
                     ))
                 }
