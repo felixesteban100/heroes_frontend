@@ -10,7 +10,7 @@ function Carousel3d(props) {
     })
   return (
     <div>
-        <Carousel slides={comics} autoplay={true} interval={2000}/>
+        <Carousel slides={comics} autoplay={true} interval={5000}/>
     </div>
   )
 }

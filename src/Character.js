@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 // import Carousel from './Carousel.js'
+import Carousel from 'nuka-carousel';
 import Carousel3d from './Carousel3d';
 import axios from 'axios'
 
@@ -513,29 +514,34 @@ function Character() {
 
                             <div key={index} className='character--withInfo'>
                                 <img className='character--withInfo--img' src={current.images.md} alt="logo" />
-                                <p className='character--withInfo--name'>Name: {current.name}</p>
-                                <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
-                                <div className='character--withInfo--alignment'>
-                                    {current.biography.alignment==="good" &&
-                                        <p className='character--alignment'>Aligment: SuperHero</p>
-                                    }
-                                    {
-                                        current.biography.alignment==="bad" &&
-                                        <p className='character--alignment'>Aligment: Super Villian</p>
-                                    }
-                                    {
-                                        current.biography.alignment==="neutral" &&
-                                        <p className='character--alignment'>Aligment: Anti-hero</p>
-                                    }
-                                    
+                                {/* <Carousel>
+                                    <img className='character--withInfo--img' src={current.images.xs} alt="" />
+                                    <img className='character--withInfo--img' src={current.images.sm} alt="" />
+                                    <img className='character--withInfo--img' src={current.images.md} alt="" />
+                                    <img className='character--withInfo--img' src={current.images.lg} alt="" />
+                                </Carousel> */}
+                                <div className='character--withInfo--n-f-a'>
+                                    <p className='character--withInfo--name'>Name: {current.name}</p>
+                                    <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
+                                    <div className='character--withInfo--alignment'>
+                                        {current.biography.alignment==="good" &&
+                                            <p className='character--alignment'>Aligment: SuperHero</p>
+                                        }
+                                        {
+                                            current.biography.alignment==="bad" &&
+                                            <p className='character--alignment'>Aligment: Super Villian</p>
+                                        }
+                                        {
+                                            current.biography.alignment==="neutral" &&
+                                            <p className='character--alignment'>Aligment: Anti-hero</p>
+                                        }
+                                        
+                                    </div>
+                                    <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
                                 </div>
                             </div>
-                            <div className='character--withInfo'>
-                                <p className='character--withInfo--name'>Comics</p>
-                            </div>
-                            <Carousel3d 
-                                comics={current.comics}
-                            />
+                            
+                                
                             <div className='character--withInfo--info'>
                                     
                                     <div className='character--withInfo--statSelectors'>
@@ -748,6 +754,13 @@ function Character() {
                                         }
                                     </div>
                             </div>
+
+                            <div className='character--withInfo'>
+                                <p className='character--withInfo--name'>Comics</p>
+                            </div>
+                            <Carousel3d 
+                                comics={current.comics}
+                            />
                         </div>
                     ))
                 }
