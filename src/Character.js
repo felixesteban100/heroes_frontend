@@ -10,6 +10,7 @@ function Character() {
     let [hiddeChacter, setHiddeCharacter] = useState(true)
     const [howManyRef, setHowManyRef] = React.useState(6)
     // let [num, setNum] = useState(0)
+    let [filterSystemButtons, setFilterSystemButtons] = useState(false)
 
     let [imageSize, setImageSize] = React.useState(false)
 
@@ -18,6 +19,8 @@ function Character() {
     let [team, setTeam] = useState("All")
 
     let [selectedStat, setSelectedStat] = useState("Powerstats")
+
+    let [bycomics, setBycomics] = React.useState(true)
 
     useEffect(() => {
         if (allCharacters[0] === undefined) {
@@ -33,54 +36,65 @@ function Character() {
             
             let selectedOnes = []
             let result = []
-            if (team !== "All") { 
-                result = []
-                
-                arr.forEach((current, index) => {
-                    if (current.connections.groupAffiliation.includes(team)) {
+
+            if (bycomics === true) {
+                allCharacters.forEach((current) => {
+                    if (current.comics !== undefined) {
+                        result.push(current)
+                    }
+                })
+            }else{
+                if (team !== "All") { 
+                    result = []
+                    
+                    arr.forEach((current, index) => {
+                        if (current.connections.groupAffiliation.includes(team)) {
+                            if (side === "All" && universe === "All") {
+                                selectedOnes.push(index)
+                                result.push(current)
+                            }else if (side === 'All' && universe !== "All" && (current.biography.publisher === universe)) {
+                                selectedOnes.push(index)
+                                result.push(current)
+                            }else if (side !== 'All' && universe === "All" && (current.biography.alignment === side)) {
+                                selectedOnes.push(index)
+                                result.push(current)
+                            }else {
+                                if (current.biography.alignment === side && current.biography.publisher === universe) {
+                                    selectedOnes.push(index)
+                                    result.push(current)
+                                }
+                            }   
+                        }
+                    }) 
+                }else{
+                    result = []
+                    arr.forEach((current, index) => {
                         if (side === "All" && universe === "All") {
                             selectedOnes.push(index)
                             result.push(current)
-                        }else if (side === 'All' && universe !== "All" && (current.biography.publisher === universe)) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }else if (side !== 'All' && universe === "All" && (current.biography.alignment === side)) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }else {
+                        }else if (side === 'All' && universe !== "All") {
+                            if (current.biography.publisher === universe) {
+                                selectedOnes.push(index)
+                                result.push(current)
+                            }
+                        }else if (side !== 'All' && universe === "All") {
+                            if (current.biography.alignment === side) {
+                                selectedOnes.push(index)
+                                result.push(current)
+                            }
+                        }else /* if (side !== "All" && universe !== "All" && teams !== "All") */ {
                             if (current.biography.alignment === side && current.biography.publisher === universe) {
                                 selectedOnes.push(index)
                                 result.push(current)
                             }
-                        }   
-                    }
-                }) 
-            }else{
-                result = []
-                arr.forEach((current, index) => {
-                    if (side === "All" && universe === "All") {
-                        selectedOnes.push(index)
-                        result.push(current)
-                    }else if (side === 'All' && universe !== "All") {
-                        if (current.biography.publisher === universe) {
-                            selectedOnes.push(index)
-                            result.push(current)
                         }
-                    }else if (side !== 'All' && universe === "All") {
-                        if (current.biography.alignment === side) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }
-                    }else /* if (side !== "All" && universe !== "All" && teams !== "All") */ {
-                        if (current.biography.alignment === side && current.biography.publisher === universe) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }
-                    }
-                })
+                    })
+                }
             }
 
-            if (howManyRef > 0 && howManyRef !== "") {
+            
+
+            if (howManyRef > 0 && howManyRef !== "" && bycomics !== true) {
                 let finalSelectedIntex = []
                 for(let i = 0; i < howManyRef; i++){
                     finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
@@ -94,7 +108,7 @@ function Character() {
                 })
             }
 
-            if (team === "All" && side === "All" && universe === "All") {
+            if (team === "All" && side === "All" && universe === "All" && bycomics !== true) {
                 let finalSelectedIntex = []
                 for(let i = 0; i < 6; i++){
                     finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
@@ -112,11 +126,12 @@ function Character() {
             setInitialCharacters(result)
         // }
 
-    }, [side, universe, team, howManyRef, allCharacters])
+    }, [side, universe, team, bycomics, howManyRef, allCharacters])
 
 
     function changeBySide(event){
         setSide(event.target.value)
+        setBycomics(false)
     }
 
     function changeByUniverse(event){
@@ -124,6 +139,7 @@ function Character() {
             setTeam("All")
         }
         setUniverse(event.target.value)
+        setBycomics(false)
     }
 
     function changeByTeam(event){   
@@ -131,10 +147,16 @@ function Character() {
         if (event.target.value !== "All") {
             setHowManyRef("")
         }
+        setBycomics(false)
     }
 
     function changeHowMany(event){
         setHowManyRef(event.target.value)
+        setBycomics(false)
+    }
+
+    function changeByComics(){
+        setBycomics(true)
     }
 
     function changeStat(event){
@@ -239,7 +261,9 @@ function Character() {
 
     function findByNameClick(idSended){
         // console.log(idSended)
-        characterRef.current.value = ""
+        if (filterSystemButtons === false) {
+            characterRef.current.value = ""
+        }
         const charactersArr = []
         allCharacters.map(charac => {
             if (idSended===charac.id) {
@@ -379,11 +403,16 @@ function Character() {
         setCharacter(charactersArr)
     }
 
+    function changeFilter(){
+        setFilterSystemButtons(prevValue => !prevValue)
+    }
+
     function getBack(){
         setHiddeCharacters(false)
         setHiddeCharacter(true)
         setImageSize(false)
         setUniverse("All")
+        setBycomics(false)
     }
 
 
@@ -395,103 +424,120 @@ function Character() {
         <div className='character-module'>
             {
                 hiddeChacter === true &&
-                <div className='find-container'>
-                    <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
-
-                    <button className='character--button' onClick={findByName}>Find character</button>
-
-                    <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All" || characterRef !== "") ? 'All' : 6} max={100} min={0}/>
-
-                    <select className='select-category' name="" id="" onChange={event => changeBySide(event)}>
-                        <option value="All">All sides</option>
-                        <option value="good">Hero 🦸‍♂️</option>
-                        <option value="bad">Villain 🦹‍♂️</option>
-                        <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
-                    </select>
-
-                    <select className='select-category' name="" id="" onChange={event => changeByUniverse(event)}>
-                        <option className='all' value="All">All universes</option>
-                        <option className='marvel' value="Marvel Comics">Marvel</option>
-                        <option className='dc' value="DC Comics">DC</option>
-                        <option className='dark-horse' value="Dark Horse Comics">Dark Horse Comics</option>
-                        <option className='george-lucas' value="George Lucas">George Lucas</option>
-                        <option className='shueisha' value="Shueisha">Shueisha</option>
-                        <option className='idwPublishing' value="IDW Publishing">IDW Publishing</option>
-                        
-                    </select>
-
+                <div>
                     {
-                        (universe === "Marvel Comics" && universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                            <option value="All">All Teams</option>
-                            <option value="Avengers">Avengers</option>
-                            <option value="Illuminati">Illuminati</option>
-                            <option value="Inhumans">Inhumans</option>
-                            <option value="X-Men">X-Men</option>
-                            <option value="X-Force">X-Force</option>
-                            <option value="Guardians of the Galaxy">Guardians of the Galaxy</option>
-                            <option value="Defenders">Defenders</option>
-                            <option value="Secret Avengers">Secret Avengers</option>
-                            <option value="Marvel Knights">Marvel Knights</option>
-                            <option value="Fantastic Four">Fantastic Four</option>
-                            <option value="Fantastic Four(Original)">Fantastic Four Original</option>
-                            <option value="Sinister Six">Sinister Six</option>
-                            <option value="Midnight Sons">Midnight Sons</option>
-                            <option value="Heroes For Hire">Heroes For Hire</option>
-                            <option value="Thunderbolts">Thunderbolts</option>
-                            <option value="Hulk Family">Hulk Family</option>
-                            <option value="Brotherhood of Evil Mutants">Brotherhood of Evil Mutants</option>
-                            <option value="Black Order">Black Order</option>
-                            <option value="Spider-Army">Spider-Army</option>
-                            <option value="Dark Avengers">Dark Avengers</option>
-                            <option value="Hydra">Hydra</option>
-                            <option value="Young Avengers">Young Avengers</option>
-                            <option value="Ultimates">Ultimates</option>
-                            <option value="Weapon X">Weapon X</option>
-                        </select>
-                    }
+                        filterSystemButtons === false &&
+                        <div className='find-container'>
+                            <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
 
-                    {
-                        (universe === "DC Comics"&& universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                            <option value="All">All Teams</option>
-                            <option value="Justice League">Justice League</option>
-                            <option value="Suicide Squad">Suicide Squad</option>
-                            <option value="Teen Titans">Teen Titans</option>
-                            <option value="Green Lantern Corps">Green Lantern Corps</option>
-                            <option value="Batman Family">Batman Family</option>
-                            <option value="Flash Family">Flash Family</option>
-                            <option value="Justice League Dark">Justice League Dark</option>
-                            <option value="Crimebusters">Crimebusters / Watchmen</option>
-                            <option value="Legion of Super-Heroes">Legion of Super-Heroes</option>
-                            <option value="Assorted Batman rogues">Assorted Batman rogues</option>
-                            <option value="Injustice">Injustice League</option>
-                            <option value="Birds of Prey">Birds of Prey</option>
-                            <option value="Secret Society of Super Villains">Secret Society of Super Villains</option>
-                            <option value="Marvel Family">Marvel Family</option>
-                            <option value="Aquaman Family">Aquaman Family</option>
-                            
-                            {/* Legion of Super-Villains */}
-                            {/* Justice Society of America */}
-                        </select>
+                            <button className='character--button' onClick={findByName}>Find character</button>
+                            <button className='character--button' onClick={() => changeFilter()}>Change filter</button>
+                        </div>
                     }
+                    
+                    {
+                        filterSystemButtons === true &&
+                        <div className='find-container'>
+                            <button className='character--button' onClick={() => changeByComics()}>Get Comics</button>
+                            <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All" || characterRef !== "") ? 'All' : 6} max={100} min={0}/>
+                            <select className='select-category' name="" id="" onChange={event => changeBySide(event)}>
+                                <option value="All">All sides</option>
+                                <option value="good">Hero 🦸‍♂️</option>
+                                <option value="bad">Villain 🦹‍♂️</option>
+                                <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
+                            </select>
 
-                    {
-                        (universe === "Dark Horse Comics"&& universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                            <option value="All">All Teams</option>
-                            <option value="Incredible Family">Incredible Family</option>
-                        </select>
-                    }
+                            <select className='select-category' name="" id="" onChange={event => changeByUniverse(event)}>
+                                <option className='all' value="All">All universes</option>
+                                <option className='marvel' value="Marvel Comics">Marvel</option>
+                                <option className='dc' value="DC Comics">DC</option>
+                                <option className='dark-horse' value="Dark Horse Comics">Dark Horse Comics</option>
+                                <option className='george-lucas' value="George Lucas">George Lucas</option>
+                                <option className='shueisha' value="Shueisha">Shueisha</option>
+                                <option className='idwPublishing' value="IDW Publishing">IDW Publishing</option>
+                                <option className='imagecomics' value="Image Comics">Image Comics</option>
+                                
+                                
+                            </select>
 
-                    {
-                        (universe === "IDW Publishing"&& universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
-                            <option value="All">All Teams</option>
-                            <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
-                        </select>
+                            {
+                                (universe === "Marvel Comics" && universe !== "All") &&
+                                <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                                    <option value="All">All Teams</option>
+                                    <option value="Avengers">Avengers</option>
+                                    <option value="Illuminati">Illuminati</option>
+                                    <option value="Inhumans">Inhumans</option>
+                                    <option value="X-Men">X-Men</option>
+                                    <option value="X-Force">X-Force</option>
+                                    <option value="Guardians of the Galaxy">Guardians of the Galaxy</option>
+                                    <option value="Defenders">Defenders</option>
+                                    <option value="Secret Avengers">Secret Avengers</option>
+                                    <option value="Marvel Knights">Marvel Knights</option>
+                                    <option value="Fantastic Four">Fantastic Four</option>
+                                    <option value="Fantastic Four(Original)">Fantastic Four Original</option>
+                                    <option value="Sinister Six">Sinister Six</option>
+                                    <option value="Midnight Sons">Midnight Sons</option>
+                                    <option value="Heroes For Hire">Heroes For Hire</option>
+                                    <option value="Thunderbolts">Thunderbolts</option>
+                                    <option value="Hulk Family">Hulk Family</option>
+                                    <option value="Brotherhood of Evil Mutants">Brotherhood of Evil Mutants</option>
+                                    <option value="Black Order">Black Order</option>
+                                    <option value="Spider-Army">Spider-Army</option>
+                                    <option value="Dark Avengers">Dark Avengers</option>
+                                    <option value="Hydra">Hydra</option>
+                                    <option value="Young Avengers">Young Avengers</option>
+                                    <option value="Ultimates">Ultimates</option>
+                                    <option value="Weapon X">Weapon X</option>
+                                    {/* Future Foundation */}
+                                </select>
+                            }
+
+                            {
+                                (universe === "DC Comics"&& universe !== "All") &&
+                                <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                                    <option value="All">All Teams</option>
+                                    <option value="Justice League">Justice League</option>
+                                    <option value="Suicide Squad">Suicide Squad</option>
+                                    <option value="Teen Titans">Teen Titans</option>
+                                    <option value="Green Lantern Corps">Green Lantern Corps</option>
+                                    <option value="Batman Family">Batman Family</option>
+                                    <option value="Flash Family">Flash Family</option>
+                                    <option value="Justice League Dark">Justice League Dark</option>
+                                    <option value="Crimebusters">Crimebusters / Watchmen</option>
+                                    <option value="Legion of Super-Heroes">Legion of Super-Heroes</option>
+                                    <option value="Assorted Batman rogues">Assorted Batman rogues</option>
+                                    <option value="Injustice">Injustice League</option>
+                                    <option value="Birds of Prey">Birds of Prey</option>
+                                    <option value="Secret Society of Super Villains">Secret Society of Super Villains</option>
+                                    <option value="Marvel Family">Marvel Family</option>
+                                    <option value="Aquaman Family">Aquaman Family</option>
+                                    {/* Outsiders */}
+                                    {/* Legion of Super-Villains */}
+                                    {/* Justice Society of America */}
+                                </select>
+                            }
+
+                            {
+                                (universe === "Dark Horse Comics"&& universe !== "All") &&
+                                <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                                    <option value="All">All Teams</option>
+                                    <option value="Incredible Family">Incredible Family</option>
+                                </select>
+                            }
+
+                            {
+                                (universe === "IDW Publishing"&& universe !== "All") &&
+                                <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
+                                    <option value="All">All Teams</option>
+                                    <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
+                                </select>
+                            }
+                            <button className='character--button' onClick={() => changeFilter()}>Change Filter</button>
+                        </div> 
                     }
+                    
                 </div>
+                
             }
             
             {/* characters--container */}
@@ -507,7 +553,6 @@ function Character() {
                                         <img className='character--img' src={current.images.md} alt="logo" />
                                     </div>
                                     <p className='character--name'>{current.name}</p>
-                                    <li className='fa fa-arrow-right'></li>
                                 </div>
                             )
                         })
@@ -520,7 +565,7 @@ function Character() {
                 {
                     hiddeChacter === false && character.length !== 0 &&
                     character.map((current, index)=> (
-                        <div>
+                        <div key={index}>
                             <div className='button-back' onClick={() => getBack()}>
                                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
                             </div>

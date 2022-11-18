@@ -3,16 +3,16 @@ import {Carousel} from '3d-react-carousal';
 import "./index.css";
 
 function Carousel3d(props) {
-    let comics = props.comics.map((img) => {
+    let comics = props.comics.map((img, index) => {
         return(
-            <div className='carousel--container'>
+            <div key={index} className='carousel--container'>
               <img className='carousel--img' alt="" src={img} />
             </div>
         )
     })
   return (
     <div>
-        <Carousel slides={comics} autoplay={false} interval={5000}/>
+        <Carousel slides={comics} autoplay={true} interval={5000}/>
     </div>
   )
 }

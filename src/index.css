@@ -258,7 +258,6 @@ body {
   transition:all 10s;
   transform:rotate(-45deg);
   animation: shine 10s infinite forwards;
-  /* animation-delay: 150s; */
 }
   
 @keyframes shine{
@@ -461,7 +460,7 @@ body {
     width: 100%;
     height: auto;
     display: grid;
-    grid-template-columns: repeat(2, 30vw);
+    grid-template-columns: repeat(2, 40vw);
     gap: 0.5rem;
     margin: 0 auto;
   }
