@@ -1,134 +1,135 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Carousel3d from './Carousel3d';
 import axios from 'axios'
 
 
 function Character() {
-    let [allCharacters, setAllCharacters] = useState([]);
-    let [initialCharacters, setInitialCharacters] = useState([])
-    let [hiddeChacters, setHiddeCharacters] = useState(false)
-    let [hiddeChacter, setHiddeCharacter] = useState(true)
+    const [allCharacters, setAllCharacters] = useState([]);
+    const [initialCharacters, setInitialCharacters] = useState([])
+    const [hiddeChacters, setHiddeCharacters] = useState(false)
+    const [hiddeChacter, setHiddeCharacter] = useState(true)
+
+    const [imageSize, setImageSize] = React.useState(false)
+
+    const [filterSystemButtons, setFilterSystemButtons] = useState(false)
     const [howManyRef, setHowManyRef] = React.useState(6)
-    // let [num, setNum] = useState(0)
-    let [filterSystemButtons, setFilterSystemButtons] = useState(false)
+    const [bycomics, setBycomics] = React.useState(false)
+    const [side, setSide] = useState("All")
+    const [universe, setUniverse] = useState("All")
+    const [team, setTeam] = useState("All")
 
-    let [imageSize, setImageSize] = React.useState(false)
-
-    let [side, setSide] = useState("All")
-    let [universe, setUniverse] = useState("All")
-    let [team, setTeam] = useState("All")
-
-    let [selectedStat, setSelectedStat] = useState("Powerstats")
-
-    let [bycomics, setBycomics] = React.useState(true)
+    const [selectedStat, setSelectedStat] = useState("Powerstats")
 
     useEffect(() => {
-        if (allCharacters[0] === undefined) {
-            // axios.get("http://localhost:3001/") // change the url to the one deploy in the web, and then deploy this frontend(push origin main)
-            axios.get("https://heroes-backend.onrender.com")
-            .then(res => setAllCharacters(res.data.sort((a, b) => a.name.toLowerCase() - b.name.toLowerCase())))
-        }
-        // if (allCharacters[0] !== undefined) {
-            // look how to sort an array of objects javascript
-            let arr = allCharacters
-            // arr.filter(current => current !== undefined)
-            // arr.forEach(current => console.log(current.name))
-            
-            let selectedOnes = []
-            let result = []
+        axios.get("https://heroes-backend.onrender.com")
+        .then(res => {
+            let dataOrganized = res.data.sort((a,b) => {
+                let fa = a.name.toLowerCase() 
+                let fb = b.name.toLowerCase()
 
-            if (bycomics === true) {
-                allCharacters.forEach((current) => {
-                    if (current.comics !== undefined) {
-                        result.push(current)
-                    }
-                })
-            }else{
-                if (team !== "All") { 
-                    result = []
-                    
-                    arr.forEach((current, index) => {
-                        if (current.connections.groupAffiliation.includes(team)) {
-                            if (side === "All" && universe === "All") {
-                                selectedOnes.push(index)
-                                result.push(current)
-                            }else if (side === 'All' && universe !== "All" && (current.biography.publisher === universe)) {
-                                selectedOnes.push(index)
-                                result.push(current)
-                            }else if (side !== 'All' && universe === "All" && (current.biography.alignment === side)) {
-                                selectedOnes.push(index)
-                                result.push(current)
-                            }else {
-                                if (current.biography.alignment === side && current.biography.publisher === universe) {
-                                    selectedOnes.push(index)
-                                    result.push(current)
-                                }
-                            }   
-                        }
-                    }) 
-                }else{
-                    result = []
-                    arr.forEach((current, index) => {
+                if (fa < fb){
+                    return -1
+                }
+                if (fa > fb) {
+                    return 1
+                }
+                return 0
+            })
+            setAllCharacters(dataOrganized) // the data is sorted by names
+        })
+    }, [])
+
+    useEffect(() => {
+        let arr = allCharacters
+        
+        let selectedOnes = []
+        let result = []
+        if (bycomics === true) {
+            allCharacters.forEach((current) => {
+                if (current.comics !== undefined) {
+                    result.push(current)
+                }
+            })
+        }else{
+            if (team !== "All") { 
+                result = []
+                
+                arr.forEach((current, index) => {
+                    if (current.connections.groupAffiliation.includes(team)) {
                         if (side === "All" && universe === "All") {
                             selectedOnes.push(index)
                             result.push(current)
-                        }else if (side === 'All' && universe !== "All") {
-                            if (current.biography.publisher === universe) {
-                                selectedOnes.push(index)
-                                result.push(current)
-                            }
-                        }else if (side !== 'All' && universe === "All") {
-                            if (current.biography.alignment === side) {
-                                selectedOnes.push(index)
-                                result.push(current)
-                            }
-                        }else /* if (side !== "All" && universe !== "All" && teams !== "All") */ {
+                        }else if (side === 'All' && universe !== "All" && (current.biography.publisher === universe)) {
+                            selectedOnes.push(index)
+                            result.push(current)
+                        }else if (side !== 'All' && universe === "All" && (current.biography.alignment === side)) {
+                            selectedOnes.push(index)
+                            result.push(current)
+                        }else {
                             if (current.biography.alignment === side && current.biography.publisher === universe) {
                                 selectedOnes.push(index)
                                 result.push(current)
                             }
+                        }   
+                    }
+                }) 
+            }else{
+                result = []
+                arr.forEach((current, index) => {
+                    if (side === "All" && universe === "All") {
+                        selectedOnes.push(index)
+                        result.push(current)
+                    }else if (side === 'All' && universe !== "All") {
+                        if (current.biography.publisher === universe) {
+                            selectedOnes.push(index)
+                            result.push(current)
                         }
-                    })
+                    }else if (side !== 'All' && universe === "All") {
+                        if (current.biography.alignment === side) {
+                            selectedOnes.push(index)
+                            result.push(current)
+                        }
+                    }else /* if (side !== "All" && universe !== "All" && teams !== "All") */ {
+                        if (current.biography.alignment === side && current.biography.publisher === universe) {
+                            selectedOnes.push(index)
+                            result.push(current)
+                        }
+                    }
+                })
+            }
+        }
+
+        if (howManyRef > 0 && howManyRef !== "" && bycomics !== true) {
+            let finalSelectedIntex = []
+            for(let i = 0; i < howManyRef; i++){
+                finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
+            } 
+
+            result = []
+            arr.forEach((current, index) => {
+                if (finalSelectedIntex.includes(index)) {
+                    result.push(current)
                 }
-            }
+            })
+        }
 
-            
+        if (team === "All" && side === "All" && universe === "All" && bycomics !== true) {
+            let finalSelectedIntex = []
+            for(let i = 0; i < 6; i++){
+                finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
+            } 
 
-            if (howManyRef > 0 && howManyRef !== "" && bycomics !== true) {
-                let finalSelectedIntex = []
-                for(let i = 0; i < howManyRef; i++){
-                    finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
-                } 
-
-                result = []
-                arr.forEach((current, index) => {
-                    if (finalSelectedIntex.includes(index)) {
-                        result.push(current)
-                    }
-                })
-            }
-
-            if (team === "All" && side === "All" && universe === "All" && bycomics !== true) {
-                let finalSelectedIntex = []
-                for(let i = 0; i < 6; i++){
-                    finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
-                } 
-
-                result = []
-                arr.forEach((current, index) => {
-                    if (finalSelectedIntex.includes(index)) {
-                        result.push(current)
-                    }
-                })
-            }
-            // console.log(result)
-            // console.log(result.map(current => console.log(current.name, ":", current.connections.groupAffiliation)))
-            setInitialCharacters(result)
-        // }
-
+            result = []
+            arr.forEach((current, index) => {
+                if (finalSelectedIntex.includes(index)) {
+                    result.push(current)
+                }
+            })
+        }
+        setInitialCharacters(result)
     }, [side, universe, team, bycomics, howManyRef, allCharacters])
 
-
+    
     function changeBySide(event){
         setSide(event.target.value)
         setBycomics(false)
@@ -191,7 +192,7 @@ function Character() {
 
     const [character, setCharacter] = React.useState([])
 
-    const characterRef = React.useRef('')
+    const characterRef = useRef('')
 
     function findByName(){
         const charactersArr = []
@@ -260,7 +261,6 @@ function Character() {
     }
 
     function findByNameClick(idSended){
-        // console.log(idSended)
         if (filterSystemButtons === false) {
             characterRef.current.value = ""
         }
@@ -284,7 +284,6 @@ function Character() {
                     }
                     return occupation.charAt(0).toUpperCase() + occupation.slice(1)
                 })
-                // console.log(occupation)
 
                 let groups = charac.connections.groupAffiliation.split(",")
                 groups = groups.map((current) => {
@@ -303,7 +302,6 @@ function Character() {
                     }
                     return groups.charAt(0).toUpperCase() + groups.slice(1)
                 })
-                // console.log(groups)
 
                 let alteregos
                 if(charac.biography.alterEgos !== "No alter egos found."){
@@ -311,7 +309,6 @@ function Character() {
                 }else{
                     alteregos = ["-"]
                 }
-                // console.log(alteregos)
 
                 let comics = []
                 if (charac.comics !== undefined) {
@@ -410,9 +407,9 @@ function Character() {
     function getBack(){
         setHiddeCharacters(false)
         setHiddeCharacter(true)
-        setImageSize(false)
-        setUniverse("All")
-        setBycomics(false)
+        // setImageSize(false)
+        // setUniverse("All")
+        // setBycomics(false)
     }
 
 
@@ -465,6 +462,7 @@ function Character() {
                                 <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
                                     <option value="All">All Teams</option>
                                     <option value="Avengers">Avengers</option>
+                                    <option value="Avengers (Original)">Avengers (Original)</option>
                                     <option value="Illuminati">Illuminati</option>
                                     <option value="Inhumans">Inhumans</option>
                                     <option value="X-Men">X-Men</option>
@@ -488,7 +486,9 @@ function Character() {
                                     <option value="Young Avengers">Young Avengers</option>
                                     <option value="Ultimates">Ultimates</option>
                                     <option value="Weapon X">Weapon X</option>
-                                    {/* Future Foundation */}
+                                    <option value="Future Foundation">Future Foundation</option>
+                                    <option value="Asgardians">Asgardians</option>
+                                    <option value="Legion of Monsters">Legion of Monsters</option>
                                 </select>
                             }
 
@@ -497,6 +497,8 @@ function Character() {
                                 <select className='select-category' name="" id="" onChange={event => changeByTeam(event)}>
                                     <option value="All">All Teams</option>
                                     <option value="Justice League">Justice League</option>
+                                    <option value="Justice League (Original)">Justice League (Original)</option>
+                                    <option value="Justice Society of America">Justice Society of America</option>
                                     <option value="Suicide Squad">Suicide Squad</option>
                                     <option value="Teen Titans">Teen Titans</option>
                                     <option value="Green Lantern Corps">Green Lantern Corps</option>
@@ -511,9 +513,8 @@ function Character() {
                                     <option value="Secret Society of Super Villains">Secret Society of Super Villains</option>
                                     <option value="Marvel Family">Marvel Family</option>
                                     <option value="Aquaman Family">Aquaman Family</option>
-                                    {/* Outsiders */}
-                                    {/* Legion of Super-Villains */}
-                                    {/* Justice Society of America */}
+                                    <option value="Outsiders">Outsiders</option>
+                                    {/* <option value="Legion of Super-Villains">Legion of Super-Villains</option> */}
                                 </select>
                             }
 
