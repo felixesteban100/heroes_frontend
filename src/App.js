@@ -3,7 +3,6 @@ import React from 'react'
 import './index.css';
 import Character from './Character';
 import Header from './Header';
-// import axios from 'axios';
 
 function App() {
   return (

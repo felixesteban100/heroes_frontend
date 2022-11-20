@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Carousel3d from './Carousel3d';
 import axios from 'axios'
+import { useTransition , animated } from 'react-spring';
 
 
 function Character() {
@@ -19,6 +20,64 @@ function Character() {
     const [team, setTeam] = useState("All")
 
     const [selectedStat, setSelectedStat] = useState("Powerstats")
+
+    // let [delayNumber, setDelayNumber] = useState(0) 
+
+    const transitionOne = useTransition(hiddeChacter, {
+        from: {
+            x: -100,
+            y: 800,
+            opacity: 0
+        },
+        enter:{
+            x: 0,
+            y: 0,
+            opacity: 1
+        },
+        leave: {
+            x: 100,
+            y: 800,
+            opacity: 0
+        },
+    })
+
+    const transitionSome = useTransition(hiddeChacters, {
+        from: {
+            x: -100,
+            y: 800,
+            opacity: 0
+        },
+        enter: item => async (next) => {
+            await next({
+                x: 0,
+                y: 0,
+                opacity: 1,
+            })
+        },
+        leave: {
+            x: 100,
+            y: 800,
+            opacity: 0
+        },
+    })
+
+    const transitionimageSize = useTransition(imageSize, {
+        from: {
+            x: -300,
+            y: 1000,
+            opacity: 0
+        },
+        enter:{
+            x: 0,
+            y: 0,
+            opacity: 1
+        },
+        leave: {
+            x: 300,
+            y: 1000,
+            opacity: 0
+        },
+    })
 
     useEffect(() => {
         axios.get("https://heroes-backend.onrender.com")
@@ -133,12 +192,13 @@ function Character() {
     function changeBySide(event){
         setSide(event.target.value)
         setBycomics(false)
+        if (universe === "All" && team === "All") {
+            setHowManyRef(6)
+        }
     }
 
     function changeByUniverse(event){
-        if (event.target.value === "All") {
-            setTeam("All")
-        }
+        setTeam("All")
         setUniverse(event.target.value)
         setBycomics(false)
     }
@@ -261,6 +321,8 @@ function Character() {
     }
 
     function findByNameClick(idSended){
+        setHiddeCharacters(true)
+        setHiddeCharacter(false)
         if (filterSystemButtons === false) {
             characterRef.current.value = ""
         }
@@ -391,8 +453,7 @@ function Character() {
             return charac // esto es innecesario
              
         })
-        setHiddeCharacters(true)
-        setHiddeCharacter(false)
+        
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -412,11 +473,6 @@ function Character() {
         // setBycomics(false)
     }
 
-
-    function zoomImage(){
-        setImageSize(prevValue => !prevValue)
-    }
-
     return (
         <div className='character-module'>
             {
@@ -426,16 +482,15 @@ function Character() {
                         filterSystemButtons === false &&
                         <div className='find-container'>
                             <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
-
-                            <button className='character--button' onClick={findByName}>Find character</button>
-                            <button className='character--button' onClick={() => changeFilter()}>Change filter</button>
+                            <button id='character--button' className='character--button' onClick={findByName}>Find character</button>
+                            <button id='character--button' className='character--button' onClick={() => changeFilter()}>Change filter</button>
                         </div>
                     }
                     
                     {
                         filterSystemButtons === true &&
                         <div className='find-container'>
-                            <button className='character--button' onClick={() => changeByComics()}>Get Comics</button>
+                            <button id='character--button' className='character--button' onClick={() => changeByComics()}>Get Comics</button>
                             <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All" || characterRef !== "") ? 'All' : 6} max={100} min={0}/>
                             <select className='select-category' name="" id="" onChange={event => changeBySide(event)}>
                                 <option value="All">All sides</option>
@@ -489,6 +544,7 @@ function Character() {
                                     <option value="Future Foundation">Future Foundation</option>
                                     <option value="Asgardians">Asgardians</option>
                                     <option value="Legion of Monsters">Legion of Monsters</option>
+                                    <option value="Symbiotes">Symbiotes</option>
                                 </select>
                             }
 
@@ -514,6 +570,7 @@ function Character() {
                                     <option value="Marvel Family">Marvel Family</option>
                                     <option value="Aquaman Family">Aquaman Family</option>
                                     <option value="Outsiders">Outsiders</option>
+                                    <option value="Superman Family">Superman Family / Kriptonian</option>
                                     {/* <option value="Legion of Super-Villains">Legion of Super-Villains</option> */}
                                 </select>
                             }
@@ -533,7 +590,7 @@ function Character() {
                                     <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
                                 </select>
                             }
-                            <button className='character--button' onClick={() => changeFilter()}>Change Filter</button>
+                            <button id='character--button' className='character--button' onClick={() => changeFilter()}>Change Filter</button>
                         </div> 
                     }
                     
@@ -541,73 +598,95 @@ function Character() {
                 
             }
             
-            {/* characters--container */}
             {
                 hiddeChacters === false && initialCharacters.length !== 0 &&
                 <div className='characters--container'>
                     {
-                        hiddeChacters === false && initialCharacters.length !== 0 &&
-                        initialCharacters.map((current, index)=> {
-                            return (
-                                <div key={index} className='character' onClick={() => findByNameClick(current.id)}>
-                                    <div className='character--img--container'>
-                                        <img className='character--img' src={current.images.md} alt="logo" />
-                                    </div>
-                                    <p className='character--name'>{current.name}</p>
-                                </div>
-                            )
-                        })
+                        (hiddeChacters === false && initialCharacters.length !== 0) &&
+                            initialCharacters.map((current, index)=> (
+                                transitionSome((style, hiddeChacters) => 
+                                    hiddeChacters === false ? 
+                                    <animated.div style={style} key={index}>
+                                        {
+                                            <div key={index} id={index} className='character' onClick={() => findByNameClick(current.id)}>
+                                                <div className='character--img--container'>
+                                                    <img className='character--img' src={current.images.md} alt="logo" />
+                                                </div>
+                                                <p className='character--name'>{current.name}</p>
+                                            </div>
+                                        }
+                                    </animated.div>
+                                    :
+                                    ""
+                                ) 
+                            ))
                     }
                 </div>
             }
-            {/* characters--container */}
 
             <div className='character--container--withInfo'>
                 {
                     hiddeChacter === false && character.length !== 0 &&
                     character.map((current, index)=> (
                         <div key={index}>
-                            <div className='button-back' onClick={() => getBack()}>
+                            <div id='button-back' className='button-back' onClick={() => getBack()}>
                                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
                             </div>
-
-                            <div key={index} className='character--withInfo'>
-                                {
-                                    imageSize === false ? 
-                                    <img onClick={() => zoomImage()} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />
+                            {
+                                transitionOne((style, hiddeChacter) => 
+                                    hiddeChacter === false ?
+                                    <animated.div style={style}>
+                                        <div key={index} className='character--withInfo'>
+                                            {
+                                                transitionimageSize((style, hiddeChacter) => 
+                                                    hiddeChacter === false ? 
+                                                    <animated.div style={style} className="character--withInfo--img-container-img">
+                                                        <img id='character--withInfo--img' onClick={() => setImageSize(true)} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />                                                    
+                                                    </animated.div>
+                                                    :
+                                                    <animated.div style={style}>
+                                                        {
+                                                            <div key={index} id='character--withInfo--img-container' onClick={() => setImageSize(false)} className='character--withInfo--img-container'>
+                                                                <img id='character--withInfo--img-zoomed' onClick={() => setImageSize(false)} className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
+                                                            </div>
+                                                        }
+                                                    </animated.div>
+                                                )
+                                            }
+                                            <div className='character--withInfo--n-f-a'>
+                                                <p className='character--withInfo--name'>Name: {current.name}</p>
+                                                <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
+                                                <div className='character--withInfo--alignment'>
+                                                    {current.biography.alignment==="good" &&
+                                                        <p className='character--alignment'>Aligment: SuperHero</p>
+                                                    }
+                                                    {
+                                                        current.biography.alignment==="bad" &&
+                                                        <p className='character--alignment'>Aligment: Super Villian</p>
+                                                    }
+                                                    {
+                                                        current.biography.alignment==="neutral" &&
+                                                        <p className='character--alignment'>Aligment: Anti-hero</p>
+                                                    }
+                                                    
+                                                </div>
+                                                <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
+                                            </div>
+                                        </div>
+                                    </animated.div>
                                     :
-                                    <div className='character--withInfo--img-container'>
-                                        <img onClick={() => zoomImage()} className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
-                                    </div>
-                                }
-                                <div className='character--withInfo--n-f-a'>
-                                    <p className='character--withInfo--name'>Name: {current.name}</p>
-                                    <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
-                                    <div className='character--withInfo--alignment'>
-                                        {current.biography.alignment==="good" &&
-                                            <p className='character--alignment'>Aligment: SuperHero</p>
-                                        }
-                                        {
-                                            current.biography.alignment==="bad" &&
-                                            <p className='character--alignment'>Aligment: Super Villian</p>
-                                        }
-                                        {
-                                            current.biography.alignment==="neutral" &&
-                                            <p className='character--alignment'>Aligment: Anti-hero</p>
-                                        }
-                                        
-                                    </div>
-                                    <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
-                                </div>
-                            </div>
+                                    ""
+                                )
+                            }
+                            
                             
                                 
                             <div className='character--withInfo--info'>
                                     
                                     <div className='character--withInfo--statSelectors'>
-                                        <div className={selectedStat === "Powerstats" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Powerstats">Powerstats</div>
-                                        <div className={selectedStat === "Biography" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Biography">Biography</div>
-                                        <div className={selectedStat === "Appearance" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Appearance">Appearance</div>
+                                        <div id='1' className={selectedStat === "Powerstats" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Powerstats">Powerstats</div>
+                                        <div id='1' className={selectedStat === "Biography" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Biography">Biography</div>
+                                        <div id='1' className={selectedStat === "Appearance" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Appearance">Appearance</div>
                                     </div>
 
                                     <div className='character--withInfo--infoByStat'>
