@@ -470,7 +470,8 @@ option[value="DC Comics"]{
   justify-content: center;
   align-items: center;
   border-radius: 0.5rem;
-  margin-top: 80rem;
+
+  margin-top: 25rem;
 }
 /* CAROUSEL */
 /* .react-3d-carousel > .slider-container > .slider-right > div {
@@ -545,7 +546,7 @@ option[value="DC Comics"]{
 
   background-color: var(--character--withInfo--info-background);
 
-  margin-top: 30rem;
+  margin-top: 19rem;
 }
 
 .character--withInfo--statSelectors{

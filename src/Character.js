@@ -546,7 +546,7 @@ function Character() {
                                     <option value="Midnight Sons">Midnight Sons</option>
                                     <option value="Heroes For Hire">Heroes For Hire</option>
                                     <option value="Thunderbolts">Thunderbolts</option>
-                                    <option value="Hulk Family">Hulk Family</option>
+                                    <option value="Hulk Family">Gamma / Hulk Family</option>
                                     <option value="Brotherhood of Evil Mutants">Brotherhood of Evil Mutants</option>
                                     <option value="Black Order">Black Order</option>
                                     <option value="Spider-Army">Spider-Army</option>
@@ -586,6 +586,7 @@ function Character() {
                                     <option value="Aquaman Family">Aquaman Family</option>
                                     <option value="Outsiders">Outsiders</option>
                                     <option value="Superman Family">Superman Family / Kriptonian</option>
+                                    <option value="Lantern Corps">All Lanterns Corps</option>
                                     {/* <option value="Legion of Super-Villains">Legion of Super-Villains</option> */}
                                 </select>
                             }
@@ -619,14 +620,14 @@ function Character() {
                     {
                         (hiddeChacters === false && initialCharacters.length !== 0) &&
                             initialCharacters.map((current, index)=> (
-                                <Fade top cascade key={index}>
-                                    <div key={index} /* id={index}  */className={`character`} /* className={`animate__animated animate__zoomIn animate__delay-${index}s character`}  */ onClick={() => findByNameClick(current.id)} /* ref={aniRef} */>
+                                /* <Fade top cascade key={index}> */
+                                    <div key={index} /* id={index}  */ className={`animate__animated animate__zoomIn character`} /* className={`animate__animated animate__zoomIn animate__delay-${index}s character`} */  onClick={() => findByNameClick(current.id)} /* ref={aniRef} */>
                                         <div className='character--img--container'>
                                             <img className='character--img' src={current.images.md} alt="logo" />
                                         </div>
                                         <p className='character--name'>{current.name}</p>
                                     </div>
-                                </Fade>
+                                /* </Fade> */
                             )
                         )
                     }
