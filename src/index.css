@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: Georgia, 'Times New Roman', Times, serif;
@@ -53,8 +57,6 @@ body {
 
   --stat-info-color: white;
 }
-
-
 
 
 /* HEADER */
@@ -272,7 +274,6 @@ option[value="DC Comics"]{
 .character--withInfo--n-f-a{
   margin-left: 5rem;
 }
-
 .character--withInfo--img-container-img{
   /* display:inline-block; */
   width: 20vw;
@@ -362,7 +363,7 @@ option[value="DC Comics"]{
   border-radius: 0.5rem;
   animation-name: grow;
   animation-iteration-count: 1;  
-  animation-duration: 1s; 
+  animation-duration: 3s; 
 }
 
 .character--withInfo--img-container{
@@ -372,6 +373,9 @@ option[value="DC Comics"]{
   position:relative;
   overflow:hidden;
   cursor: pointer;
+  display: flex;
+  justify-content:center;
+
 }
 .character--withInfo--img-container::before{
   content:"";
@@ -386,13 +390,13 @@ option[value="DC Comics"]{
     rgba(255, 255, 255, 0.5) 50%,
     rgba(255, 255, 255, 0.1) 55%,
     transparent 100%);
-  transition:all 10s;
+  transition:all 50s;
   transform:rotate(-45deg);
-  animation: shine 10s infinite forwards;
+  animation: shine 20s infinite forwards;
 }
   
 @keyframes grow {  
-  0% { 
+  /* 0% { 
     height:10%;
     width: 20%;
   }
@@ -415,6 +419,12 @@ option[value="DC Comics"]{
   100% { 
     height:100%;
     width: 100%;
+  } */
+  from {
+    transform: scale(0.5);
+  }
+  to {
+    transform: scale(1);
   }
 }
 
@@ -450,7 +460,18 @@ option[value="DC Comics"]{
   color: var(--character--withInfo--alignment-color);
 }
 
-
+.character--withInfo-comics{
+  width: 80vw;
+  background-color: var(--character--withInfo-background);
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  margin-top: 80rem;
+}
 /* CAROUSEL */
 /* .react-3d-carousel > .slider-container > .slider-right > div {
   border: 2px solid #ffffff;
@@ -523,6 +544,8 @@ option[value="DC Comics"]{
   border-radius: 0.5rem;
 
   background-color: var(--character--withInfo--info-background);
+
+  margin-top: 30rem;
 }
 
 .character--withInfo--statSelectors{
@@ -684,6 +707,7 @@ option[value="DC Comics"]{
   .character--withInfo--publisher{
     font-size: 4vw;
   }
+  
 
   /* CAROUSEL RESPONSIVE */
   .carousel--img{

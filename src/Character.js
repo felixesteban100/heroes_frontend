@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Carousel3d from './Carousel3d';
 import axios from 'axios'
-import { useTransition , animated } from 'react-spring';
+// import { useTransition , animated } from 'react-spring';
+// import {useAutoAnimate} from '@formkit/auto-animate/react'
+// import autoAnimate from '@formkit/auto-animate';
+// import { Transition } from 'react-transition-group';
+import 'animate.css';
+import Fade from 'react-reveal/Fade'; 
+
 
 
 function Character() {
@@ -21,11 +27,11 @@ function Character() {
 
     const [selectedStat, setSelectedStat] = useState("Powerstats")
 
-    // let [delayNumber, setDelayNumber] = useState(0) 
+    // const aniRef = useRef(null)
 
-    const transitionOne = useTransition(hiddeChacter, {
+    /* const transitionOne = useTransition(hiddeChacter, {
         from: {
-            x: -100,
+            x: 0,
             y: 800,
             opacity: 0
         },
@@ -35,49 +41,31 @@ function Character() {
             opacity: 1
         },
         leave: {
-            x: 100,
-            y: 800,
-            opacity: 0
-        },
-    })
-
-    const transitionSome = useTransition(hiddeChacters, {
-        from: {
-            x: -100,
-            y: 800,
-            opacity: 0
-        },
-        enter: item => async (next) => {
-            await next({
-                x: 0,
-                y: 0,
-                opacity: 1,
-            })
-        },
-        leave: {
-            x: 100,
-            y: 800,
-            opacity: 0
-        },
-    })
-
-    const transitionimageSize = useTransition(imageSize, {
-        from: {
-            x: -300,
-            y: 1000,
-            opacity: 0
-        },
-        enter:{
             x: 0,
-            y: 0,
-            opacity: 1
-        },
-        leave: {
-            x: 300,
-            y: 1000,
+            y: 800,
             opacity: 0
         },
-    })
+    }) */
+
+    // const transitionSome = useTransition(hiddeChacters, {
+    //     from: {
+    //         x: -100,
+    //         y: 800,
+    //         opacity: 0
+    //     },
+    //     enter: item => async (next) => {
+    //         await next({
+    //             x: 0,
+    //             y: 0,
+    //             opacity: 1,
+    //         })
+    //     },
+    //     leave: {
+    //         x: 100,
+    //         y: 800,
+    //         opacity: 0
+    //     },
+    // })
 
     useEffect(() => {
         axios.get("https://heroes-backend.onrender.com")
@@ -185,7 +173,23 @@ function Character() {
                 }
             })
         }
-        setInitialCharacters(result)
+
+        if (hiddeChacters === false && hiddeChacter === true)  {
+            setTimeout(() => {
+                setHiddeCharacters(true)
+                setInitialCharacters(result)
+                // console.log("paso 1")
+            }, 1000);
+    
+            setTimeout(() => {
+                setHiddeCharacters(false)
+                // console.log("paso 4")
+            }, 2000);
+        }else{
+            setInitialCharacters(result)
+        }
+        
+        // aniRef.current && autoAnimate(aniRef.current)
     }, [side, universe, team, bycomics, howManyRef, allCharacters])
 
     
@@ -255,69 +259,79 @@ function Character() {
     const characterRef = useRef('')
 
     function findByName(){
-        const charactersArr = []
-        allCharacters.map(charac => {
-            const name = charac.name.toLowerCase();
-            const nameintro = characterRef.current.value.toLowerCase();
-            const result = name.includes(nameintro)
+        setTimeout(() => {
+            setHiddeCharacters(true)
+            console.log("paso 1")
+        }, 1000);
 
-            if (result===true) {
-                charactersArr.push({
-                    id: charac.id,
-                    name: charac.name,
-                    images: {
-                        xs: charac.images.xs,
-                        sm: charac.images.sm,
-                        md: charac.images.md,
-                        lg: charac.images.lg
-                    },
-                    comics: charac.comics,
-                    appearance:{
-                        gender: charac.appearance.gender,
-                        race: charac.appearance.race,
-                        height: charac.appearance.height,
-                        weight: charac.appearance.weight,
-                        eyeColor: charac.appearance.eyeColor,
-                        hairColor: charac.appearance.hairColor,
-                    },
-                    powerstats: {
-                        intelligence: charac.powerstats.intelligence,
-                        strength: charac.powerstats.strength,
-                        speed: charac.powerstats.speed,
-                        durability: charac.powerstats.durability,
-                        power: charac.powerstats.power, 
-                        combat: charac.powerstats.combat,
-                    },
-                    biography: { 
-                        fullName: charac.biography.fullName,
-                        alignment: charac.biography.alignment,
-                        publisher: charac.biography.publisher,
-                        firstAppearance: charac.biography.firstAppearance,
-                        alterEgos: charac.biography.alterEgos,
-                        placeOfBirth: charac.biography.placeOfBirth,
-                        aliases: charac.biography.aliases,
-                        
-                    },
-                    work: {
-                        occupation: charac.work.occupation
-                    },
-                    connections:{
-                        groupAffiliation: charac.connections.groupAffiliation,
-                        relatives: charac.connections.relatives
-                    },
-                    publisherIMG: getPublisherImg(charac.biography.publisher)
-                })
-            }
-            return result // esto es innecesario
-             
-        })
-        setInitialCharacters(charactersArr)
-        setHiddeCharacters(false)
-        setHiddeCharacter(true)
-        // setSide("All")
-        // setUniverse("All")
-        // setTeam("All")
-        // setHowManyRef("")
+        setTimeout(() => {
+            setHiddeCharacters(false)
+            console.log("paso 4")
+            const charactersArr = []
+            allCharacters.map(charac => {
+                const name = charac.name.toLowerCase();
+                const nameintro = characterRef.current.value.toLowerCase();
+                const result = name.includes(nameintro)
+
+                if (result===true) {
+                    charactersArr.push({
+                        id: charac.id,
+                        name: charac.name,
+                        images: {
+                            xs: charac.images.xs,
+                            sm: charac.images.sm,
+                            md: charac.images.md,
+                            lg: charac.images.lg
+                        },
+                        comics: charac.comics,
+                        appearance:{
+                            gender: charac.appearance.gender,
+                            race: charac.appearance.race,
+                            height: charac.appearance.height,
+                            weight: charac.appearance.weight,
+                            eyeColor: charac.appearance.eyeColor,
+                            hairColor: charac.appearance.hairColor,
+                        },
+                        powerstats: {
+                            intelligence: charac.powerstats.intelligence,
+                            strength: charac.powerstats.strength,
+                            speed: charac.powerstats.speed,
+                            durability: charac.powerstats.durability,
+                            power: charac.powerstats.power, 
+                            combat: charac.powerstats.combat,
+                        },
+                        biography: { 
+                            fullName: charac.biography.fullName,
+                            alignment: charac.biography.alignment,
+                            publisher: charac.biography.publisher,
+                            firstAppearance: charac.biography.firstAppearance,
+                            alterEgos: charac.biography.alterEgos,
+                            placeOfBirth: charac.biography.placeOfBirth,
+                            aliases: charac.biography.aliases,
+                            
+                        },
+                        work: {
+                            occupation: charac.work.occupation
+                        },
+                        connections:{
+                            groupAffiliation: charac.connections.groupAffiliation,
+                            relatives: charac.connections.relatives
+                        },
+                        publisherIMG: getPublisherImg(charac.biography.publisher)
+                    })
+                }
+                return result // esto es innecesario
+                
+            })
+            setInitialCharacters(charactersArr)
+            setHiddeCharacters(false)
+            setHiddeCharacter(true)
+            // setSide("All")
+            // setUniverse("All")
+            // setTeam("All")
+            // setHowManyRef("")
+        }, 2000);
+        
     }
 
     function findByNameClick(idSended){
@@ -480,7 +494,7 @@ function Character() {
                 <div>
                     {
                         filterSystemButtons === false &&
-                        <div className='find-container'>
+                        <div className='animate__animated animate__lightSpeedInLeft find-container'>
                             <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
                             <button id='character--button' className='character--button' onClick={findByName}>Find character</button>
                             <button id='character--button' className='character--button' onClick={() => changeFilter()}>Change filter</button>
@@ -489,7 +503,7 @@ function Character() {
                     
                     {
                         filterSystemButtons === true &&
-                        <div className='find-container'>
+                        <div className='animate__animated animate__lightSpeedInRight find-container'>
                             <button id='character--button' className='character--button' onClick={() => changeByComics()}>Get Comics</button>
                             <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All" || characterRef !== "") ? 'All' : 6} max={100} min={0}/>
                             <select className='select-category' name="" id="" onChange={event => changeBySide(event)}>
@@ -545,6 +559,7 @@ function Character() {
                                     <option value="Asgardians">Asgardians</option>
                                     <option value="Legion of Monsters">Legion of Monsters</option>
                                     <option value="Symbiotes">Symbiotes</option>
+                                    {/* New Mutans */}
                                 </select>
                             }
 
@@ -604,26 +619,20 @@ function Character() {
                     {
                         (hiddeChacters === false && initialCharacters.length !== 0) &&
                             initialCharacters.map((current, index)=> (
-                                transitionSome((style, hiddeChacters) => 
-                                    hiddeChacters === false ? 
-                                    <animated.div style={style} key={index}>
-                                        {
-                                            <div key={index} id={index} className='character' onClick={() => findByNameClick(current.id)}>
-                                                <div className='character--img--container'>
-                                                    <img className='character--img' src={current.images.md} alt="logo" />
-                                                </div>
-                                                <p className='character--name'>{current.name}</p>
-                                            </div>
-                                        }
-                                    </animated.div>
-                                    :
-                                    ""
-                                ) 
-                            ))
+                                <Fade top cascade key={index}>
+                                    <div key={index} /* id={index}  */className={`character`} /* className={`animate__animated animate__zoomIn animate__delay-${index}s character`}  */ onClick={() => findByNameClick(current.id)} /* ref={aniRef} */>
+                                        <div className='character--img--container'>
+                                            <img className='character--img' src={current.images.md} alt="logo" />
+                                        </div>
+                                        <p className='character--name'>{current.name}</p>
+                                    </div>
+                                </Fade>
+                            )
+                        )
                     }
                 </div>
             }
-
+            
             <div className='character--container--withInfo'>
                 {
                     hiddeChacter === false && character.length !== 0 &&
@@ -633,27 +642,21 @@ function Character() {
                                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
                             </div>
                             {
-                                transitionOne((style, hiddeChacter) => 
+                                /* transitionOne((style, hiddeChacter) => 
                                     hiddeChacter === false ?
-                                    <animated.div style={style}>
+                                    <animated.div style={style}> */
                                         <div key={index} className='character--withInfo'>
                                             {
-                                                transitionimageSize((style, hiddeChacter) => 
-                                                    hiddeChacter === false ? 
-                                                    <animated.div style={style} className="character--withInfo--img-container-img">
-                                                        <img id='character--withInfo--img' onClick={() => setImageSize(true)} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />                                                    
-                                                    </animated.div>
-                                                    :
-                                                    <animated.div style={style}>
-                                                        {
-                                                            <div key={index} id='character--withInfo--img-container' onClick={() => setImageSize(false)} className='character--withInfo--img-container'>
-                                                                <img id='character--withInfo--img-zoomed' onClick={() => setImageSize(false)} className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
-                                                            </div>
-                                                        }
-                                                    </animated.div>
-                                                )
+                                                imageSize === false ? 
+                                                <div className="animate__animated animate__fadeIn character--withInfo--img-container-img">
+                                                    <img id='character--withInfo--img' onClick={() => setImageSize(true)} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />                                                    
+                                                </div>
+                                                :
+                                                <div key={index} id='animate__animated animate__fadeIn character--withInfo--img-container' onClick={() => setImageSize(false)} className='character--withInfo--img-container'>
+                                                    <img id='character--withInfo--img-zoomed' onClick={() => setImageSize(false)} className='character--withInfo--img-zoomed'  src={current.images.md} alt="logo" />
+                                                </div>
                                             }
-                                            <div className='character--withInfo--n-f-a'>
+                                            <div className='animate__animated animate__fadeIn animate__delay-1s character--withInfo--n-f-a'>
                                                 <p className='character--withInfo--name'>Name: {current.name}</p>
                                                 <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
                                                 <div className='character--withInfo--alignment'>
@@ -673,237 +676,245 @@ function Character() {
                                                 <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
                                             </div>
                                         </div>
-                                    </animated.div>
+                                    /* </animated.div>
                                     :
                                     ""
-                                )
+                                ) */
                             }
                             
                             
                                 
-                            <div className='character--withInfo--info'>
-                                    
-                                    <div className='character--withInfo--statSelectors'>
-                                        <div id='1' className={selectedStat === "Powerstats" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Powerstats">Powerstats</div>
-                                        <div id='1' className={selectedStat === "Biography" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Biography">Biography</div>
-                                        <div id='1' className={selectedStat === "Appearance" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Appearance">Appearance</div>
-                                    </div>
-
-                                    <div className='character--withInfo--infoByStat'>
-                                        {   selectedStat === "Powerstats" &&
-                                            <div className='character--withInfo--infoByStat--stat'>
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1787/1787077.png" alt="" />
-                                                    <p className='stat--info'>Intelligence: {current.powerstats.intelligence}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1599/1599755.png" alt="" />
-                                                    <p className='stat--info'>Strength: {current.powerstats.strength}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4357/4357645.png" alt="" />
-                                                    <p className='stat--info'>Speed: {current.powerstats.speed}</p>
-                                                </div>
+                            <Fade bottom cascade>
+                                <section id='character--withInfo--info' className='character--withInfo--info'>
                                         
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2592/2592317.png" alt="" />
-                                                    <p className='stat--info'>Durability: {current.powerstats.durability}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3103/3103567.png" alt="" />
-                                                    <p className='stat--info'>Power: {current.powerstats.power}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/6027/6027161.png" alt="" />
-                                                    <p className='stat--info'>Combat: {current.powerstats.combat}</p>
-                                                </div>
-                                            </div>
-                                        }
+                                        <div className='character--withInfo--statSelectors'>
+                                            <div id='1' className={selectedStat === "Powerstats" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Powerstats">Powerstats</div>
+                                            <div id='1' className={selectedStat === "Biography" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Biography">Biography</div>
+                                            <div id='1' className={selectedStat === "Appearance" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Appearance">Appearance</div>
+                                        </div>
 
-                                        {   selectedStat === "Biography" &&
-                                            <div className='character--withInfo--infoByStat--stat'>
-
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2555/2555572.png" alt="" />
-                                                    <p className='stat--info'><strong>Place of birth: </strong>
-                                                        {   
-                                                            current.biography.placeOfBirth!== "-" ?
-                                                            current.biography.placeOfBirth
-                                                            :
-                                                            "Unknown"
-                                                        }
-                                                    </p>
+                                        <div className='character--withInfo--infoByStat'>
+                                            {   selectedStat === "Powerstats" &&
+                                                <div className='character--withInfo--infoByStat--stat'>
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1787/1787077.png" alt="" />
+                                                        <p className='stat--info'>Intelligence: {current.powerstats.intelligence}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1599/1599755.png" alt="" />
+                                                        <p className='stat--info'>Strength: {current.powerstats.strength}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4357/4357645.png" alt="" />
+                                                        <p className='stat--info'>Speed: {current.powerstats.speed}</p>
+                                                    </div>
+                                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2592/2592317.png" alt="" />
+                                                        <p className='stat--info'>Durability: {current.powerstats.durability}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3103/3103567.png" alt="" />
+                                                        <p className='stat--info'>Power: {current.powerstats.power}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/6027/6027161.png" alt="" />
+                                                        <p className='stat--info'>Combat: {current.powerstats.combat}</p>
+                                                    </div>
                                                 </div>
+                                            }
 
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png" alt="" />
-                                                    <p className='stat--info'><strong>Occupations: </strong> 
-                                                        {
-                                                            current.work.occupation[0] === "-" ?
-                                                            "None"
-                                                            :
-                                                            current.work.occupation.map((current2, index) => {
-                                                                if (index  === current.work.occupation.length - 1) {
+                                            {   selectedStat === "Biography" &&
+                                                <div className='character--withInfo--infoByStat--stat'>
+
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2555/2555572.png" alt="" />
+                                                        <p className='stat--info'><strong>Place of birth: </strong>
+                                                            {   
+                                                                current.biography.placeOfBirth!== "-" ?
+                                                                current.biography.placeOfBirth
+                                                                :
+                                                                "Unknown"
+                                                            }
+                                                        </p>
+                                                    </div>
+
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png" alt="" />
+                                                        <p className='stat--info'><strong>Occupations: </strong> 
+                                                            {
+                                                                current.work.occupation[0] === "-" ?
+                                                                "None"
+                                                                :
+                                                                current.work.occupation.map((current2, index) => {
+                                                                    if (index  === current.work.occupation.length - 1) {
+                                                                        return (
+                                                                            ` ${current2}`
+                                                                        )
+                                                                    }
                                                                     return (
-                                                                        ` ${current2}`
+                                                                        ` ${current2},`
                                                                     )
-                                                                }
-                                                                return (
-                                                                    ` ${current2},`
-                                                                )
-                                                            })
-                                                        }
-                                                    </p>
-                                                </div>
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </div>
 
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3037/3037914.png" alt="" />
-                                                    <p className='stat--info'><strong>Aliases: </strong> 
-                                                        {
-                                                            current.biography.aliases[0] === "-" ?
-                                                            "None"
-                                                            :
-                                                            current.biography.aliases.map((current2, index) => {
-                                                                if (index  === current.biography.aliases.length - 1) {
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3037/3037914.png" alt="" />
+                                                        <p className='stat--info'><strong>Aliases: </strong> 
+                                                            {
+                                                                current.biography.aliases[0] === "-" ?
+                                                                "None"
+                                                                :
+                                                                current.biography.aliases.map((current2, index) => {
+                                                                    if (index  === current.biography.aliases.length - 1) {
+                                                                        return (
+                                                                            ` ${current2}`
+                                                                        )
+                                                                    }
                                                                     return (
-                                                                        ` ${current2}`
+                                                                        ` ${current2},`
                                                                     )
-                                                                }
-                                                                return (
-                                                                    ` ${current2},`
-                                                                )
-                                                            })
-                                                        }
-                                                    </p>
-                                                </div>
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </div>
 
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1828/1828413.png" alt="" />
-                                                    <p className='stat--info'><strong>Alter Egos: </strong> 
-                                                        {
-                                                            current.biography.alterEgos[0] === "-" ?
-                                                            "None"
-                                                            :
-                                                            current.biography.alterEgos.map((current2, index) => {
-                                                                if (index  === current.biography.alterEgos.length - 1) {
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1828/1828413.png" alt="" />
+                                                        <p className='stat--info'><strong>Alter Egos: </strong> 
+                                                            {
+                                                                current.biography.alterEgos[0] === "-" ?
+                                                                "None"
+                                                                :
+                                                                current.biography.alterEgos.map((current2, index) => {
+                                                                    if (index  === current.biography.alterEgos.length - 1) {
+                                                                        return (
+                                                                            ` ${current2}`
+                                                                        )
+                                                                    }
                                                                     return (
-                                                                        ` ${current2}`
+                                                                        ` ${current2},`
                                                                     )
-                                                                }
-                                                                return (
-                                                                    ` ${current2},`
-                                                                )
-                                                            })
-                                                        }
-                                                    </p>
-                                                </div>
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </div>
 
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="" />
-                                                    <p className='stat--info'><strong>First Appearance: </strong>
-                                                        {   
-                                                            current.biography.firstAppearance !== "-" ?
-                                                            current.biography.firstAppearance
-                                                            :
-                                                            "Unknown"
-                                                        }
-                                                    </p>
-                                                </div>
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="" />
+                                                        <p className='stat--info'><strong>First Appearance: </strong>
+                                                            {   
+                                                                current.biography.firstAppearance !== "-" ?
+                                                                current.biography.firstAppearance
+                                                                :
+                                                                "Unknown"
+                                                            }
+                                                        </p>
+                                                    </div>
 
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1534/1534938.png" alt="" />
-                                                    <p className='stat--info'><strong>Groups affiliation: </strong> 
-                                                        {
-                                                            current.connections.groupAffiliation[0] === "-" ?
-                                                            "Unknown"
-                                                            :
-                                                            current.connections.groupAffiliation.map((current2, index) => {
-                                                                if (index  === current.connections.groupAffiliation.length - 1) {
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1534/1534938.png" alt="" />
+                                                        <p className='stat--info'><strong>Groups affiliation: </strong> 
+                                                            {
+                                                                current.connections.groupAffiliation[0] === "-" ?
+                                                                "Unknown"
+                                                                :
+                                                                current.connections.groupAffiliation.map((current2, index) => {
+                                                                    if (index  === current.connections.groupAffiliation.length - 1) {
+                                                                        return (
+                                                                            ` ${current2}`
+                                                                        )
+                                                                    }
                                                                     return (
-                                                                        ` ${current2}`
+                                                                        ` ${current2},`
                                                                     )
-                                                                }
-                                                                return (
-                                                                    ` ${current2},`
-                                                                )
-                                                            })
-                                                        }
-                                                    </p>
-                                                </div>
+                                                                })
+                                                            }
+                                                        </p>
+                                                    </div>
 
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2219/2219867.png" alt="" />
-                                                    <p className='stat--info'><strong>Relatives: </strong>
-                                                        {   
-                                                            current.connections.relatives !== "-" ?
-                                                            current.connections.relatives
-                                                            :
-                                                            "Unknown"
-                                                        }
-                                                    </p>
-                                                </div>
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2219/2219867.png" alt="" />
+                                                        <p className='stat--info'><strong>Relatives: </strong>
+                                                            {   
+                                                                current.connections.relatives !== "-" ?
+                                                                current.connections.relatives
+                                                                :
+                                                                "Unknown"
+                                                            }
+                                                        </p>
+                                                    </div>
 
-                                                <div className='stat'>
-                                                        <p className='stat--info'><strong>Publisher:</strong></p> 
-                                                </div>
+                                                    <div className='stat'>
+                                                            <p className='stat--info'><strong>Publisher:</strong></p> 
+                                                    </div>
 
-                                                <div className='stat-publisher'>
-                                                    <img className='stat-publisher-logo' src={current.publisherIMG} alt="" />
-                                                </div>
+                                                    <div className='stat-publisher'>
+                                                        <img className='stat-publisher-logo' src={current.publisherIMG} alt="" />
+                                                    </div>
 
-                                            </div>
-                                        }
+                                                </div>
+                                            }
 
-                                        {   selectedStat === "Appearance" &&
-                                            <div className='character--withInfo--infoByStat--stat'>                                                
-                                                <div className='stat'>                                                
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2324/2324529.png" alt="" />
-                                                    <p className='stat--info'>Gender: {current.appearance.gender}</p>
+                                            {   selectedStat === "Appearance" &&
+                                                <div className='character--withInfo--infoByStat--stat'>                                                
+                                                    <div className='stat'>                                                
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2324/2324529.png" alt="" />
+                                                        <p className='stat--info'>Gender: {current.appearance.gender}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3090/3090509.png" alt="" />
+                                                        <p className='stat--info'>Race: {current.appearance.race === null ? "Unknown" : current.appearance.race}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3209/3209114.png" alt="" />
+                                                        <p className='stat--info'>Height: {current.appearance.height[0]} / {current.appearance.height[1]}</p>
+                                                    </div>
+                                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/847/847523.png" alt="" />
+                                                        <p className='stat--info'>Weight: {current.appearance.weight[0]} / {current.appearance.weight[1]}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4621/4621975.png" alt="" />
+                                                        <p className='stat--info'>Eye Color: {current.appearance.eyeColor}</p>
+                                                    </div>
+                            
+                                                    <div className='stat'>
+                                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3791/3791210.png" alt="" />
+                                                        <p className='stat--info'>Hair Color: {current.appearance.hairColor}</p>
+                                                    </div>
                                                 </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3090/3090509.png" alt="" />
-                                                    <p className='stat--info'>Race: {current.appearance.race === null ? "Unknown" : current.appearance.race}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3209/3209114.png" alt="" />
-                                                    <p className='stat--info'>Height: {current.appearance.height[0]} / {current.appearance.height[1]}</p>
-                                                </div>
-                                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/847/847523.png" alt="" />
-                                                    <p className='stat--info'>Weight: {current.appearance.weight[0]} / {current.appearance.weight[1]}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4621/4621975.png" alt="" />
-                                                    <p className='stat--info'>Eye Color: {current.appearance.eyeColor}</p>
-                                                </div>
-                        
-                                                <div className='stat'>
-                                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3791/3791210.png" alt="" />
-                                                    <p className='stat--info'>Hair Color: {current.appearance.hairColor}</p>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>
-                            </div>
+                                            }
+                                        </div>
+                                </section>
+                            </Fade>
 
-                            <div className='character--withInfo'>
-                                <p className='character--withInfo--name'>Comics</p>
-                            </div>
-                            <Carousel3d 
-                                comics={current.comics}
-                            />
+                            <Fade bottom cascade>
+                                <div id='character--withInfo-comics' className='character--withInfo-comics'>
+                                    <p className='character--withInfo--name'>Comics</p>
+                                </div>
+                                <Carousel3d 
+                                    comics={current.comics}
+                                />
+                            </Fade>
                         </div>
                     ))
                 }
             </div>
+
+
+            
+
         </div>
     );
 }
