@@ -71,6 +71,7 @@ function FilterBar({characterRef, findByName, changeFilter, changeByComics, chan
                         <option value="Asgardians">Asgardians</option>
                         <option value="Legion of Monsters">Legion of Monsters</option>
                         <option value="Symbiotes">Symbiotes</option>
+                        {/* New Warriors */}
                         {/* New Mutans */}
                     </select>
                 }

@@ -530,3 +530,49 @@ function Character() {
 }
 
 export default Character;
+
+
+
+// /* VARIABLES */
+
+// --background-general: black;
+
+// --header-background: rgb(7, 7, 7);
+// --header-text: white;
+
+// /* --background-find-container: rgb(29, 29, 36); */
+// --background-find-container: rgba(0, 0, 0, 0);
+
+// --character-textbox-first: rgba(0, 0, 0, 0.788);
+// --character-textbox-second: rgb(4, 13, 31);
+// --input-howMany-border-color: white;
+
+// --character-button-first: rgb(0, 0, 0);
+// --character-button-second: rgb(4, 13, 31);
+
+// --button-color: rgb(255, 255, 255);
+// --finder--border: white;
+
+// /* --character-box-first: rgb(15,15,50);
+// --character-box-second: gray; */
+// --character-box-first: rgba(0, 0, 0, 0);
+// --character-box-second: rgb(5, 5, 19);
+
+
+// --character--name-color: white /* black */;
+
+// --character--withInfo--name-color: white;
+// --character--withInfo--fullname-color: white;
+// --character--withInfo--alignment-color: white;
+
+// /* --character--withInfo-background: rgba(101, 101, 101, 0);*/
+// --character--withInfo-background: rgba(7, 0, 0, 0);
+
+// --character--withInfo--statSelectors-background: rgb(3, 3, 8);
+// --statSelectors-color: rgb(23, 49, 85);
+// --statSelectors-selected-color: rgb(33, 87, 248);
+
+// /* --character--withInfo--info-background: rgb(16, 14, 43);  */
+// --character--withInfo--info-background: rgba(16, 14, 43, 0.342);
+
+// --stat-info-color: white;

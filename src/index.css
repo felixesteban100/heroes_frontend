@@ -6,12 +6,10 @@ body {
   margin: 0;
   font-family: Georgia, 'Times New Roman', Times, serif;
   background-color: rgb(59, 52, 52);
-  background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80');
-  /* background: url('https://images.squarespace-cdn.com/content/v1/5c0f697e9d5abb8c65cd6857/1599032187414-92U41D7HVIIFVCHHBDA3/Artboard+2.png?format=1000w'); */
-  /* background: url('https://64.media.tumblr.com/d6d0246ca0dffa230f03be2521b3210f/tumblr_obfjz6Bd9f1runoqyo2_r1_540.gif'); */
-  /* background: url('https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif'); */
-  /* https://media.tenor.com/TLsSaQMZYNsAAAAd/stars-space.gif */
-  /* background-size: cover; */
+  /* background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'); */
+  /* background: url('https://media.idownloadblog.com/wp-content/uploads/2019/12/Snowman-Tree-Red-scaled.png'); */
+  background: url('https://www.aiseesoft.com/images/resource/christmas-wallpaper-iphone/19-houses-in-red-background.jpg');
+  background-size: cover;
   background-attachment: fixed;
   /* background-repeat: no-repeat; */
 
@@ -19,43 +17,46 @@ body {
 
   --background-general: black;
 
-  --header-background: black;
+  --header-background: rgb(24, 46, 28);
+  --header-text: rgb(224, 224, 224);
 
   /* --background-find-container: rgb(29, 29, 36); */
   --background-find-container: rgba(0, 0, 0, 0);
 
-  --character-textbox-first: rgba(0, 0, 0, 0);
-  --character-textbox-second: rgb(4, 13, 31);
+  --character-textbox-first: rgba(37, 53, 23, 0.788);
+  --character-textbox-second: rgb(17, 51, 14);
+  --input-howMany-border-color: black;
 
-  --character-button-first: rgba(0, 0, 0, 0);
-  --character-button-second: rgb(4, 13, 31);
+  --character-button-first: rgb(51, 78, 42);
+  --character-button-second: rgb(17, 51, 14);
 
   --button-color: rgb(255, 255, 255);
   --finder--border: white;
 
   /* --character-box-first: rgb(15,15,50);
   --character-box-second: gray; */
-  --character-box-first: rgba(0, 0, 0, 0);
-  --character-box-second: rgb(5, 5, 19);
+  --character-box-first: rgba(255, 0, 0, 0);
+  --character-box-second: rgb(37, 63, 34);
 
   
-  --character--name-color: white /* black */;
+  --character--name-color: rgb(230, 230, 230) /* black */;
 
-  --character--withInfo--name-color: white;
-  --character--withInfo--fullname-color: white;
-  --character--withInfo--alignment-color: white;
+  --character--withInfo--name-color: rgb(17, 51, 14);
+  --character--withInfo--fullname-color: rgb(17, 51, 14);
+  --character--withInfo--alignment-color: rgb(17, 51, 14);
 
   /* --character--withInfo-background: rgba(101, 101, 101, 0);*/
   --character--withInfo-background: rgba(7, 0, 0, 0);
 
-  --character--withInfo--statSelectors-background: rgb(3, 3, 8);
-  --statSelectors-color: rgb(23, 49, 85);
-  --statSelectors-selected-color: rgb(33, 87, 248);
+  --character--withInfo--statSelectors-background: rgb(184, 12, 12);
+  --statSelectors-color: rgb(184, 168, 24);
+  --statSelectors-selected-color: rgb(251, 255, 0);
+  --statSelectors-selected-border-color: rgb(55, 189, 22);
 
   /* --character--withInfo--info-background: rgb(16, 14, 43);  */
-  --character--withInfo--info-background: rgba(16, 14, 43, 0.342);
+  --character--withInfo--info-background: rgba(0, 0, 0, 0.199);
 
-  --stat-info-color: white;
+  --stat-info-color: rgb(196, 180, 37);
 }
 
 
@@ -77,6 +78,7 @@ body {
 
 .header--text{
   margin-left: 10px;
+  color: var(--header-text);
 }
 /* HEADER */
 
@@ -99,7 +101,7 @@ body {
   background: linear-gradient(var(--character-textbox-first), var(--character-textbox-second));
   color: var(--button-color);
   border: none;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--input-howMany-border-color);
 }
 
 
@@ -119,7 +121,7 @@ body {
   color: var(--button-color);
   border: none;
   /* border: 1px solid var(--finder--border); */
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--input-howMany-border-color);
 }
 
 .select-category{
@@ -166,7 +168,7 @@ option[value="DC Comics"]{
 }
 
 .character{
-  background: linear-gradient(var(--character-box-first), var(--character-box-second));
+  background: linear-gradient(var(--character-box-first) 50%, var(--character-box-second));
   height: 100%;
   width: 100%;
   text-align:center;
@@ -615,7 +617,7 @@ option[value="DC Comics"]{
   color: var(--statSelectors-selected-color);
   font-size: 3vw;
   cursor: pointer;
-  border-bottom: 0.3rem solid blue;
+  border-bottom: 0.3rem solid var(--statSelectors-selected-border-color);
 }
 
 /* .character--withInfo--infoByStat{
