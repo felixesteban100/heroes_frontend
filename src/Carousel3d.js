@@ -1,6 +1,5 @@
 import React from 'react'
 import {Carousel} from '3d-react-carousal';
-import "./index.css";
 import { useState } from 'react';
 
 function Carousel3d(props) {

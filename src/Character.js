@@ -106,7 +106,7 @@ function Character() {
             }
         }
 
-        if (howManyRef > 0 && howManyRef !== "" && bycomics !== true) {
+        if ((howManyRef > 0 || howManyRef !== "") && bycomics !== true) {
             let finalSelectedIntex = []
             for(let i = 0; i < howManyRef; i++){
                 finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
@@ -120,7 +120,7 @@ function Character() {
             })
         }
 
-        if (team === "All" && side === "All" && universe === "All" && bycomics !== true) {
+        if (team === "All" && side === "All" && universe === "All" && bycomics !== true && (howManyRef < 0 || howManyRef === "")) {
             let finalSelectedIntex = []
             for(let i = 0; i < 6; i++){
                 finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
@@ -148,7 +148,6 @@ function Character() {
         if (result[0] !== undefined && firstLoad === false) {
             setFirstLoad(true)
             setInitialCharacters(result)
-            console.log('ok')
         }else{
             if (hiddeChacters === false && hiddeChacter === true)  {
                 setTimeout(() => {
@@ -289,6 +288,10 @@ function Character() {
             return result // esto es innecesario
             
         })
+        for (let i = charactersArr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [charactersArr[i], charactersArr[j]] = [charactersArr[j], charactersArr[i]];
+        }
         delayTheApp(charactersArr)
         // setHiddeCharacters(false)
         // setHiddeCharacter(true)
@@ -426,7 +429,8 @@ function Character() {
                         groupAffiliation: groups,
                         relatives: charac.connections.relatives
                     },
-                    publisherIMG: getPublisherImg(charac.biography.publisher)
+                    publisherIMG: getPublisherImg(charac.biography.publisher),
+                    // boxShadowColor: getAverageRGB(charac.images.md)
                 })
             }
             return charac // esto es innecesario
@@ -495,7 +499,7 @@ function Character() {
             }
 
             {
-                (hiddeChacters === true && initialCharacters[0] === undefined && firstLoad === true) &&
+                (hiddeChacters === false && initialCharacters[0] === undefined && firstLoad === true) &&
                 /* <div className='character--container--withInfo'> */
                     <div className='character--withInfo-unknown'>
                         <img className='animate__animated animate__fadeIn character--withInfo--img--unknown'  src="https://www.pngitem.com/pimgs/m/52-526033_unknown-person-icon-png-transparent-png.png" alt="logo" />                                                    
@@ -533,46 +537,3 @@ export default Character;
 
 
 
-// /* VARIABLES */
-
-// --background-general: black;
-
-// --header-background: rgb(7, 7, 7);
-// --header-text: white;
-
-// /* --background-find-container: rgb(29, 29, 36); */
-// --background-find-container: rgba(0, 0, 0, 0);
-
-// --character-textbox-first: rgba(0, 0, 0, 0.788);
-// --character-textbox-second: rgb(4, 13, 31);
-// --input-howMany-border-color: white;
-
-// --character-button-first: rgb(0, 0, 0);
-// --character-button-second: rgb(4, 13, 31);
-
-// --button-color: rgb(255, 255, 255);
-// --finder--border: white;
-
-// /* --character-box-first: rgb(15,15,50);
-// --character-box-second: gray; */
-// --character-box-first: rgba(0, 0, 0, 0);
-// --character-box-second: rgb(5, 5, 19);
-
-
-// --character--name-color: white /* black */;
-
-// --character--withInfo--name-color: white;
-// --character--withInfo--fullname-color: white;
-// --character--withInfo--alignment-color: white;
-
-// /* --character--withInfo-background: rgba(101, 101, 101, 0);*/
-// --character--withInfo-background: rgba(7, 0, 0, 0);
-
-// --character--withInfo--statSelectors-background: rgb(3, 3, 8);
-// --statSelectors-color: rgb(23, 49, 85);
-// --statSelectors-selected-color: rgb(33, 87, 248);
-
-// /* --character--withInfo--info-background: rgb(16, 14, 43);  */
-// --character--withInfo--info-background: rgba(16, 14, 43, 0.342);
-
-// --stat-info-color: white;
