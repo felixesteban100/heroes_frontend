@@ -35,12 +35,12 @@ body {
   --character-button-selected-text: rgb(255, 255, 255);
 
   --button-color: rgb(255, 255, 255);
-  --button-color2: rgb(145, 145, 247);
+  --button-color2: rgb(57, 189, 255);
   --finder--border: white;
 
   /* --character-box-first: rgb(15,15,50);
   --character-box-second: gray; */
-  --character-box-first: rgba(0, 0, 0, 0);
+  --character-box-first: rgba(0, 0, 0, 0.283);
   --character-box-second: rgb(0, 0, 0);
   --character-box-selected: rgb(0, 0, 0);
 
@@ -136,7 +136,7 @@ body {
 
 .character--button:hover{
   /* background: var(--character-button-selected); */
-  color: var(--character-button-selected-text);
+  color: var(--button-color2);
   /* box-shadow: inset 0 0 0 2em var(--character-button-selected); */
   /* box-shadow: 0 0.5em 0.5em -0.4em var(--character-button-selected); */
   /* transform: translateY(-0.25em); */
@@ -509,7 +509,7 @@ option[value="DC Comics"]{
 }
 
 .character--withInfo-comics{
-  width: 100vw;
+  width: 90vw;
   background-color: var(--character--withInfo-background);
   text-align: center;
   /* margin: 0 auto;
@@ -524,7 +524,7 @@ option[value="DC Comics"]{
 }
 
 .character--withInfo--title{
-  font-size: 5vw;
+  font-size: 3vw;
   font-weight: 800;
   color: var(--character--withInfo--name-color);
 }
