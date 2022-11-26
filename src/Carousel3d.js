@@ -1,14 +1,14 @@
 import React from 'react'
-import {Carousel} from '3d-react-carousal';
-import { useState } from 'react';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 
 function Carousel3d(props) {
-  const [autoPlay, setAutoPlay] = useState(true)
 
   let comics = props.comics.map((img, index) => {
       return(
-        <div key={index} className='carousel--container'>
-          <img className='carousel--img' alt="" src={img} />
+        <div key={index} className="carousel--container">
+            <img src={img} />
+            <p className="legend">{props.name}</p>
         </div>
       )
   })
@@ -18,14 +18,18 @@ function Carousel3d(props) {
       <div id='character--withInfo-comics' className='character--withInfo-comics'>
         <p className='character--withInfo--title'>Comics</p>
         <br />
-        <button className='character--withInfo-comics-button' onClick={() => setAutoPlay(prev => !prev)}>
-          {autoPlay ? "Stop Autoplay" : "Begin AutoPlay"}
-        </button>
         <br />
-        <Carousel slides={comics} autoplay={autoPlay} interval={2000}/>
+        <Carousel>
+          {comics}
+        </Carousel>
       </div>
     </div>
   )
 }
 
 export default Carousel3d
+
+{/* <div key={index} className='carousel--container'>
+          <img className='carousel--img' alt="" src={img} />
+          <p className="legend">{props.name}</p>
+        </div> */}

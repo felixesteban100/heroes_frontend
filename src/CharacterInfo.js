@@ -1,37 +1,21 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import 'animate.css';
-import Fade from 'react-reveal/Fade'; 
 import Carousel3d from './Carousel3d';
-import { ColorExtractor } from 'react-color-extractor';
+import getAverageColor from 'get-average-color'
 
 function CharacterInfo({index, current, imageSize, setImageSize, getBack, selectedStat, changeStat}) {
-    const [colors, setColors] = useState([])
-    let characterwithInfoimgborder = {
-        boxShadow: `gray 0px 10px 70px 4px, gray 0px 10px 70px 4px, gray 0px 10px 70px 4px`
-    }
-    if (colors.length !== 0) {
-        characterwithInfoimgborder = {
-            boxShadow: `${colors[0]} 0px 10px 70px 4px, ${colors[5]} 0px 10px 70px 4px, ${colors[2]} 0px 22px 70px 4px`
-        }
+    let [colorsArr, setColorsArr] = useState([{r: 0, g: 0, b: 0}])
+    
+    function getColors(){
+        getAverageColor(current.images.md).then(rgb => {
+            setColorsArr(rgb)
+        })
     }
 
-    const colorExtractorStyle = {
-        display: 'None'
-    }
-
-    console.log(`${current.name} has the colors: ${colors}`)
+    // console.log("colorsArr", colorsArr)
   
     return (
-        <div key={index}>
-            {/* this wont display */}
-            <div style={colorExtractorStyle}>
-                <ColorExtractor getColors={colors => setColors(colors)}>
-                    <img src={current.images.md} alt="logo" />
-                </ColorExtractor>
-            </div>
-            {/* this wont display */}
-            
-            
+        <div key={index} onLoad={getColors}>
             <div id='button-back' className='button-back' onClick={() => getBack()}>
                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
             </div>
@@ -40,7 +24,7 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                     {
                         imageSize === false ? 
                         <div className="animate__animated animate__fadeIn character--withInfo--img-container-img">
-                            <img id='character--withInfo--img' style={characterwithInfoimgborder} onClick={() => setImageSize(true)} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />                                               
+                            <img id='character--withInfo--img' style={{boxShadow: `rgb(${colorsArr.r}, ${colorsArr.g}, ${colorsArr.b}) 0px 10px 70px 4px`}} onClick={() => setImageSize(true)} className={'character--withInfo--img'}  src={current.images.md} alt="logo" />                                               
                         </div>
                         :
                         <div key={index} id='animate__animated animate__fadeIn character--withInfo--img-container' onClick={() => setImageSize(false)} className='character--withInfo--img-container'>
@@ -71,226 +55,223 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
             
             
                 
-            <Fade bottom cascade>
-                <section id='character--withInfo--info' className='character--withInfo--info'>
+            <section id='character--withInfo--info' className='character--withInfo--info'>
+                    
+                    <div className='character--withInfo--statSelectors'>
+                        <div id='1' className={selectedStat === "Powerstats" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Powerstats">Powerstats</div>
+                        <div id='1' className={selectedStat === "Biography" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Biography">Biography</div>
+                        <div id='1' className={selectedStat === "Appearance" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Appearance">Appearance</div>
+                    </div>
+
+                    <div className='character--withInfo--infoByStat'>
+                        {   selectedStat === "Powerstats" &&
+                            <div className='character--withInfo--infoByStat--stat'>
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1787/1787077.png" alt="" />
+                                    <p className='stat--info'>Intelligence: {current.powerstats.intelligence}</p>
+                                </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1599/1599755.png" alt="" />
+                                    <p className='stat--info'>Strength: {current.powerstats.strength}</p>
+                                </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4357/4357645.png" alt="" />
+                                    <p className='stat--info'>Speed: {current.powerstats.speed}</p>
+                                </div>
                         
-                        <div className='character--withInfo--statSelectors'>
-                            <div id='1' className={selectedStat === "Powerstats" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Powerstats">Powerstats</div>
-                            <div id='1' className={selectedStat === "Biography" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Biography">Biography</div>
-                            <div id='1' className={selectedStat === "Appearance" ? 'statSelectors-selected' : 'statSelectors'} onClick={(event) => changeStat(event)} value="Appearance">Appearance</div>
-                        </div>
-
-                        <div className='character--withInfo--infoByStat'>
-                            {   selectedStat === "Powerstats" &&
-                                <div className='character--withInfo--infoByStat--stat'>
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1787/1787077.png" alt="" />
-                                        <p className='stat--info'>Intelligence: {current.powerstats.intelligence}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1599/1599755.png" alt="" />
-                                        <p className='stat--info'>Strength: {current.powerstats.strength}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4357/4357645.png" alt="" />
-                                        <p className='stat--info'>Speed: {current.powerstats.speed}</p>
-                                    </div>
-                            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2592/2592317.png" alt="" />
-                                        <p className='stat--info'>Durability: {current.powerstats.durability}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3103/3103567.png" alt="" />
-                                        <p className='stat--info'>Power: {current.powerstats.power}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/6027/6027161.png" alt="" />
-                                        <p className='stat--info'>Combat: {current.powerstats.combat}</p>
-                                    </div>
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2592/2592317.png" alt="" />
+                                    <p className='stat--info'>Durability: {current.powerstats.durability}</p>
                                 </div>
-                            }
-
-                            {   selectedStat === "Biography" &&
-                                <div className='character--withInfo--infoByStat--stat'>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2555/2555572.png" alt="" />
-                                        <p className='stat--info'><strong>Place of birth: </strong>
-                                            {   
-                                                current.biography.placeOfBirth!== "-" ?
-                                                current.biography.placeOfBirth
-                                                :
-                                                "Unknown"
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png" alt="" />
-                                        <p className='stat--info'><strong>Occupations: </strong> 
-                                            {
-                                                current.work.occupation[0] === "-" ?
-                                                "None"
-                                                :
-                                                current.work.occupation.map((current2, index) => {
-                                                    if (index  === current.work.occupation.length - 1) {
-                                                        return (
-                                                            ` ${current2}`
-                                                        )
-                                                    }
-                                                    return (
-                                                        ` ${current2},`
-                                                    )
-                                                })
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3037/3037914.png" alt="" />
-                                        <p className='stat--info'><strong>Aliases: </strong> 
-                                            {
-                                                current.biography.aliases[0] === "-" ?
-                                                "None"
-                                                :
-                                                current.biography.aliases.map((current2, index) => {
-                                                    if (index  === current.biography.aliases.length - 1) {
-                                                        return (
-                                                            ` ${current2}`
-                                                        )
-                                                    }
-                                                    return (
-                                                        ` ${current2},`
-                                                    )
-                                                })
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1828/1828413.png" alt="" />
-                                        <p className='stat--info'><strong>Alter Egos: </strong> 
-                                            {
-                                                current.biography.alterEgos[0] === "-" ?
-                                                "None"
-                                                :
-                                                current.biography.alterEgos.map((current2, index) => {
-                                                    if (index  === current.biography.alterEgos.length - 1) {
-                                                        return (
-                                                            ` ${current2}`
-                                                        )
-                                                    }
-                                                    return (
-                                                        ` ${current2},`
-                                                    )
-                                                })
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="" />
-                                        <p className='stat--info'><strong>First Appearance: </strong>
-                                            {   
-                                                current.biography.firstAppearance !== "-" ?
-                                                current.biography.firstAppearance
-                                                :
-                                                "Unknown"
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1534/1534938.png" alt="" />
-                                        <p className='stat--info'><strong>Groups affiliation: </strong> 
-                                            {
-                                                current.connections.groupAffiliation[0] === "-" ?
-                                                "Unknown"
-                                                :
-                                                current.connections.groupAffiliation.map((current2, index) => {
-                                                    if (index  === current.connections.groupAffiliation.length - 1) {
-                                                        return (
-                                                            ` ${current2}`
-                                                        )
-                                                    }
-                                                    return (
-                                                        ` ${current2},`
-                                                    )
-                                                })
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2219/2219867.png" alt="" />
-                                        <p className='stat--info'><strong>Relatives: </strong>
-                                            {   
-                                                current.connections.relatives !== "-" ?
-                                                current.connections.relatives
-                                                :
-                                                "Unknown"
-                                            }
-                                        </p>
-                                    </div>
-
-                                    <div className='stat'>
-                                            <p className='stat--info'><strong>Publisher:</strong></p> 
-                                    </div>
-
-                                    <div className='stat-publisher'>
-                                        <img className='stat-publisher-logo' src={current.publisherIMG} alt="" />
-                                    </div>
-
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3103/3103567.png" alt="" />
+                                    <p className='stat--info'>Power: {current.powerstats.power}</p>
                                 </div>
-                            }
-
-                            {   selectedStat === "Appearance" &&
-                                <div className='character--withInfo--infoByStat--stat'>                                                
-                                    <div className='stat'>                                                
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2324/2324529.png" alt="" />
-                                        <p className='stat--info'>Gender: {current.appearance.gender}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3090/3090509.png" alt="" />
-                                        <p className='stat--info'>Race: {current.appearance.race === null ? "Unknown" : current.appearance.race}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3209/3209114.png" alt="" />
-                                        <p className='stat--info'>Height: {current.appearance.height[0]} / {current.appearance.height[1]}</p>
-                                    </div>
-                            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/847/847523.png" alt="" />
-                                        <p className='stat--info'>Weight: {current.appearance.weight[0]} / {current.appearance.weight[1]}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4621/4621975.png" alt="" />
-                                        <p className='stat--info'>Eye Color: {current.appearance.eyeColor}</p>
-                                    </div>
-            
-                                    <div className='stat'>
-                                        <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3791/3791210.png" alt="" />
-                                        <p className='stat--info'>Hair Color: {current.appearance.hairColor}</p>
-                                    </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/6027/6027161.png" alt="" />
+                                    <p className='stat--info'>Combat: {current.powerstats.combat}</p>
                                 </div>
-                            }
-                        </div>
-                </section>
-            </Fade>
+                            </div>
+                        }
 
-            <Fade bottom cascade>
-                <Carousel3d 
-                    comics={current.comics}
-                />
-            </Fade>
+                        {   selectedStat === "Biography" &&
+                            <div className='character--withInfo--infoByStat--stat'>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2555/2555572.png" alt="" />
+                                    <p className='stat--info'><strong>Place of birth: </strong>
+                                        {   
+                                            current.biography.placeOfBirth!== "-" ?
+                                            current.biography.placeOfBirth
+                                            :
+                                            "Unknown"
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png" alt="" />
+                                    <p className='stat--info'><strong>Occupations: </strong> 
+                                        {
+                                            current.work.occupation[0] === "-" ?
+                                            "None"
+                                            :
+                                            current.work.occupation.map((current2, index) => {
+                                                if (index  === current.work.occupation.length - 1) {
+                                                    return (
+                                                        ` ${current2}`
+                                                    )
+                                                }
+                                                return (
+                                                    ` ${current2},`
+                                                )
+                                            })
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3037/3037914.png" alt="" />
+                                    <p className='stat--info'><strong>Aliases: </strong> 
+                                        {
+                                            current.biography.aliases[0] === "-" ?
+                                            "None"
+                                            :
+                                            current.biography.aliases.map((current2, index) => {
+                                                if (index  === current.biography.aliases.length - 1) {
+                                                    return (
+                                                        ` ${current2}`
+                                                    )
+                                                }
+                                                return (
+                                                    ` ${current2},`
+                                                )
+                                            })
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1828/1828413.png" alt="" />
+                                    <p className='stat--info'><strong>Alter Egos: </strong> 
+                                        {
+                                            current.biography.alterEgos[0] === "-" ?
+                                            "None"
+                                            :
+                                            current.biography.alterEgos.map((current2, index) => {
+                                                if (index  === current.biography.alterEgos.length - 1) {
+                                                    return (
+                                                        ` ${current2}`
+                                                    )
+                                                }
+                                                return (
+                                                    ` ${current2},`
+                                                )
+                                            })
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="" />
+                                    <p className='stat--info'><strong>First Appearance: </strong>
+                                        {   
+                                            current.biography.firstAppearance !== "-" ?
+                                            current.biography.firstAppearance
+                                            :
+                                            "Unknown"
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/1534/1534938.png" alt="" />
+                                    <p className='stat--info'><strong>Groups affiliation: </strong> 
+                                        {
+                                            current.connections.groupAffiliation[0] === "-" ?
+                                            "Unknown"
+                                            :
+                                            current.connections.groupAffiliation.map((current2, index) => {
+                                                if (index  === current.connections.groupAffiliation.length - 1) {
+                                                    return (
+                                                        ` ${current2}`
+                                                    )
+                                                }
+                                                return (
+                                                    ` ${current2},`
+                                                )
+                                            })
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2219/2219867.png" alt="" />
+                                    <p className='stat--info'><strong>Relatives: </strong>
+                                        {   
+                                            current.connections.relatives !== "-" ?
+                                            current.connections.relatives
+                                            :
+                                            "Unknown"
+                                        }
+                                    </p>
+                                </div>
+
+                                <div className='stat'>
+                                        <p className='stat--info'><strong>Publisher:</strong></p> 
+                                </div>
+
+                                <div className='stat-publisher'>
+                                    <img className='stat-publisher-logo' src={current.publisherIMG} alt="" />
+                                </div>
+
+                            </div>
+                        }
+
+                        {   selectedStat === "Appearance" &&
+                            <div className='character--withInfo--infoByStat--stat'>                                                
+                                <div className='stat'>                                                
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/2324/2324529.png" alt="" />
+                                    <p className='stat--info'>Gender: {current.appearance.gender}</p>
+                                </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3090/3090509.png" alt="" />
+                                    <p className='stat--info'>Race: {current.appearance.race === null ? "Unknown" : current.appearance.race}</p>
+                                </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3209/3209114.png" alt="" />
+                                    <p className='stat--info'>Height: {current.appearance.height[0]} / {current.appearance.height[1]}</p>
+                                </div>
+                        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/847/847523.png" alt="" />
+                                    <p className='stat--info'>Weight: {current.appearance.weight[0]} / {current.appearance.weight[1]}</p>
+                                </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/4621/4621975.png" alt="" />
+                                    <p className='stat--info'>Eye Color: {current.appearance.eyeColor}</p>
+                                </div>
+        
+                                <div className='stat'>
+                                    <img className="stat--logo" src="https://cdn-icons-png.flaticon.com/512/3791/3791210.png" alt="" />
+                                    <p className='stat--info'>Hair Color: {current.appearance.hairColor}</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+            </section>
+
+            <Carousel3d 
+                comics={current.comics}
+                name={current.name}
+            />
         </div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { /* useCallback, */ useEffect, useRef, useState } from 'react'
 import FilterBar from './FilterBar';
 import CharacterInfo from './CharacterInfo'
 import axios from 'axios'
@@ -17,7 +17,7 @@ function Character() {
 
     const [imageSize, setImageSize] = React.useState(false)
 
-    const [filterSystemButtons, setFilterSystemButtons] = useState(false)
+    const [filterSystemButtons, setFilterSystemButtons] = useState(true)
     const [howManyRef, setHowManyRef] = React.useState(6)
     const [bycomics, setBycomics] = React.useState(false)
     const [side, setSide] = useState("All")
@@ -44,9 +44,55 @@ function Character() {
             })
             setAllCharacters(dataOrganized) // the data is sorted by names
         })
+
+        const saveSide = localStorage.getItem('side')
+        const saveUniverse = localStorage.getItem('universe')
+        const saveTeam = localStorage.getItem('team')
+        const saveByComics = localStorage.getItem('bycomics')
+        const saveHowManyRef = localStorage.getItem('howManyRef')
+        const savefilterSystemButtons = localStorage.getItem('filterButtons')
+        
+        if (saveSide !== undefined && saveSide !== null) {
+            setSide(saveSide)
+        }
+
+        if (saveUniverse !== undefined || saveUniverse !== null) {
+            setUniverse(saveUniverse)
+        }  
+        
+        if (saveTeam !== undefined && saveTeam !== null) {
+            setTeam(saveTeam)
+        }
+
+        if (saveByComics !== undefined && saveByComics !== null) {
+            const isTrueSet = (saveByComics === 'true')
+            setBycomics(isTrueSet)
+        }
+
+        if (saveHowManyRef !== undefined && saveHowManyRef !== null) {
+            setHowManyRef(saveHowManyRef)
+        }
+
+        if (savefilterSystemButtons !== undefined && savefilterSystemButtons !== null) {
+            const isTrueSet = (savefilterSystemButtons === 'true')
+            setFilterSystemButtons(isTrueSet)
+        }
+
     }, [])
 
+     
     useEffect(() => {
+
+        localStorage.setItem('side', side)
+        if (universe === null) {
+            localStorage.setItem('universe', "All")
+        }else{
+            localStorage.setItem('universe', universe)
+        }
+        localStorage.setItem('team', team)
+        localStorage.setItem('bycomics', bycomics)
+        localStorage.setItem('howManyRef', howManyRef)
+
         let arr = allCharacters
         
         let selectedOnes = []
@@ -139,32 +185,21 @@ function Character() {
             [result[i], result[j]] = [result[j], result[i]];
         }
 
-        delayTheApp(result)
-        
+        // delayTheApp(result)
+        // setInitialCharacters(result)
+        console.log(result)
+
+        setTimeout(() => {
+            setHiddeCharacters(true)
+            setInitialCharacters(result)
+        }, 300);
+
+        setTimeout(() => {
+            setHiddeCharacters(false)
+        }, 500);
         
     }, [side, universe, team, bycomics, howManyRef, allCharacters])
 
-    function delayTheApp(result){
-        if (result[0] !== undefined && firstLoad === false) {
-            setFirstLoad(true)
-            setInitialCharacters(result)
-        }else{
-            if (hiddeChacters === false && hiddeChacter === true)  {
-                setTimeout(() => {
-                    setHiddeCharacters(true)
-                    setInitialCharacters(result)
-                }, 300);
-        
-                setTimeout(() => {
-                    setHiddeCharacters(false)
-                }, 500);
-                
-            }else{
-                setInitialCharacters(result)
-            }
-        }
-        
-    }
     
     function changeBySide(event){
         setSide(event.target.value)
@@ -194,7 +229,7 @@ function Character() {
     }
 
     function changeByComics(){
-        setBycomics(true)
+        setBycomics(prev => !prev)
     }
 
     function changeStat(event){
@@ -292,14 +327,27 @@ function Character() {
             const j = Math.floor(Math.random() * (i + 1));
             [charactersArr[i], charactersArr[j]] = [charactersArr[j], charactersArr[i]];
         }
-        delayTheApp(charactersArr)
+        setTimeout(() => {
+            setHiddeCharacters(true)
+            setInitialCharacters(charactersArr)
+        }, 300);
+
+        setTimeout(() => {
+            setHiddeCharacters(false)
+        }, 500);
+
+        setTimeout(() => {
+            if (charactersArr[0] === undefined && characterRef.current.value !== "") {
+                setFirstLoad(true)
+            }
+        }, 800)
+        // delayTheApp(charactersArr)
         // setHiddeCharacters(false)
         // setHiddeCharacter(true)
         // setSide("All")
         // setUniverse("All")
         // setTeam("All")
-        // setHowManyRef("")
-        
+        // setHowManyRef("") 
     }
 
     function findByNameClick(idSended){
@@ -446,6 +494,7 @@ function Character() {
 
     function changeFilter(){
         setFilterSystemButtons(prevValue => !prevValue)
+        localStorage.setItem('filterButtons', filterSystemButtons)
     }
 
     function getBack(){

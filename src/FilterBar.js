@@ -224,16 +224,16 @@ function FilterBar({characterRef, findByName, changeFilter, changeByComics, chan
         <div>
             {
                 filterSystemButtons === false &&
-                <div className='animate__animated animate__lightSpeedInLeft find-container'>
+                <div className='animate__animated animate__fadeIn find-container'>
                     <input className="find-by-name" type="text" placeholder='Enter name'ref={characterRef}/>
                     <button id='character--button' className='character--button' onClick={findByName}>Find character</button>
-                    <button id='character--button' className='character--button' onClick={() => changeFilter()}>Change filter</button>
+                    <button id='character--button' className='character--button' onClick={() => changeFilter()}>Find by category</button>
                 </div>
             }
             
             {
                 filterSystemButtons === true &&
-                <div className='animate__animated animate__lightSpeedInRight find-container'>
+                <div className='animate__animated animate__fadeIn find-container'>
                     <button id='character--button' className='character--button' onClick={() => changeByComics()}>Get Comics</button>
                     <input className='input-howMany' type="number" name="howMany" id="" value={howManyRef} onChange={event => changeHowMany(event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
                     <select className='select-category' name="" id="" onChange={event => changeBySide(event)} value={side}>
@@ -241,11 +241,6 @@ function FilterBar({characterRef, findByName, changeFilter, changeByComics, chan
                         <option value="good">Hero 🦸‍♂️</option>
                         <option value="bad">Villain 🦹‍♂️</option>
                         <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
-
-                        {/* <option value="All"><p className='option-text'>All sides</p></option>
-                        <option value="good"><p className='option-text'>Hero 🦸‍♂️</p></option>
-                        <option value="bad"><p className='option-text'>Villain 🦹‍♂️</p></option>
-                        <option value="neutral"><p className='option-text'>Anti-hero 🦸‍♂️🦹‍♂️</p></option> */}
                     </select>
 
                     <select className='select-category' name="" id="" onChange={event => changeByUniverse(event)} value={universe}>
@@ -298,7 +293,7 @@ function FilterBar({characterRef, findByName, changeFilter, changeByComics, chan
                             <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
                         </select>
                     }
-                    <button id='character--button' className='character--button' onClick={() => changeFilter()}>Change Filter</button>
+                    <button id='character--button' className='character--button' onClick={() => changeFilter()}>Find by name</button>
                 </div> 
             }
             

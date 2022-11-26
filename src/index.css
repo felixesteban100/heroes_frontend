@@ -223,7 +223,7 @@ option[value="DC Comics"]{
   justify-content: center;
   align-content: center;
   cursor: pointer;
-  transition: all 2s ease-in-out;
+  transition: all 1s ease-in-out;
 }
 
 .character:hover{
@@ -253,6 +253,10 @@ option[value="DC Comics"]{
 .character--name{
   font-size: 2vw;
   color: var(--character--name-color);
+}
+
+.character--name:hover{
+  color: var(--button-color2);
 }
 
 .character--img--container{
@@ -509,7 +513,7 @@ option[value="DC Comics"]{
 }
 
 .character--withInfo-comics{
-  width: 90vw;
+  width: 95vw;
   background-color: var(--character--withInfo-background);
   text-align: center;
   /* margin: 0 auto;
@@ -524,7 +528,7 @@ option[value="DC Comics"]{
 }
 
 .character--withInfo--title{
-  font-size: 3vw;
+  font-size: 6vw;
   font-weight: 800;
   color: var(--character--withInfo--name-color);
 }
@@ -575,11 +579,17 @@ option[value="DC Comics"]{
 }
 
 .carousel--container{
+  /* height: auto;
+  width: 30vw;
+  border-radius: 0.5rem;
+  position:relative;
+  overflow:hidden; */
   height: auto;
   width: 30vw;
   border-radius: 0.5rem;
   position:relative;
   overflow:hidden;
+  margin: 0 auto;
 }
 
 .carousel--container::before{
