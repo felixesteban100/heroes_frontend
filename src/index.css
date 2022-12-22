@@ -1,19 +1,29 @@
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
+
 body {
   margin: 0;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  background-color: rgb(59, 52, 52);
+  background-color: rgb(6, 7, 42);
   background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80');
   /* background: url('https://media.idownloadblog.com/wp-content/uploads/2019/12/Snowman-Tree-Red-scaled.png'); */
   /* background: url('https://www.aiseesoft.com/images/resource/christmas-wallpaper-iphone/19-houses-in-red-background.jpg'); */
-  background-size: cover;
-  background-attachment: fixed;
-  /* background-repeat: no-repeat; */
+  /* background-size: cover; */
+  /* background-attachment: fixed; */  
+
 
   /* VARIABLES */
+
+  --error-background: rgb(207, 83, 83);
+  --error-text: rgb(67, 14, 14);
 
   --background-general: black;
 
@@ -28,7 +38,7 @@ body {
   --character-textbox-selected: rgb(0, 0, 0);
   --input-howMany-border-color: rgb(0, 0, 0);
 
-  --character-button-first: rgba(0, 0, 0, 0);
+  --character-button-first: rgb(0, 0, 0);
   --character-button-second: rgb(16, 17, 46);
   --character-button-border: rgb(0, 0, 0);
   --character-button-selected: rgb(0, 0, 0);
@@ -63,6 +73,103 @@ body {
   --character--withInfo--info-background: rgba(16, 14, 43, 0.342);
 
   --stat-info-color: white;
+
+  /* animation-name: rainbow;
+  animation-iteration-count: infinite;  
+  animation-duration: 10s;  */
+}
+
+@keyframes para {
+	100% {
+		background-position: 
+			-5000px 20%,
+			-800px 95%,
+			500px 50%,
+			1000px 100%,
+			400px 0;
+		}
+	}
+
+@keyframes rainbow {  
+  0% { 
+    /* box-shadow: 0 0 20px rgb(255, 0, 0);
+    border: 2px solid rgb(255, 0, 0); */
+    background-color: rgb(43, 7, 7);;
+  }
+  20% { 
+    /* box-shadow: 0 0 20px rgb(255, 238, 0);
+    border: 2px solid rgb(255, 238, 0); */
+    background-color: rgb(54, 51, 11);
+  }
+  50% { 
+    /* box-shadow: 0 0 20px rgb(0, 255, 0);
+    border: 2px solid rgb(0, 255, 0); */
+    background-color: rgb(7, 49, 7);
+  }
+  60% { 
+    /* box-shadow: 0 0 20px rgb(0, 0, 255);
+    border: 2px solid rgb(0, 0, 255); */
+    background-color: rgb(7, 7, 42);
+  }
+  90% { 
+    /* box-shadow: 0 0 20px rgb(255, 0, 179);
+    border: 2px solid rgb(255, 0, 179); */
+    background-color: rgb(38, 5, 28); 
+  }
+  100% { 
+    /* box-shadow: 0 0 20px rgb(255, 0, 0);
+    border: 2px solid rgb(255, 0, 0); */
+    background-color: rgb(38, 7, 7);
+  }
+}
+
+/* @keyframes rainbow2 {  
+  0% { 
+    padding: 0.5rem solid rgba(255, 0, 0, 0.205);
+  }
+  20% { 
+    padding: 0.5rem solid rgba(255, 238, 0, 0.144);
+  }
+  50% { 
+    padding: 0.5rem solid rgba(0, 255, 0, 0.253);
+  }
+  60% { 
+    padding: 0.5rem solid rgba(0, 0, 255, 0.233);
+  }
+  90% { 
+    padding: 0.5rem solid rgba(255, 0, 179, 0.164);
+  }
+  100% { 
+    padding: 0.5rem solid rgba(255, 0, 0, 0.116);
+  }
+} */
+
+
+.loading-container{
+  width: 80vw;
+  height: fit-content;
+  min-height: 40vh;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+.error-container{
+  background-color: var(--error-background);
+  width: 80vw;
+  height: fit-content;
+  min-height: 40vh;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+.error-text{
+  color: var(--error-text);
 }
 
 
@@ -98,7 +205,7 @@ body {
   width: 100%;
   display: flex;
   justify-content:center;
-  height: 8vh;
+  height: 8vw;
   padding: 2rem 0;
   background-color: var(--background-find-container);
   border-radius: 0.5rem;
@@ -155,6 +262,7 @@ body {
   /* border: 1px solid var(--finder--border); */
   border-bottom: 2px solid var(--input-howMany-border-color);
   /* padding: 1rem; */
+  transition: all .5s ease-in-out;
 }
 
 .input-howMany:focus, .select-category:hover{
@@ -170,6 +278,7 @@ body {
   /* border: none; */
   border: 0.5rem solid var(--character-textbox-second);
   /* padding: 1rem; */
+  transition: all .5s ease-in-out;
 }
 .select-category:hover, .select-category:focus{
   outline: none;
@@ -193,10 +302,25 @@ option[value="neutral"]{
   color: var(--button-color);
 }
 option[value="Marvel Comics"]{
-  color: rgb(165, 24, 24);
+  color: rgb(234, 9, 9);
 }
 option[value="DC Comics"]{
-  color: rgb(14, 12, 110);
+  color: rgb(20, 17, 210);
+}
+option[value="Shueisha"]{
+  color: rgb(14, 152, 49);
+}
+option[value="George Lucas"]{
+  color: rgb(155, 212, 21);
+}
+option[value="IDW Publishing"]{
+  color: rgb(21, 212, 206);
+}
+option[value="Dark Horse Comics"]{
+  color: rgb(202, 126, 126);
+}
+option[value="Image Comics"]{
+  color: rgb(230, 241, 147);
 }
 /* FILTER  */
 
@@ -205,16 +329,18 @@ option[value="DC Comics"]{
 /* CHARACTERS LIST */
 .characters--container{
   display: grid;
+  /* grid-template-rows: repeat(30vw); */
   grid-template-columns: repeat(3, 20vw);
   justify-content: center;
   margin-top: 2rem;
   gap: 1rem;
   padding-bottom: 5rem;
+  /* transition: all .5s ease-in-out; */
 }
 
 .character{
   background: linear-gradient(var(--character-box-first) 50%, var(--character-box-second));
-  height: 100%;
+  height: 55vh;
   width: 100%;
   text-align:center;
   border-radius: 1rem;
@@ -223,7 +349,7 @@ option[value="DC Comics"]{
   justify-content: center;
   align-content: center;
   cursor: pointer;
-  transition: all 1s ease-in-out;
+  transition: all .5s ease-in-out;
 }
 
 .character:hover{
@@ -241,6 +367,7 @@ option[value="DC Comics"]{
   border-radius: 0.5rem; 
   width: 100%;
   height: 100%;
+  object-fit: cover;
   /* height: auto; */
 }
 
@@ -337,7 +464,9 @@ option[value="DC Comics"]{
   height: auto;
   display: flex;
   justify-content: center;
+  /* position: relative; */
 }
+
 .character--withInfo--img{
   /* width: 25%;
   height: 55%; */
@@ -346,79 +475,10 @@ option[value="DC Comics"]{
   border-radius: 0.5rem;
   margin-top: 1rem;
   cursor: pointer;
-
-  
+  /* position: absolute; */
 }
 
-/* .character--withInfo--img:hover{
-  color: #111; 
-  background: rgb(8, 9, 41); 
-  animation-name: rainbow;
-  animation-iteration-count: infinite;  
-  animation-duration: 5s; 
-} */
-
-/* @keyframes rainbow {  
-  0% { 
-    box-shadow: 0 0 20px rgb(255, 0, 0);
-    border: 2px solid rgb(255, 0, 0);
-  }
-  20% { 
-    box-shadow: 0 0 20px rgb(255, 238, 0);
-    border: 2px solid rgb(255, 238, 0);
-  }
-  50% { 
-    box-shadow: 0 0 20px rgb(0, 255, 0);
-    border: 2px solid rgb(0, 255, 0);
-  }
-  60% { 
-    box-shadow: 0 0 20px rgb(0, 0, 255);
-    border: 2px solid rgb(0, 0, 255);
-  }
-  90% { 
-    box-shadow: 0 0 20px rgb(255, 0, 179);
-    border: 2px solid rgb(255, 0, 179);
-  }
-  100% { 
-    box-shadow: 0 0 20px rgb(255, 0, 0);
-    border: 2px solid rgb(255, 0, 0);
-  }
-} */
-
-/* @keyframes rainbow2 {  
-  0% { 
-    padding: 0.5rem solid rgba(255, 0, 0, 0.205);
-  }
-  20% { 
-    padding: 0.5rem solid rgba(255, 238, 0, 0.144);
-  }
-  50% { 
-    padding: 0.5rem solid rgba(0, 255, 0, 0.253);
-  }
-  60% { 
-    padding: 0.5rem solid rgba(0, 0, 255, 0.233);
-  }
-  90% { 
-    padding: 0.5rem solid rgba(255, 0, 179, 0.164);
-  }
-  100% { 
-    padding: 0.5rem solid rgba(255, 0, 0, 0.116);
-  }
-} */
-
-.character--withInfo--img-zoomed{
-  /* position:absolute; */
-  /* top:0;
-  left:0; */
-  height:100%;
-  width: 100%;
-  border-radius: 0.5rem;
-  animation-name: grow;
-  animation-iteration-count: 1;  
-  animation-duration: 3s; 
-}
-
-.character--withInfo--img-container{
+.character--withInfo--img-zoomed-container{
   /* display:inline-block; */
   width: 30vw;
   height: auto;
@@ -427,9 +487,20 @@ option[value="DC Comics"]{
   cursor: pointer;
   display: flex;
   justify-content:center;
-
 }
-.character--withInfo--img-container::before{
+
+.character--withInfo--img-zoomed{
+  height:100%;
+  width: 100%;
+  border-radius: 0.5rem;
+  animation-name: grow;
+  animation-iteration-count: 1;  
+  animation-duration: 3s; 
+  /* position: absolute; */
+}
+
+
+.character--withInfo--img-zoomed-container::before{
   content:"";
   z-index:10;
   position:absolute;
@@ -569,21 +640,13 @@ option[value="DC Comics"]{
 
 
 /* CAROUSEL */
-.carousel--img{
-  /* height: auto; */
-  /* width: 30vw; */
-  /* justify-self: center; */
+/* .carousel--img{
   height:100%;
   width:100%;
   border-radius: 0.5rem;
-}
+} */
 
 .carousel--container{
-  /* height: auto;
-  width: 30vw;
-  border-radius: 0.5rem;
-  position:relative;
-  overflow:hidden; */
   height: auto;
   width: 30vw;
   border-radius: 0.5rem;
@@ -611,22 +674,31 @@ option[value="DC Comics"]{
   /* animation-delay: 150s; */
 }
 
+/* .thumbs-wrapper{
+  margin-right: 5rem;
+  margin-left: 5rem;
+} */
 
-.slider-right > div {
+/* .thumb:last-child{
+  margin-right: 5rem;
+  padding-inline-start: 40px;
+} */
+
+/* .slider-right > div {
   border: 5px solid #ffffff;
   display: none;
   border: none;
-}
+} */
 
-.slider-left > div {
+/* .slider-left > div {
   border: 5px solid #ffffff;
   display: none;
   border: none;
-}
+} */
 
-.react-3d-carousel{
+/* .react-3d-carousel{
   margin-bottom: 8rem;
-}
+} */
 /* CAROUSEL */
 
 
@@ -654,7 +726,7 @@ option[value="DC Comics"]{
   align-items: center;
   text-align: center;
   padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  /* padding-bottom: 0.5rem; */
   border-radius: 0.5rem 0.5rem 0 0;
   background-color: var(--character--withInfo--statSelectors-background);
 }
@@ -663,6 +735,7 @@ option[value="DC Comics"]{
   color: var(--statSelectors-color);
   font-size: 3vw;
   cursor: pointer;
+  padding-bottom: 0.5rem;
 } 
 
 .statSelectors:hover{
@@ -675,6 +748,7 @@ option[value="DC Comics"]{
   font-size: 3vw;
   cursor: pointer;
   border-bottom: 0.3rem solid var(--statSelectors-selected-border-color);
+  padding-bottom: 0.5rem;
 }
 
 /* .character--withInfo--infoByStat{
@@ -714,6 +788,29 @@ option[value="DC Comics"]{
   height: auto;
   border-radius: 0.5rem;
 }
+
+/* @keyframes wipe-enter{
+  0% {
+    transform: scale(0,.025);
+  }
+  50%{
+    transform: scale(1,.025);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .character--withInfo--info{
+    animation-name: wipe-enter;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+  }
+}
+
+.character--withInfo--info-transition{
+  opacity: 1;
+  transform: none;
+} */
+
 /* ACTUAL INFO */
 /* CHARACTER WITH HIS/HER INFO */
 
@@ -724,6 +821,19 @@ option[value="DC Comics"]{
   /* CHARACTERS LIST RESPONSIVE */
   .characters--container{
     grid-template-columns: repeat(2, 40vw);
+  }
+  .character{
+    background: linear-gradient(var(--character-box-first) 50%, var(--character-box-second));
+    height: 70vw;
+    width: 100%;
+    text-align:center;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    cursor: pointer;
+    transition: all .5s ease-in-out;
   }
 
   .character--name{
@@ -789,7 +899,7 @@ option[value="DC Comics"]{
     display: flex;
     justify-content: center;
   }
-  .character--withInfo--img-container{
+  .character--withInfo--img-zoomed-container{
     width: 90vw;
     height: auto;
   }

@@ -3,11 +3,17 @@ import Character from './Character';
 import Header from './Header';
 import './index.css';
 
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
+
 function App() {
   return (
     <div className="App">
       <Header />
-      <Character />
+      <QueryClientProvider client={queryClient}>
+        <Character />
+      </QueryClientProvider>
     </div>
   );
 }
