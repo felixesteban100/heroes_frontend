@@ -13,7 +13,7 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
         })
     }
 
-    console.log("current", current)
+    // console.log("current", current)
   
     return (
         <div /* key={index} */ onLoad={getColors}>
@@ -28,12 +28,12 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                             className={imageSize === false ? "character--withInfo--img-container-img" : "character--withInfo--img-zoomed-container"} 
                             onClick={() => setImageSize(prev => !prev)}>
                             <img 
-                                className={imageSize === false ? 'animate__animated animate__flip character--withInfo--img' : 'animate__animated animate__fadeIn character--withInfo--img-zoomed'} 
+                                className={imageSize === false ? 'animate__animated animate__flip animate__delay-1s character--withInfo--img' : 'animate__animated animate__fadeIn character--withInfo--img-zoomed'} 
                                 style={imageSize === false ? {boxShadow: `rgb(${colorsArr.r}, ${colorsArr.g}, ${colorsArr.b}) 0px 10px 70px 4px`} : {}} 
                                 src={current.images.md} alt="logo" 
                             />                                                
                         </div>
-                        <div className='animate__animated animate__fadeIn animate__delay-1s character--withInfo--n-f-a'>
+                        <div className='animate__animated animate__fadeIn animate__delay-3s character--withInfo--n-f-a'>
                             <p className='character--withInfo--name'>Name: {current.name}</p>
                             <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
                             <div className='character--withInfo--alignment'>

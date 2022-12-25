@@ -266,7 +266,8 @@ function FilterBar({characterRef, team, teamRef, universe, universeRef, side, si
                             <option value="All">All Teams</option>
                             {
                                 marvelComicsTeams.map((current, index) => (
-                                    <option key={index} value={current.value}><p className='option-text'>{current.name}</p></option>
+                                    // <option key={index} value={current.value}><p className='option-text'>{current.name}</p></option>
+                                    <option key={index} value={current.value} className='option-text'>{current.name}</option>
                                 ))
                             }
                         </select>

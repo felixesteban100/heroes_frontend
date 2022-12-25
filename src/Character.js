@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { /* useEffect, */ useRef, useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import FilterBar from './FilterBar';
 import CharacterInfo from './CharacterInfo'
@@ -6,7 +6,7 @@ import Loading from './Loading';
 import Error from './Error';
 import axios from 'axios'
 import 'animate.css';
-import { AnimationOnScroll } from 'react-animation-on-scroll';
+// import { AnimationOnScroll } from 'react-animation-on-scroll';
 
 const queryClient = new QueryClient()
 
@@ -24,8 +24,8 @@ function Character() {
     const [howMany, setHowMany] = useState(6)
     const howManyRef = useRef()
 
-    const [bycomics, setByComics] = useState(false)
-    const byComicsRef = useRef()
+    // const [bycomics, setByComics] = useState(false)
+    const byComicsRef = useRef(false)
 
     const [side, setSide] = useState("All")
     const sideRef = useRef()
@@ -58,21 +58,23 @@ function Character() {
         })
     })
 
-    // find a way get the localstorage data at the beginning in react without useEffect hook
-    useEffect(() => {
+    //for the beggining
+    function gettingReady(){
         const saveSide = localStorage.getItem('side')
         const saveUniverse = localStorage.getItem('universe')
         const saveTeam = localStorage.getItem('team')
         const saveByComics = localStorage.getItem('bycomics')
-        const saveHowMany = localStorage.getItem('howMany')
+        const saveHowMany = localStorage.getItem('howManyRef')
         const savefilterSystemButtons = localStorage.getItem('filterButtons')
 
-        console.log("saveSide", saveSide)
-        console.log("saveUniverse", saveUniverse)
-        console.log("saveTeam", saveTeam)
-        console.log("saveByComics", saveByComics)
-        console.log("saveHowMany", saveHowMany)
-        console.log("savefilterSystemButtons",savefilterSystemButtons)
+        // console.log("----------------------")
+        // console.log("saveSide", saveSide)
+        // console.log("saveUniverse", saveUniverse)
+        // console.log("saveTeam", saveTeam)
+        // console.log("saveByComics", saveByComics)
+        // console.log("saveHowMany", saveHowMany)
+        // console.log("savefilterSystemButtons",savefilterSystemButtons)
+        // console.log("----------------------")
 
 
         if (saveSide !== undefined && saveSide !== null) {
@@ -86,7 +88,8 @@ function Character() {
         }
         if (saveByComics !== undefined && saveByComics !== null) {
             const isTrueSet = (saveByComics === 'true')
-            setByComics(isTrueSet)
+            // setByComics(isTrueSet)
+            byComicsRef.current = isTrueSet
         }
         if (saveHowMany !== undefined && saveHowMany !== null) {
             setHowMany(saveHowMany)
@@ -95,78 +98,60 @@ function Character() {
             const isTrueSet = (savefilterSystemButtons === 'true')
             setFilterSystemButtons(isTrueSet)
         }
-    }, [data])
 
-    function getCharacters(type, event){
-        switch(type){
-            case "side":
-                setByComics(false)
-                setSide(event.target.value)
-                if (universeRef.current === "All" && teamRef.current === "All") {
-                    howManyRef.current = 6
-                }
-            break;
+        // console.log("----------------------")
+        // console.log("side", side)
+        // console.log("universe", universe)
+        // console.log("team", team)
+        // console.log("bycomics", bycomics)
+        // console.log("howMany", howMany)
+        // console.log("filterSystemButtons",filterSystemButtons)
 
-            case "universe":
-                setUniverse(event.target.value)
-                // teamRef.current.value = "All"
-                setByComics(false)
-            break;
-
-            case "team":
-                setTeam(event.target.value)
-                if (teamRef.current.value !== "All") {
-                    setHowMany("")
-                }
-                setByComics(false)
-            break;
-
-            case "how":
-                setByComics(false)
-                setHowMany(event.target.value)
-            break;
-
-            default:
-
-            break;
-        }
-
-
-        // FOR TESTING PURPOSES
-        // console.log("---------------------------")
-        // console.log("howmanyref", howManyRef.current.value)
-        // console.log("side", sideRef.current.value)
-        // console.log("universe", universeRef.current.value)
-        // console.log("teamRef.current", teamRef.current)
-        // if (teamRef.current !== undefined && teamRef.current !== null) {
-        //     console.log("team", teamRef.current.value)
+        // if(data !== undefined && (saveTeam !== null && saveUniverse !== null && saveSide !== null && saveHowMany !== null)){
+        //     filterData("begin", (saveByComics === "true"), saveTeam, saveUniverse, saveSide, saveHowMany)
         // }
-        // console.log("---------------------------")
-        
+
+        // if(data !== undefined && (saveTeam === null && saveUniverse === null && saveSide === null && saveHowMany === null)){
+        //     filterData("begin", false, "All", "All", "All", 6)
+        // }
+    }
+    if(initialCharacters.length === 0 && (data !== undefined && (team !== null && universe !== null && side !== null && howMany !== null))){
+        gettingReady()
+        filterData("begin", byComicsRef.current, team, universe, side, howMany)
+    }
+    if(initialCharacters.length === 0 && (data !== undefined && (team !== null && universe !== null && side !== null && howMany !== null))){
+        gettingReady()
+        filterData("begin", false, "All", "All", "All", 6)
+    }
+    //for the beggining
+
+
+    function filterData(where, bycomicsSended, teamSended, universeSended, sideSended, howManySended){
+        // console.log(`from ${where}`, bycomicsSended, teamSended, universeSended, sideSended, howManySended)
 
         let selectedOnes = []
         let result = []
-        if (bycomics === true) {
+        if (bycomicsSended === true) {
             data.forEach((current) => {
                 if (current.comics !== undefined) {
                     result.push(current)
                 }
             })
         }else{
-            if ((teamRef.current !== undefined && teamRef.current !== null) && teamRef.current.value !== "All") { 
+            if (/* (teamSended !== undefined && teamSended !== null) && */ teamSended !== "All") { 
                 data.forEach((current, index) => {
-                    if (current.connections.groupAffiliation.includes(teamRef.current.value)) {
-                        if (sideRef.current.value === "All" && universeRef.current.value === "All") {
+                    if (current.connections.groupAffiliation.includes(teamSended)) {
+                        if (sideSended === "All" && universeSended === "All") {
                             selectedOnes.push(index)
                             result.push(current)
-                        }else if (sideRef.current.value === 'All' && universeRef.current.value !== "All" && (current.biography.publisher === universeRef.current.value)) {
+                        }else if (sideSended === 'All' && universeSended !== "All" && (current.biography.publisher === universeSended)) {
                             selectedOnes.push(index)
                             result.push(current)
-                        }else if (sideRef.current.value !== 'All' && universeRef.current.value === "All" && (current.biography.alignment === sideRef.current.value)) {
+                        }else if (sideSended !== 'All' && universeSended === "All" && (current.biography.alignment === sideSended)) {
                             selectedOnes.push(index)
                             result.push(current)
                         }else {
-                            if (current.biography.alignment === sideRef.current.value && current.biography.publisher === universeRef.current.value) {
+                            if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) {
                                 selectedOnes.push(index)
                                 result.push(current)
                             }
@@ -175,21 +160,21 @@ function Character() {
                 }) 
             }else{
                 data.forEach((current, index) => {
-                    if (sideRef.current.value === "All" && universeRef.current.value === "All") {
+                    if (sideSended === "All" && universeSended === "All") {
                         selectedOnes.push(index)
                         result.push(current)
-                    }else if (sideRef.current.value === 'All' && universeRef.current.value !== "All") {
-                        if (current.biography.publisher === universeRef.current.value) {
+                    }else if (sideSended === 'All' && universeSended !== "All") {
+                        if (current.biography.publisher === universeSended) {
                             selectedOnes.push(index)
                             result.push(current)
                         }
-                    }else if (sideRef.current.value !== 'All' && universeRef.current.value === "All") {
-                        if (current.biography.alignment === sideRef.current.value) {
+                    }else if (sideSended !== 'All' && universeSended === "All") {
+                        if (current.biography.alignment === sideSended) {
                             selectedOnes.push(index)
                             result.push(current)
                         }
                     }else /* if (side !== "All" && universe !== "All" && teams !== "All") */ {
-                        if (current.biography.alignment === sideRef.current.value && current.biography.publisher === universeRef.current.value) {
+                        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) {
                             selectedOnes.push(index)
                             result.push(current)
                         }
@@ -198,9 +183,9 @@ function Character() {
             }
         }
 
-        if ((howManyRef.current.value > 0 || howManyRef.current.value !== "") && bycomics !== true) {
+        if ((howManySended > 0 || howManySended !== "") && bycomicsSended !== true) {
             let finalSelectedIntex = []
-            for(let i = 0; i < howManyRef.current.value; i++){
+            for(let i = 0; i < howManySended; i++){
                 finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
             } 
             result = []
@@ -211,13 +196,12 @@ function Character() {
             })
         }
 
-        // if ((teamRef.current === undefined || teamRef.current === "All") && sideRef.current.value === "All" && universeRef.current.value === "All" && bycomics !== true && (howManyRef.current.value < 0 || howManyRef.current.value === "")) {
-        if (((teamRef.current === undefined || teamRef.current === null) || teamRef.current.value === "All") && sideRef.current.value === "All" && universeRef.current.value === "All" && bycomics !== true && (howManyRef.current.value < 0 || howManyRef.current.value === "")) {
+        // if ((teamSended === undefined || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true && (howManySended < 0 || howManySended === "")) {
+        if ((howManySended < 0 || howManySended === "") && ((teamSended === undefined || teamSended === null) || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true) {
             let finalSelectedIntex = []
             for(let i = 0; i < 6; i++){
                 finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
             } 
-
             result = []
             data.forEach((current, index) => {
                 if (finalSelectedIntex.includes(index)) {
@@ -232,25 +216,86 @@ function Character() {
         }
 
         setInitialCharacters(result)
+    }
 
-        localStorage.setItem('side', side)
-        if (universe === null) {
+    function getCharacters(type, event){
+        switch(type){
+            case "side":
+                // setByComics(false)
+                byComicsRef.current = false
+                setSide(event.target.value)
+                if (universeRef.current === "All" && teamRef.current === "All") {
+                    howManyRef.current = 6
+                }
+            break;
+
+            case "universe":
+                setUniverse(event.target.value)
+                // teamRef.current.value = "All"
+                // setByComics(false)
+                byComicsRef.current = false
+            break;
+
+            case "team":
+                setTeam(event.target.value)
+                if (teamRef.current.value !== "All") {
+                    setHowMany("")
+                }
+                // setByComics(false)
+                byComicsRef.current = false
+            break;
+
+            case "how":
+                // setByComics(false)
+                byComicsRef.current = false
+                setHowMany(event.target.value)
+            break;
+
+            default:
+
+            break;
+        }
+
+        /* FOR TESTING PURPOSES */
+        // console.log("---------------------------")
+        // console.log("byComicsRef", byComicsRef.current)
+        // console.log("howmanyref", howManyRef.current.value)
+        // console.log("side", sideRef.current.value)
+        // console.log("universe", universeRef.current.value)
+        // console.log("teamRef.current", teamRef.current)
+        // if (teamRef.current !== undefined && teamRef.current !== null) {
+        //     console.log("team", teamRef.current.value)
+        // }
+        // console.log("---------------------------")
+        
+
+        if (teamRef.current !== undefined && teamRef.current !== null) {
+            filterData("getCharacters", byComicsRef.current, teamRef.current.value, universeRef.current.value, sideRef.current.value, howManyRef.current.value)
+        }else{
+            filterData("getCharacters", byComicsRef.current, "All", universeRef.current.value, sideRef.current.value, howManyRef.current.value)
+        }
+
+        localStorage.setItem('side', sideRef.current.value)
+        if (universeRef === null) {
             localStorage.setItem('universe', "All")
         }else{
-            localStorage.setItem('universe', universe)
+            localStorage.setItem('universe', universeRef.current.value)
         }
         
         if (teamRef.current !== undefined && teamRef.current !== null) {
             localStorage.setItem('team', teamRef.current.value)
+        }else{
+            localStorage.setItem('team', "All")
         }
 
-        localStorage.setItem('bycomics', bycomics)
+        localStorage.setItem('bycomics', byComicsRef.current)
         localStorage.setItem('howManyRef', howManyRef.current.value)
         localStorage.setItem('filterButtons', filterSystemButtons)
     }
 
-    function changeByComics(){
-        setByComics(prev => !prev)
+    function changeByComics(value){
+        // setByComics(prev => !prev)
+        byComicsRef.current = !byComicsRef.current
         getCharacters("comics", "Nothing here")
     }
 
