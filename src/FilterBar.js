@@ -1,6 +1,6 @@
 import React from 'react'
 
-function FilterBar({characterRef, team, teamRef, universe, universeRef, side, sideRef, filterSystemButtons, howMany, howManyRef, findByName, getCharacters, setFilterSystemButtons, changeByComics, bycomicsRef}) {
+function FilterBar({characterRef, team, universe, side, filterSystemButtons, howMany, findByName, getCharacters}) {
   
     const dcComicsTeams = [
         {
@@ -223,33 +223,33 @@ function FilterBar({characterRef, team, teamRef, universe, universeRef, side, si
             value: "Young avengers"
         },
     ]
-  
+
     return (
         <div>
             {
                 filterSystemButtons === false &&
                 <div className='animate__animated animate__fadeIn find-container'>
-                    <input className="find-by-name" type="text" placeholder='Enter name or names'ref={characterRef}/>
+                    <input className="find-by-name" type="text" placeholder='Enter name or names' ref={characterRef}/>
                     <button id='character--button' className='character--button' onClick={findByName}>Find character</button>
-                    <button id='character--button' className='character--button' onClick={() => setFilterSystemButtons(true)}>Find by category</button>
+                    <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", true)}>Find by category</button>
                 </div>
             }
             
             {
                 filterSystemButtons === true &&
                 <div className='animate__animated animate__fadeIn find-container'>
-                    <button id='character--button' className='character--button' onClick={() => changeByComics()} ref={bycomicsRef}>Get Comics</button>
+                    <button id='character--button' className='character--button' onClick={() => getCharacters("comics", "Nothing here")} >Get Comics</button>
                     
-                    <input className='input-howMany' type="number" ref={howManyRef} value={howMany} onChange={(event) => getCharacters("how", event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
+                    <input className='input-howMany' type="number" value={howMany} onChange={(event) => getCharacters("how", event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
 
-                    <select className='select-category' onChange={event => getCharacters("side", event)} ref={sideRef} value={side}>
+                    <select className='select-category' onChange={event => getCharacters("side", event)} value={side}>
                         <option value="All">All sides</option>
                         <option value="good">Hero 🦸‍♂️</option>
                         <option value="bad">Villain 🦹‍♂️</option>
                         <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
                     </select>
 
-                    <select className='select-category' onChange={(event) => getCharacters("universe", event)} ref={universeRef} value={universe}>
+                    <select className='select-category' onChange={(event) => getCharacters("universe", event)} value={universe}>
                         <option className='all' value="All">All universes</option>
                         <option className='marvel' value="Marvel Comics">Marvel</option>
                         <option className='dc' value="DC Comics">DC</option>
@@ -261,8 +261,15 @@ function FilterBar({characterRef, team, teamRef, universe, universeRef, side, si
                     </select>
 
                     {
+                        (universe === "All" || universe === "George Lucas" || universe === "Image Comics" || universe === "Shueisha") &&
+                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
+                            <option value="All">All Teams</option>
+                        </select>
+                    }
+
+                    {
                         (universe === "Marvel Comics" && universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} ref={teamRef} value={team}>
+                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
                             <option value="All">All Teams</option>
                             {
                                 marvelComicsTeams.map((current, index) => (
@@ -275,7 +282,7 @@ function FilterBar({characterRef, team, teamRef, universe, universeRef, side, si
 
                     {
                         (universe === "DC Comics" && universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)}  ref={teamRef} value={team}>
+                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
                             <option value="All">All Teams</option>
                             {
                                 dcComicsTeams.map((current, index) => (
@@ -286,8 +293,8 @@ function FilterBar({characterRef, team, teamRef, universe, universeRef, side, si
                     }
 
                     {
-                        (universe === "Dark Horse Comics"&& universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} ref={teamRef} value={team}>
+                        (universe === "Dark Horse Comics" && universe !== "All") &&
+                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
                             <option value="All">All Teams</option>
                             <option value="Incredible Family">Incredible Family</option>
                         </select>
@@ -295,12 +302,12 @@ function FilterBar({characterRef, team, teamRef, universe, universeRef, side, si
 
                     {
                         (universe === "IDW Publishing"&& universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} ref={teamRef} value={team}>
+                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
                             <option value="All">All Teams</option>
                             <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
                         </select>
                     }
-                    <button id='character--button' className='character--button' onClick={() => setFilterSystemButtons(false)}>Find by name</button>
+                    <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", false)}>Find by name</button>
                 </div> 
             }
             

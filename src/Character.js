@@ -1,4 +1,4 @@
-import React, { /* useEffect, */ useRef, useState } from 'react'
+import React, { /* useCallback, useEffect, */ useRef, useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import FilterBar from './FilterBar';
 import CharacterInfo from './CharacterInfo'
@@ -22,17 +22,13 @@ function Character() {
     const characterRef = useRef('')
     
     const [howMany, setHowMany] = useState(6)
-    const howManyRef = useRef()
+    // const howManyRef = useRef(null)
 
     // const [bycomics, setByComics] = useState(false)
-    const byComicsRef = useRef(false)
 
     const [side, setSide] = useState("All")
-    const sideRef = useRef()
     const [universe, setUniverse] = useState("All")
-    const universeRef = useRef()
     const [team, setTeam] = useState("All")
-    const teamRef = useRef()
 
     const [character, setCharacter] = React.useState([])
     const [imageSize, setImageSize] = React.useState(false)
@@ -58,76 +54,46 @@ function Character() {
         })
     })
 
-    //for the beggining
-    function gettingReady(){
+    function gettingTheLocalStorageData(){
         const saveSide = localStorage.getItem('side')
         const saveUniverse = localStorage.getItem('universe')
         const saveTeam = localStorage.getItem('team')
         const saveByComics = localStorage.getItem('bycomics')
-        const saveHowMany = localStorage.getItem('howManyRef')
         const savefilterSystemButtons = localStorage.getItem('filterButtons')
+        let saveHowMany = localStorage.getItem('howManyRef')
 
-        // console.log("----------------------")
-        // console.log("saveSide", saveSide)
-        // console.log("saveUniverse", saveUniverse)
-        // console.log("saveTeam", saveTeam)
-        // console.log("saveByComics", saveByComics)
-        // console.log("saveHowMany", saveHowMany)
-        // console.log("savefilterSystemButtons",savefilterSystemButtons)
-        // console.log("----------------------")
+        saveHowMany = saveHowMany === null ? "" : saveHowMany
 
-
-        if (saveSide !== undefined && saveSide !== null) {
-            setSide(saveSide)
-        }
-        if (saveUniverse !== undefined || saveUniverse !== null) {
-            setUniverse(saveUniverse)
-        }  
-        if (saveTeam !== undefined && saveTeam !== null) {
-            setTeam(saveTeam)
-        }
-        if (saveByComics !== undefined && saveByComics !== null) {
-            const isTrueSet = (saveByComics === 'true')
-            // setByComics(isTrueSet)
-            byComicsRef.current = isTrueSet
-        }
-        if (saveHowMany !== undefined && saveHowMany !== null) {
-            setHowMany(saveHowMany)
-        }
-        if (savefilterSystemButtons !== undefined && savefilterSystemButtons !== null) {
-            const isTrueSet = (savefilterSystemButtons === 'true')
-            setFilterSystemButtons(isTrueSet)
-        }
-
-        // console.log("----------------------")
-        // console.log("side", side)
-        // console.log("universe", universe)
-        // console.log("team", team)
-        // console.log("bycomics", bycomics)
-        // console.log("howMany", howMany)
-        // console.log("filterSystemButtons",filterSystemButtons)
-
-        // if(data !== undefined && (saveTeam !== null && saveUniverse !== null && saveSide !== null && saveHowMany !== null)){
-        //     filterData("begin", (saveByComics === "true"), saveTeam, saveUniverse, saveSide, saveHowMany)
-        // }
-
-        // if(data !== undefined && (saveTeam === null && saveUniverse === null && saveSide === null && saveHowMany === null)){
-        //     filterData("begin", false, "All", "All", "All", 6)
-        // }
+        return {saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, savefilterSystemButtons}
     }
-    if(initialCharacters.length === 0 && (data !== undefined && (team !== null && universe !== null && side !== null && howMany !== null))){
-        gettingReady()
-        filterData("begin", byComicsRef.current, team, universe, side, howMany)
-    }
-    if(initialCharacters.length === 0 && (data !== undefined && (team !== null && universe !== null && side !== null && howMany !== null))){
-        gettingReady()
-        filterData("begin", false, "All", "All", "All", 6)
+
+    //for the beggining
+    if ((initialCharacters[0] === undefined) && data !== undefined) {
+        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, savefilterSystemButtons } = gettingTheLocalStorageData()
+
+        saveSide = saveSide !== null ? saveSide : "All" 
+        saveUniverse = saveUniverse !== null ? saveUniverse : "All" 
+        saveTeam = saveTeam !== null ? saveTeam : "All" 
+        saveHowMany = saveHowMany !== null ? saveHowMany : "" 
+
+        setSide(saveSide)
+        setUniverse(saveUniverse)
+        setTeam(saveTeam)
+        setHowMany(saveHowMany)
+        const isTrueSet = (savefilterSystemButtons === 'true')
+        setFilterSystemButtons(isTrueSet)
+
+        filterData("begin", saveByComics, saveTeam, saveUniverse, saveSide, saveHowMany)
+
+        const saveCharacters = JSON.parse(localStorage.getItem('initialcharacters'))
+        if (saveCharacters !== undefined && saveCharacters !== null) {
+            setInitialCharacters(saveCharacters)
+        }
     }
     //for the beggining
 
-
     function filterData(where, bycomicsSended, teamSended, universeSended, sideSended, howManySended){
-        // console.log(`from ${where}`, bycomicsSended, teamSended, universeSended, sideSended, howManySended)
+        // console.log(`////from ${where}//// \n bycomicsSended: ${bycomicsSended}, teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended}`)
 
         let selectedOnes = []
         let result = []
@@ -216,87 +182,121 @@ function Character() {
         }
 
         setInitialCharacters(result)
+
+        if (result[0] !== undefined && where !== "begin") {
+            localStorage.setItem('initialcharacters', JSON.stringify(result))
+        }
     }
 
-    function getCharacters(type, event){
-        switch(type){
-            case "side":
-                // setByComics(false)
-                byComicsRef.current = false
-                setSide(event.target.value)
-                if (universeRef.current === "All" && teamRef.current === "All") {
-                    howManyRef.current = 6
-                }
-            break;
-
-            case "universe":
-                setUniverse(event.target.value)
-                // teamRef.current.value = "All"
-                // setByComics(false)
-                byComicsRef.current = false
-            break;
-
-            case "team":
-                setTeam(event.target.value)
-                if (teamRef.current.value !== "All") {
-                    setHowMany("")
-                }
-                // setByComics(false)
-                byComicsRef.current = false
-            break;
-
-            case "how":
-                // setByComics(false)
-                byComicsRef.current = false
-                setHowMany(event.target.value)
-            break;
-
-            default:
-
-            break;
-        }
-
+    function saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected){
         /* FOR TESTING PURPOSES */
         // console.log("---------------------------")
-        // console.log("byComicsRef", byComicsRef.current)
-        // console.log("howmanyref", howManyRef.current.value)
-        // console.log("side", sideRef.current.value)
-        // console.log("universe", universeRef.current.value)
-        // console.log("teamRef.current", teamRef.current)
-        // if (teamRef.current !== undefined && teamRef.current !== null) {
-        //     console.log("team", teamRef.current.value)
-        // }
+        // console.log(bycomicsSelected)
+        // console.log(howManySelected)
+        // console.log(sideSelected)
+        // console.log(universeSelected)
+        // console.log(teamSelected)
         // console.log("---------------------------")
-        
 
-        if (teamRef.current !== undefined && teamRef.current !== null) {
-            filterData("getCharacters", byComicsRef.current, teamRef.current.value, universeRef.current.value, sideRef.current.value, howManyRef.current.value)
+        filterData("getCharacters", bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+        
+        if (bycomicsSelected !== null && bycomicsSelected !== undefined) {
+            localStorage.setItem('bycomics', bycomicsSelected)
         }else{
-            filterData("getCharacters", byComicsRef.current, "All", universeRef.current.value, sideRef.current.value, howManyRef.current.value)
+            localStorage.setItem('bycomics', false)
         }
 
-        localStorage.setItem('side', sideRef.current.value)
-        if (universeRef === null) {
+        if (sideSelected !== null && sideSelected !== undefined) {
+            localStorage.setItem('side', sideSelected)
+        }else{
+            localStorage.setItem('side', "All")
+        }
+
+        if (universeSelected !== null && universeSelected !== undefined) {
+            localStorage.setItem('universe', universeSelected)
+        }else{
             localStorage.setItem('universe', "All")
-        }else{
-            localStorage.setItem('universe', universeRef.current.value)
         }
-        
-        if (teamRef.current !== undefined && teamRef.current !== null) {
-            localStorage.setItem('team', teamRef.current.value)
+
+        if (teamSelected !== null && teamSelected !== undefined) {
+            localStorage.setItem('team', teamSelected)
         }else{
             localStorage.setItem('team', "All")
         }
 
-        localStorage.setItem('bycomics', byComicsRef.current)
-        localStorage.setItem('howManyRef', howManyRef.current.value)
+        if (howManySelected !== null && howManySelected !== undefined) {
+            localStorage.setItem('howMany', howManySelected)
+        }else{
+            localStorage.setItem('howMany', 6)
+            if (howManySelected === null) {
+                localStorage.setItem('howMany', "")
+            }
+        }
         localStorage.setItem('filterButtons', filterSystemButtons)
     }
 
-    function changeByComics(value){
-        // setByComics(prev => !prev)
-        byComicsRef.current = !byComicsRef.current
-        getCharacters("comics", "Nothing here")
+    function getCharacters(type, event){
+        let {saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveByComics: bycomicsSelected, saveHowMany: howManySelected} = gettingTheLocalStorageData()
+
+        switch(type){
+            case "side":
+                bycomicsSelected = false
+                setSide(event.target.value)
+                sideSelected = event.target.value
+
+                if (universeSelected === "All" && universeSelected === "All") {
+                    howManySelected = 6
+                }
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+            break;
+
+            case "universe":
+                bycomicsSelected = false
+                setUniverse(event.target.value)
+                universeSelected = event.target.value
+
+                setTeam("All")
+                if (event.target.value !== "All") {
+                    teamSelected = "All"
+                }
+                if (universeSelected === "All" && teamSelected === "All") {
+                    howManySelected = 6
+                }
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+            break;
+
+            case "team":
+                bycomicsSelected = false
+                setTeam(event.target.value)
+                teamSelected = event.target.value
+                
+                if (event.target.value !== "All") {
+                    setHowMany("")
+                }
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+            break;
+
+            case "how":
+                bycomicsSelected = false
+                setHowMany(event.target.value)
+                howManySelected = event.target.value
+
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+            break;
+
+            case "comics":
+                bycomicsSelected = !(bycomicsSelected === "true")
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+            break;
+
+            case 'filterButtons': 
+                setFilterSystemButtons(event);
+                localStorage.setItem('filterButtons', event)
+            break;
+
+            default:
+            break;
+        }
     }
 
     function changeStat(event){
@@ -427,6 +427,10 @@ function Character() {
             }
             // setIsloading(false)
         }, 800)
+
+        if (charactersArr[0] !== undefined) {
+            localStorage.setItem('initialcharacters', JSON.stringify(charactersArr))
+        }
 
         // delayTheApp(charactersArr)
         // setHiddeCharacters(false)
@@ -613,19 +617,12 @@ function Character() {
                     <FilterBar 
                         characterRef={characterRef}
                         team={team}
-                        teamRef={teamRef}
                         universe={universe}
-                        universeRef={universeRef}
                         side={side}
-                        sideRef={sideRef}
                         howMany={howMany}
-                        howManyRef={howManyRef}
                         filterSystemButtons={filterSystemButtons}
                         getCharacters={getCharacters}
-                        findByName={findByName}
-                        setFilterSystemButtons={setFilterSystemButtons}
-                        changeByComics={changeByComics}
-                        byComicsRef={byComicsRef}                        
+                        findByName={findByName}                 
                     />
                 }
                 
@@ -641,8 +638,8 @@ function Character() {
                     
                 {
                     isLoading === false &&
-                    (hiddeChacters === false && initialCharacters[0] !== undefined) &&
-                    // <AnimationOnScroll initiallyVisible={false} animateIn={"animate__fadeIn"} animateOut={"animate__fadeOut"} duration={2}>
+                    (hiddeChacters === false && initialCharacters[0] !== undefined && initialCharacters[0] !== null) &&
+                    // <AnimationOnScroll initiallyVisible={true} animateIn={"animate__fadeIn"} animateOut={"animate__fadeOut"} duration={2}>
                         <div className='characters--container'>
                             {
                                 initialCharacters.map((current, index)=> (
@@ -698,51 +695,3 @@ function Character() {
 }
 
 export default Character;
-
-
-
-// useEffect(() => {
-    //     const saveSide = localStorage.getItem('side')
-    //     const saveUniverse = localStorage.getItem('universe')
-    //     const saveTeam = localStorage.getItem('team')
-    //     const saveByComics = localStorage.getItem('bycomics')
-    //     const saveHowManyRef = localStorage.getItem('howManyRef')
-    //     const savefilterSystemButtons = localStorage.getItem('filterButtons')
-    //     if (saveSide !== undefined && saveSide !== null) {
-    //         setSide(saveSide)
-    //     }
-    //     if (saveUniverse !== undefined || saveUniverse !== null) {
-    //         setUniverse(saveUniverse)
-    //     }  
-    //     if (saveTeam !== undefined && saveTeam !== null) {
-    //         setTeam(saveTeam)
-    //     }
-    //     if (saveByComics !== undefined && saveByComics !== null) {
-    //         const isTrueSet = (saveByComics === 'true')
-    //         setBycomics(isTrueSet)
-    //     }
-    //     if (saveHowManyRef !== undefined && saveHowManyRef !== null) {
-    //         setHowManyRef(saveHowManyRef)
-    //     }
-    //     if (savefilterSystemButtons !== undefined && savefilterSystemButtons !== null) {
-    //         const isTrueSet = (savefilterSystemButtons === 'true')
-    //         setFilterSystemButtons(isTrueSet)
-    //     }
-    //     getCharacters()
-    // }, [])
-
-
-
-    /* 
-    // setIsloading(true)
-
-    // localStorage.setItem('side', side)
-    // if (universe === null) {
-    //     localStorage.setItem('universe', "All")
-    // }else{
-    //     localStorage.setItem('universe', universe)
-    // }
-    // localStorage.setItem('team', team)
-    // localStorage.setItem('bycomics', bycomics)
-    // localStorage.setItem('howManyRef', howManyRef)
-    // localStorage.setItem('filterButtons', filterSystemButtons) */
