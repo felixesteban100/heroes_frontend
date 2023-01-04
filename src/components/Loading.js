@@ -1,6 +1,6 @@
 import React from 'react'
 import {ProgressBar} from "react-loader-spinner";
-import './index.css'
+import '../index.css'
 
 function Loading() {
   return (

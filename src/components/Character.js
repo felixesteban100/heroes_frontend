@@ -1,9 +1,9 @@
 import React, { /* useCallback, useEffect, */ useRef, useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
-import FilterBar from './FilterBar';
-import CharacterInfo from './CharacterInfo'
-import Loading from './Loading';
-import Error from './Error';
+import FilterBar from '../components/FilterBar';
+import CharacterInfo from '../components/CharacterInfo'
+import Loading from '../components/Loading';
+import Error from '../components/Error';
 import axios from 'axios'
 import 'animate.css';
 // import { AnimationOnScroll } from 'react-animation-on-scroll';
@@ -97,56 +97,35 @@ function Character() {
 
         let selectedOnes = []
         let result = []
+
+        if (teamSended === "All") {
+            data.forEach((current, index) => {
+                let currentReturned = whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended)
+                if (currentReturned !== undefined) {
+                    selectedOnes.push(currentReturned.index)
+                    result.push(currentReturned.current)
+                }
+            })
+        }
+        
+        if (teamSended !== "All") { 
+            data.forEach((current, index) => {
+                if (current.connections.groupAffiliation.includes(teamSended)) {
+                    let currentReturned = whenTeamCoincide(current,index, sideSended, universeSended)
+                    if (currentReturned !== undefined) {
+                        selectedOnes.push(currentReturned.index)
+                        result.push(currentReturned.current)
+                    }
+                }
+            }) 
+        }
+        
         if (bycomicsSended === true) {
             data.forEach((current) => {
                 if (current.comics !== undefined) {
                     result.push(current)
                 }
             })
-        }else{
-            if (/* (teamSended !== undefined && teamSended !== null) && */ teamSended !== "All") { 
-                data.forEach((current, index) => {
-                    if (current.connections.groupAffiliation.includes(teamSended)) {
-                        if (sideSended === "All" && universeSended === "All") {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }else if (sideSended === 'All' && universeSended !== "All" && (current.biography.publisher === universeSended)) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }else if (sideSended !== 'All' && universeSended === "All" && (current.biography.alignment === sideSended)) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }else {
-                            if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) {
-                                selectedOnes.push(index)
-                                result.push(current)
-                            }
-                        }   
-                    }
-                }) 
-            }else{
-                data.forEach((current, index) => {
-                    if (sideSended === "All" && universeSended === "All") {
-                        selectedOnes.push(index)
-                        result.push(current)
-                    }else if (sideSended === 'All' && universeSended !== "All") {
-                        if (current.biography.publisher === universeSended) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }
-                    }else if (sideSended !== 'All' && universeSended === "All") {
-                        if (current.biography.alignment === sideSended) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }
-                    }else /* if (side !== "All" && universe !== "All" && teams !== "All") */ {
-                        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) {
-                            selectedOnes.push(index)
-                            result.push(current)
-                        }
-                    }
-                })
-            }
         }
 
         if ((howManySended > 0 || howManySended !== "") && bycomicsSended !== true) {
@@ -188,6 +167,21 @@ function Character() {
         }
     }
 
+    function whenTeamCoincide(current,index, sideSended, universeSended){
+        if (sideSended === "All" && universeSended === "All") return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended !== "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) return {"index": index, "current": current}
+    }
+
+    function whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended){
+        if (sideSended === "All" && universeSended === "All") return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended !== "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+        /* if (side !== "All" && universe !== "All" && teams !== "All") */
+        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) return {"index": index, "current": current}
+    }
+
     function saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected){
         /* FOR TESTING PURPOSES */
         // console.log("---------------------------")
@@ -200,37 +194,32 @@ function Character() {
 
         filterData("getCharacters", bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
         
+        localStorage.setItem('bycomics', false)
         if (bycomicsSelected !== null && bycomicsSelected !== undefined) {
             localStorage.setItem('bycomics', bycomicsSelected)
-        }else{
-            localStorage.setItem('bycomics', false)
         }
 
+        localStorage.setItem('side', "All")
         if (sideSelected !== null && sideSelected !== undefined) {
             localStorage.setItem('side', sideSelected)
-        }else{
-            localStorage.setItem('side', "All")
         }
 
+        localStorage.setItem('universe', "All")
         if (universeSelected !== null && universeSelected !== undefined) {
             localStorage.setItem('universe', universeSelected)
-        }else{
-            localStorage.setItem('universe', "All")
         }
 
+        localStorage.setItem('team', "All")
         if (teamSelected !== null && teamSelected !== undefined) {
             localStorage.setItem('team', teamSelected)
-        }else{
-            localStorage.setItem('team', "All")
         }
 
+        localStorage.setItem('howMany', 6)
+        if (howManySelected === null) {
+            localStorage.setItem('howMany', "")
+        }
         if (howManySelected !== null && howManySelected !== undefined) {
             localStorage.setItem('howMany', howManySelected)
-        }else{
-            localStorage.setItem('howMany', 6)
-            if (howManySelected === null) {
-                localStorage.setItem('howMany', "")
-            }
         }
         localStorage.setItem('filterButtons', filterSystemButtons)
     }
@@ -339,24 +328,22 @@ function Character() {
     
     function findByName(){
         const charactersArr = []
-        let names 
+        let names = [characterRef.current.value]
 
         if (characterRef.current.value.includes(",")) {
             names = characterRef.current.value
             .split(",")
             .map(current => current.trim())
-        }else{
-            names = [characterRef.current.value]
         }
 
         names.forEach((currentName) => {
-            data.map(charac => {
+            data.forEach(charac => {
                 const name = charac.name.toLowerCase();
                 const nameintro = currentName.toLowerCase();
                 // const result = name.includes(nameintro)
                 const result = name === nameintro
     
-                if (result===true) {
+                if (result === true) {
                     charactersArr.push({
                         id: charac.id,
                         name: charac.name,
@@ -403,8 +390,6 @@ function Character() {
                         publisherIMG: getPublisherImg(charac.biography.publisher)
                     })
                 }
-                return result // esto es innecesario
-                
             })
         })
 
@@ -425,20 +410,11 @@ function Character() {
             if (charactersArr[0] === undefined && characterRef.current.value !== "") {
                 setFirstLoad(true)
             }
-            // setIsloading(false)
         }, 800)
 
         if (charactersArr[0] !== undefined) {
             localStorage.setItem('initialcharacters', JSON.stringify(charactersArr))
         }
-
-        // delayTheApp(charactersArr)
-        // setHiddeCharacters(false)
-        // setHiddeCharacter(true)
-        // setSide("All")
-        // setUniverse("All")
-        // setTeam("All")
-        // setHowManyRef("") 
     }
 
     function findByNameClick(idSended){
@@ -486,19 +462,19 @@ function Character() {
                     return groups.charAt(0).toUpperCase() + groups.slice(1)
                 })
 
-                let alteregos = []
+                let alteregos = ["-"]
                 if (charac.biography.alterEgos !== undefined) {
                     if((charac.biography.alterEgos !== "No alter egos found." || charac.biography.alterEgos !== "-") && charac.biography.alterEgos.includes(",")){
                         alteregos = charac.biography.alterEgos.split(",")
-                    }else{
-                        alteregos = ["-"]
                     }
                 }
 
                 let comics = []
                 if (charac.comics !== undefined) {
                     comics = charac.comics
-                }else{
+                }
+
+                if(charac.comics === undefined){
                     switch(charac.biography.publisher){
                         case "Marvel Comics":
                             comics = [
@@ -600,8 +576,6 @@ function Character() {
         setHiddeCharacters(false)
         setHiddeCharacter(true)
         setImageSize(false)
-        // setUniverse("All")
-        // setBycomics(false)
 
         window.scrollTo({
             top: lastWindowPosition,

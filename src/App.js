@@ -1,6 +1,6 @@
 import React from 'react'
-import Character from './Character';
-import Header from './Header';
+import Character from './components/Character';
+import Header from './components/Header';
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from 'react-query'
