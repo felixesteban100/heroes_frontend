@@ -1,6 +1,6 @@
 import React from 'react'
 
-function FilterBar({characterRef, team, universe, side, filterSystemButtons, howMany, findByName, getCharacters}) {
+function FilterBar({characterRef, team, universe, side, filterSystemButtons, howMany, findByName, getCharacters, noCharacter, namesFilterExact, setNamesFilterExact}) {
   
     const dcComicsTeams = [
         {
@@ -224,13 +224,21 @@ function FilterBar({characterRef, team, universe, side, filterSystemButtons, how
         },
     ]
 
+    const style = noCharacter === false ? { color: "red" } : {}
+
     return (
         <div>
             {
                 filterSystemButtons === false &&
                 <div className='animate__animated animate__fadeIn find-container'>
-                    <input className="find-by-name" type="text" placeholder='Enter name or names' ref={characterRef}/>
-                    <button id='character--button' className='character--button' onClick={findByName}>Find character</button>
+                    <input className="find-by-name" type="text" placeholder='Enter name or names' ref={characterRef} style={style}/>
+                    <button id='character--button' className='character--button' onClick={findByName} >Find character</button>
+                    {
+                        namesFilterExact ?
+                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Exact Name</button>
+                        :
+                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Include Name</button>
+                    }
                     <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", true)}>Find by category</button>
                 </div>
             }

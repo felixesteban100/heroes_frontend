@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import 'animate.css';
 import Carousel3d from './Carousel3d';
 import getAverageColor from 'get-average-color'
-import { AnimationOnScroll } from 'react-animation-on-scroll';
+// import { AnimationOnScroll } from 'react-animation-on-scroll';
 
 function CharacterInfo({index, current, imageSize, setImageSize, getBack, selectedStat, changeStat}) {
     let [colorsArr, setColorsArr] = useState([{r: 0, g: 0, b: 0}])
@@ -21,7 +21,7 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
             </div>
             
-            {/* <AnimationOnScroll initiallyVisible={false} animateIn="animate__fadeIn" duration={3} animateOut="animate__fadeOut" > */}
+            {/* <AnimationOnScroll initiallyVisible={true} animateIn="animate__fadeInUp" duration={3} animateOut="animate__fadeOut" > */}
                 {
                     <div className='character--withInfo'>
                         <div 
@@ -38,15 +38,15 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                             <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
                             <div className='character--withInfo--alignment'>
                                 {current.biography.alignment==="good" &&
-                                    <p className='character--alignment'>Aligment: SuperHero</p>
+                                    <p className='character--alignment'>Alignment: SuperHero</p>
                                 }
                                 {
                                     current.biography.alignment==="bad" &&
-                                    <p className='character--alignment'>Aligment: Super Villian</p>
+                                    <p className='character--alignment'>Alignment: Super Villain</p>
                                 }
                                 {
                                     current.biography.alignment==="neutral" &&
-                                    <p className='character--alignment'>Aligment: Anti-hero</p>
+                                    <p className='character--alignment'>Alignment: Anti-hero</p>
                                 }
                                 
                             </div>
@@ -56,9 +56,7 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                 }
             {/* </AnimationOnScroll> */}
             
-            
-            
-            <AnimationOnScroll initiallyVisible={false} animateIn="animate__fadeIn" duration={4} animateOut="animate__fadeOut" >
+            {/* <AnimationOnScroll initiallyVisible={false} animateIn="animate__fadeInUp" duration={4} animateOut="animate__fadeOut" > */}
                 <section id='character--withInfo--info' className='character--withInfo--info character--withInfo--info-transition'>
                         
                         <div className='character--withInfo--statSelectors'>
@@ -271,14 +269,14 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                             }
                         </div>
                 </section>
-            </AnimationOnScroll>
+            {/* </AnimationOnScroll> */}
 
-            <AnimationOnScroll initiallyVisible={false} animateIn="animate__fadeIn" duration={4} animateOut="animate__fadeOut" >
+            {/* <AnimationOnScroll initiallyVisible={false} animateIn="animate__fadeInUp" duration={4} animateOut="animate__fadeOut" > */}
                 <Carousel3d 
                     comics={current.comics}
                     name={current.name}
                 />
-            </AnimationOnScroll>
+            {/* </AnimationOnScroll> */}
         </div>
   )
 }

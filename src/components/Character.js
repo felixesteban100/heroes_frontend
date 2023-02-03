@@ -1,4 +1,4 @@
-import React, { /* useCallback, useEffect, */ useRef, useState } from 'react'
+import React, { /* useCallback */ useRef, useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import FilterBar from '../components/FilterBar';
 import CharacterInfo from '../components/CharacterInfo'
@@ -14,17 +14,15 @@ function Character() {
     const [initialCharacters, setInitialCharacters] = useState([])
     const [firstLoad, setFirstLoad] = useState(false)
 
-    const [hiddeChacters, setHiddeCharacters] = useState(false)
-    const [hiddeChacter, setHiddeCharacter] = useState(true)
+    const [hideCharacters, setHideCharacters] = useState(false)
+    const [hideCharacter, setHideCharacter] = useState(true)
 
     const [filterSystemButtons, setFilterSystemButtons] = useState(false)
 
     const characterRef = useRef('')
+    const [namesFilterExact, setNamesFilterExact] = useState(false)
     
     const [howMany, setHowMany] = useState(6)
-    // const howManyRef = useRef(null)
-
-    // const [bycomics, setByComics] = useState(false)
 
     const [side, setSide] = useState("All")
     const [universe, setUniverse] = useState("All")
@@ -59,28 +57,28 @@ function Character() {
         const saveUniverse = localStorage.getItem('universe')
         const saveTeam = localStorage.getItem('team')
         const saveByComics = localStorage.getItem('bycomics')
-        const savefilterSystemButtons = localStorage.getItem('filterButtons')
+        const saveFilterSystemButtons = localStorage.getItem('filterButtons')
         let saveHowMany = localStorage.getItem('howManyRef')
 
         saveHowMany = saveHowMany === null ? "" : saveHowMany
 
-        return {saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, savefilterSystemButtons}
+        return {saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveFilterSystemButtons}
     }
 
-    //for the beggining
-    if ((initialCharacters[0] === undefined) && data !== undefined) {
-        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, savefilterSystemButtons } = gettingTheLocalStorageData()
+    //for the beginning
+    if (firstLoad === false && (initialCharacters[0] === undefined) && data !== undefined) {
+        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveFilterSystemButtons } = gettingTheLocalStorageData()
 
-        saveSide = saveSide !== null ? saveSide : "All" 
-        saveUniverse = saveUniverse !== null ? saveUniverse : "All" 
-        saveTeam = saveTeam !== null ? saveTeam : "All" 
-        saveHowMany = saveHowMany !== null ? saveHowMany : "" 
+        saveSide = saveSide ?? "All" 
+        saveUniverse = saveUniverse ?? "All" 
+        saveTeam = saveTeam ?? "All" 
+        saveHowMany = saveHowMany ?? "" 
 
         setSide(saveSide)
         setUniverse(saveUniverse)
         setTeam(saveTeam)
         setHowMany(saveHowMany)
-        const isTrueSet = (savefilterSystemButtons === 'true')
+        const isTrueSet = (saveFilterSystemButtons === 'true')
         setFilterSystemButtons(isTrueSet)
 
         filterData("begin", saveByComics, saveTeam, saveUniverse, saveSide, saveHowMany)
@@ -90,7 +88,7 @@ function Character() {
             setInitialCharacters(saveCharacters)
         }
     }
-    //for the beggining
+    //for the beginning
 
     function filterData(where, bycomicsSended, teamSended, universeSended, sideSended, howManySended){
         // console.log(`////from ${where}//// \n bycomicsSended: ${bycomicsSended}, teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended}`)
@@ -121,6 +119,7 @@ function Character() {
         }
         
         if (bycomicsSended === true) {
+            result = []
             data.forEach((current) => {
                 if (current.comics !== undefined) {
                     result.push(current)
@@ -129,13 +128,13 @@ function Character() {
         }
 
         if ((howManySended > 0 || howManySended !== "") && bycomicsSended !== true) {
-            let finalSelectedIntex = []
+            let finalSelectedIndex = []
             for(let i = 0; i < howManySended; i++){
-                finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
+                finalSelectedIndex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
             } 
             result = []
             data.forEach((current, index) => {
-                if (finalSelectedIntex.includes(index)) {
+                if (finalSelectedIndex.includes(index)) {
                     result.push(current)
                 }
             })
@@ -143,13 +142,13 @@ function Character() {
 
         // if ((teamSended === undefined || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true && (howManySended < 0 || howManySended === "")) {
         if ((howManySended < 0 || howManySended === "") && ((teamSended === undefined || teamSended === null) || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true) {
-            let finalSelectedIntex = []
+            let finalSelectedIndex = []
             for(let i = 0; i < 6; i++){
-                finalSelectedIntex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
+                finalSelectedIndex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
             } 
             result = []
             data.forEach((current, index) => {
-                if (finalSelectedIntex.includes(index)) {
+                if (finalSelectedIndex.includes(index)) {
                     result.push(current)
                 }
             })
@@ -160,7 +159,11 @@ function Character() {
             [result[i], result[j]] = [result[j], result[i]];
         }
 
-        setInitialCharacters(result)
+        setInitialCharacters([undefined])
+
+        if (result[0] !== undefined) {
+            setInitialCharacters(result)
+        }
 
         if (result[0] !== undefined && where !== "begin") {
             localStorage.setItem('initialcharacters', JSON.stringify(result))
@@ -325,6 +328,54 @@ function Character() {
         }
         return img
     }
+
+    function organizeCharacterData(charac, comics, alteregos, occupation, groups){
+        return {
+            id: charac.id,
+            name: charac.name,
+            images: {
+                xs: charac.images.xs,
+                sm: charac.images.sm,
+                md: charac.images.md,
+                lg: charac.images.lg
+            },
+            comics: comics ?? charac.comics,
+            appearance:{
+                gender: charac.appearance.gender,
+                race: charac.appearance.race,
+                height: charac.appearance.height,
+                weight: charac.appearance.weight,
+                eyeColor: charac.appearance.eyeColor,
+                hairColor: charac.appearance.hairColor,
+            },
+            powerstats: {
+                intelligence: charac.powerstats.intelligence,
+                strength: charac.powerstats.strength,
+                speed: charac.powerstats.speed,
+                durability: charac.powerstats.durability,
+                power: charac.powerstats.power, 
+                combat: charac.powerstats.combat,
+            },
+            biography: { 
+                fullName: charac.biography.fullName,
+                alignment: charac.biography.alignment,
+                publisher: charac.biography.publisher,
+                firstAppearance: charac.biography.firstAppearance,
+                alterEgos: alteregos ?? charac.biography.alterEgos,
+                placeOfBirth: charac.biography.placeOfBirth,
+                aliases: charac.biography.aliases,
+            },
+            work: {
+                occupation: occupation ?? charac.work.occupation
+            },
+            connections:{
+                groupAffiliation: groups ?? charac.connections.groupAffiliation,
+                relatives: charac.connections.relatives
+            },
+            publisherIMG: getPublisherImg(charac.biography.publisher),
+            // boxShadowColor: getAverageRGB(charac.images.md)
+        }
+    }
     
     function findByName(){
         const charactersArr = []
@@ -340,55 +391,12 @@ function Character() {
             data.forEach(charac => {
                 const name = charac.name.toLowerCase();
                 const nameintro = currentName.toLowerCase();
-                // const result = name.includes(nameintro)
-                const result = name === nameintro
+                let result
+                if(namesFilterExact) result = name.includes(nameintro)
+                if(!namesFilterExact) result = name === nameintro
     
                 if (result === true) {
-                    charactersArr.push({
-                        id: charac.id,
-                        name: charac.name,
-                        images: {
-                            xs: charac.images.xs,
-                            sm: charac.images.sm,
-                            md: charac.images.md,
-                            lg: charac.images.lg
-                        },
-                        comics: charac.comics,
-                        appearance:{
-                            gender: charac.appearance.gender,
-                            race: charac.appearance.race,
-                            height: charac.appearance.height,
-                            weight: charac.appearance.weight,
-                            eyeColor: charac.appearance.eyeColor,
-                            hairColor: charac.appearance.hairColor,
-                        },
-                        powerstats: {
-                            intelligence: charac.powerstats.intelligence,
-                            strength: charac.powerstats.strength,
-                            speed: charac.powerstats.speed,
-                            durability: charac.powerstats.durability,
-                            power: charac.powerstats.power, 
-                            combat: charac.powerstats.combat,
-                        },
-                        biography: { 
-                            fullName: charac.biography.fullName,
-                            alignment: charac.biography.alignment,
-                            publisher: charac.biography.publisher,
-                            firstAppearance: charac.biography.firstAppearance,
-                            alterEgos: charac.biography.alterEgos,
-                            placeOfBirth: charac.biography.placeOfBirth,
-                            aliases: charac.biography.aliases,
-                            
-                        },
-                        work: {
-                            occupation: charac.work.occupation
-                        },
-                        connections:{
-                            groupAffiliation: charac.connections.groupAffiliation,
-                            relatives: charac.connections.relatives
-                        },
-                        publisherIMG: getPublisherImg(charac.biography.publisher)
-                    })
+                    charactersArr.push(organizeCharacterData(charac))
                 }
             })
         })
@@ -398,12 +406,12 @@ function Character() {
             [charactersArr[i], charactersArr[j]] = [charactersArr[j], charactersArr[i]];
         }
         setTimeout(() => {
-            setHiddeCharacters(true)
+            setHideCharacters(true)
             setInitialCharacters(charactersArr)
         }, 300);
 
         setTimeout(() => {
-            setHiddeCharacters(false)
+            setHideCharacters(false)
         }, 500);
 
         setTimeout(() => {
@@ -418,44 +426,34 @@ function Character() {
     }
 
     function findByNameClick(idSended){
-        setHiddeCharacters(true)
-        setHiddeCharacter(false)
+        setHideCharacters(true)
+        setHideCharacter(false)
         if (filterSystemButtons === false) {
             characterRef.current.value = ""
         }
         const charactersArr = []
-        data.map(charac => {
+        data.forEach(charac => {
             if (idSended===charac.id) {
-                let occupation = charac.work.occupation.split(",")
-                occupation = occupation.map((current) => {
-                    return current.split(";")
-                })
+                let occupation = charac.work.occupation.split(",").map((current) => current.split(";"))
                 let occupationArr = []
                 occupation = occupation.map(current => {   
                     occupationArr.push(...current)
                     return current
                 })
-                occupation = occupationArr
-
-                occupation = occupation.map(occupation => {
+                occupation = occupationArr.map(occupation => {
                     if(occupation.charAt(0) === " "){
                         return occupation.charAt(1).toUpperCase() + occupation.slice(2)
                     }
                     return occupation.charAt(0).toUpperCase() + occupation.slice(1)
                 })
 
-                let groups = charac.connections.groupAffiliation.split(",")
-                groups = groups.map((current) => {
-                    return current.split(";")
-                })
+                let groups = charac.connections.groupAffiliation.split(",").map((current) => current.split(";"))
                 let groupsArr = []
                 groups = groups.map(current => {   
                     groupsArr.push(...current)
                     return current
                 })
-                groups = groupsArr
-
-                groups = groups.map(groups => {
+                groups = groupsArr.map(groups => {
                     if(groups.charAt(0) === " "){
                         return groups.charAt(1).toUpperCase() + groups.slice(2)
                     }
@@ -469,10 +467,7 @@ function Character() {
                     }
                 }
 
-                let comics = []
-                if (charac.comics !== undefined) {
-                    comics = charac.comics
-                }
+                let comics = charac.comics !== undefined ? charac.comics : []
 
                 if(charac.comics === undefined){
                     switch(charac.biography.publisher){
@@ -510,56 +505,8 @@ function Character() {
                         break;
                     }
                 }
-
-                charactersArr.push({
-                    // charac
-                    id: charac.id,
-                    name: charac.name,
-                    images: {
-                        xs: charac.images.xs,
-                        sm: charac.images.sm,
-                        md: charac.images.md,
-                        lg: charac.images.lg
-                    },
-                    comics: comics,
-                    appearance:{
-                        gender: charac.appearance.gender,
-                        race: charac.appearance.race,
-                        height: charac.appearance.height,
-                        weight: charac.appearance.weight,
-                        eyeColor: charac.appearance.eyeColor,
-                        hairColor: charac.appearance.hairColor,
-                    },
-                    powerstats: {
-                        intelligence: charac.powerstats.intelligence,
-                        strength: charac.powerstats.strength,
-                        speed: charac.powerstats.speed,
-                        durability: charac.powerstats.durability,
-                        power: charac.powerstats.power, 
-                        combat: charac.powerstats.combat,
-                    },
-                    biography: { 
-                        fullName: charac.biography.fullName,
-                        alignment: charac.biography.alignment,
-                        publisher: charac.biography.publisher,
-                        firstAppearance: charac.biography.firstAppearance,
-                        alterEgos: alteregos,
-                        placeOfBirth: charac.biography.placeOfBirth,
-                        aliases: charac.biography.aliases,
-                    },
-                    work: {
-                        occupation: occupation
-                    },
-                    connections:{
-                        groupAffiliation: groups,
-                        relatives: charac.connections.relatives
-                    },
-                    publisherIMG: getPublisherImg(charac.biography.publisher),
-                    // boxShadowColor: getAverageRGB(charac.images.md)
-                })
-            }
-            return charac // esto es innecesario
-             
+                charactersArr.push(organizeCharacterData(charac, comics, alteregos, occupation, groups))
+            }             
         })
 
         setLastWindowPosition(window.pageYOffset)
@@ -573,8 +520,8 @@ function Character() {
     }
 
     function getBack(){
-        setHiddeCharacters(false)
-        setHiddeCharacter(true)
+        setHideCharacters(false)
+        setHideCharacter(true)
         setImageSize(false)
 
         window.scrollTo({
@@ -587,7 +534,7 @@ function Character() {
         <div className='character-module'>
             <QueryClientProvider client={queryClient}>
                 {
-                    hiddeChacter === true &&
+                    hideCharacter === true &&
                     <FilterBar 
                         characterRef={characterRef}
                         team={team}
@@ -596,7 +543,9 @@ function Character() {
                         howMany={howMany}
                         filterSystemButtons={filterSystemButtons}
                         getCharacters={getCharacters}
-                        findByName={findByName}                 
+                        findByName={findByName}
+                        namesFilterExact={namesFilterExact}
+                        setNamesFilterExact={setNamesFilterExact}              
                     />
                 }
                 
@@ -612,12 +561,12 @@ function Character() {
                     
                 {
                     isLoading === false &&
-                    (hiddeChacters === false && initialCharacters[0] !== undefined && initialCharacters[0] !== null) &&
+                    (hideCharacters === false && initialCharacters[0] !== undefined && initialCharacters[0] !== null) &&
                     // <AnimationOnScroll initiallyVisible={true} animateIn={"animate__fadeIn"} animateOut={"animate__fadeOut"} duration={2}>
                         <div className='characters--container'>
                             {
                                 initialCharacters.map((current, index)=> (
-                                    // <AnimationOnScroll key={index} initiallyVisible={true} animateIn={"animate__flip"} animateOut={"animate__fadeOut"} duration={2}>
+                                    // <AnimationOnScroll key={index} initiallyVisible={true} animateIn={"animate__fadeIn"} animateOut={"animate__fadeOut"} duration={2}>
                                         <div key={index} className={`animate__animated animate__fadeIn character`} onClick={() => findByNameClick(current.id)}>
                                             <div className='character--img--container'>
                                                 <img className='character--img' src={current.images.md} alt="logo" />
@@ -633,17 +582,17 @@ function Character() {
 
                 {
                     isLoading === false &&
-                    (hiddeChacters === false && initialCharacters[0] === undefined && firstLoad === true) &&
+                    (hideCharacters === false && initialCharacters[0] === undefined && firstLoad === true) &&
                     <div className='character--withInfo-unknown'>
                         <img className='animate__animated animate__fadeIn character--withInfo--img--unknown'  src="https://www.pngitem.com/pimgs/m/52-526033_unknown-person-icon-png-transparent-png.png" alt="logo" />                                                    
-                        <p className='animate__animated animate__fadeIn animate__delay-1s character--withInfo--unknown--info'>Sorry but we dont have that character </p>
+                        <p className='animate__animated animate__fadeIn animate__delay-1s character--withInfo--unknown--info'>Sorry but we don't have that character </p>
                     </div>
                 }
                     
 
                 {
                     isLoading === false &&
-                    (hiddeChacter === false) &&
+                    (hideCharacter === false) &&
                     <div className='character--container--withInfo'>
                         {
                             character.length !== 0 &&
