@@ -1,14 +1,7 @@
 # CHARACTERS FRONTEND 
 
 This project was created using  [React](https://github.com/facebook/create-react-app).
-![alt text](http://url/to/img.png)
-
-
-<img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
-
-<p align="center">
-  <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
-</p>
+![alt text](http://url/to/img.png)<img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
 
 ## Available Scripts
 
