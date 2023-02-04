@@ -5,7 +5,12 @@ This project was created using  [React](https://github.com/facebook/create-react
 
 
 <p align="center">
-  <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="100" title="css">
+    CSS
+  <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
+</p>
+
+<p align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
 </p>
 
 ## Available Scripts
