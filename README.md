@@ -4,10 +4,7 @@ This project was created using  [React](https://github.com/facebook/create-react
 ![alt text](http://url/to/img.png)
 
 
-<p align="center">
-    CSS
-  <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
-</p>
+<img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
 
 <p align="center">
   <img src="https://cdn-icons-png.flaticon.com/512/732/732190.png" width="50" title="css">
