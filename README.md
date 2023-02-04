@@ -1,16 +1,9 @@
 # CHARACTERS FRONTEND 
 CHARACTERS FRONTEND is a project with information of several fictional characters.
 
-# Technologies used  
+## Technologies used  
 This project was created using  
-[React](https://github.com/facebook/create-react-app).
-<img src="https://cdn-icons-png.flaticon.com/512/1260/1260775.png"  width="25" height="25">
-
-[CSS].
-<img src="https://cdn-icons-png.flaticon.com/512/732/732190.png"  width="25" height="25">
-
-[React Query](https://github.com/facebook/create-react-app).
-<img src="https://seeklogo.com/images/R/react-query-logo-1340EA4CE9-seeklogo.com.png"  width="25" height="25">
+[create-react-app](https://github.com/facebook/create-react-app)
 
 ## Available Scripts
 
