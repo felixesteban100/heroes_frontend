@@ -15,40 +15,32 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
         })
     }
 
-    function controlled3d(event){
-        const element = event.target
+    // function controlled3d(event){
+    //     const element = event.target
 
-        // get mouse position
-        const x = event.clientX;
-        const y = event.clientY;
+    //     // get mouse position
+    //     const x = event.clientX;
+    //     const y = event.clientY;
 
-        // find the middle of the entire page
-        const middleX = window.innerWidth / 2;
-        const middleY = window.innerHeight / 2;
+    //     // find the middle of the entire page
+    //     const middleX = window.innerWidth / 2;
+    //     const middleY = window.innerHeight / 2;
 
-        // // find the middle of the container (I guess)
-        // const middleX = container.innerWidth / 2;
-        // const middleY = container.innerHeight / 2;
+    //     // // find the middle of the container (I guess)
+    //     // const middleX = container.innerWidth / 2;
+    //     // const middleY = container.innerHeight / 2;
 
-        // get offset from middle
-        const offsetX = ((x - middleX) / middleX) * 100;
-        const offsetY = ((y - middleY) / middleY) * 100;
+    //     // get offset from middle
+    //     const offsetX = ((x - middleX) / middleX) * 100;
+    //     const offsetY = ((y - middleY) / middleY) * 100;
 
-        console.log(offsetX, offsetY)
+    //     console.log(offsetX, offsetY)
 
-        element.style.setProperty("--rotateX", -1 * offsetY + "deg")
-        element.style.setProperty("--rotateY", offsetX + "deg")
-    }
+    //     element.style.setProperty("--rotateX", -1 * offsetY + "deg")
+    //     element.style.setProperty("--rotateY", offsetX + "deg")
+    // }
 
     const [modalIsOpen, setIsOpen] = React.useState(false);
-
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
 
     const customStyles = {
         content: {
@@ -77,9 +69,9 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                 style={customStyles}
             >
                 <button 
-                    onClick={() => closeModal()}
+                    onClick={() => setIsOpen(false)}
                     style={{
-                        margin: '2rem',
+                        margin: '0',
                         backgroundColor: 'black',
                         color: 'white',
                         fontSize: '2rem',
@@ -89,12 +81,6 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                     >
                     X
                 </button>
-                {/* <div 
-                    className="character--img-3d"
-                    onDragOver={(event) => controlled3d(event)}
-                >
-                    <img style={{height: '50rem'}} src={current.images.md} alt=""/>
-                </div> */}
                 <div 
                     className={"character--withInfo--img-zoomed-container"} 
                     >
@@ -106,40 +92,6 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
 
 
             </Modal>
-            {/* <AnimationOnScroll initiallyVisible={true} animateIn="animate__fadeInUp" duration={3} animateOut="animate__fadeOut" > */}
-                {/* {
-                    <div className='character--withInfo'>
-                        <div 
-                            className={imageSize === false ? "character--withInfo--img-container-img" : "character--withInfo--img-zoomed-container"} 
-                            onClick={() => setImageSize(prev => !prev)}>
-                            <img 
-                                className={imageSize === false ? 'animate__animated animate__flip animate__delay-1s character--withInfo--img' : 'animate__animated animate__fadeIn character--withInfo--img-zoomed'} 
-                                style={imageSize === false ? {boxShadow: `rgb(${colorsArr.r}, ${colorsArr.g}, ${colorsArr.b}) 0px 10px 70px 4px`} : {}} 
-                                src={current.images.md} alt="logo" 
-                            />                                                
-                        </div>
-                        <div className='animate__animated animate__fadeIn animate__delay-3s character--withInfo--n-f-a'>
-                            <p className='character--withInfo--name'>Name: {current.name}</p>
-                            <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
-                            <div className='character--withInfo--alignment'>
-                                {current.biography.alignment==="good" &&
-                                    <p className='character--alignment'>Alignment: SuperHero</p>
-                                }
-                                {
-                                    current.biography.alignment==="bad" &&
-                                    <p className='character--alignment'>Alignment: Super Villain</p>
-                                }
-                                {
-                                    current.biography.alignment==="neutral" &&
-                                    <p className='character--alignment'>Alignment: Anti-hero</p>
-                                }
-                                
-                            </div>
-                            <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
-                        </div>
-                    </div>
-                } */}
-            {/* </AnimationOnScroll> */}
             <div className='character--withInfo'>
                 {/* <div 
                     className={imageSize === false ? "character--withInfo--img-container-img" : "character--withInfo--img-zoomed-container"} 
@@ -155,7 +107,7 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                 <div 
                     className={"character--withInfo--img-container-img"} 
                     // onMouseDown={() => setImageSize(prev => !prev)}
-                    onClick={openModal}
+                    onClick={() => setIsOpen(true)}
                     >
                     <img 
                         className={'animate__animated animate__flip animate__delay-1s character--withInfo--img'} 
