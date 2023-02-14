@@ -3,6 +3,8 @@ import 'animate.css';
 import Carousel3d from './Carousel3d';
 import getAverageColor from 'get-average-color'
 // import { AnimationOnScroll } from 'react-animation-on-scroll';
+import Modal from 'react-modal';
+
 
 function CharacterInfo({index, current, imageSize, setImageSize, getBack, selectedStat, changeStat}) {
     let [colorsArr, setColorsArr] = useState([{r: 0, g: 0, b: 0}])
@@ -13,16 +15,99 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
         })
     }
 
-    // console.log("current", current)
+    function controlled3d(event){
+        const element = event.target
+
+        // get mouse position
+        const x = event.clientX;
+        const y = event.clientY;
+
+        // find the middle of the entire page
+        const middleX = window.innerWidth / 2;
+        const middleY = window.innerHeight / 2;
+
+        // // find the middle of the container (I guess)
+        // const middleX = container.innerWidth / 2;
+        // const middleY = container.innerHeight / 2;
+
+        // get offset from middle
+        const offsetX = ((x - middleX) / middleX) * 100;
+        const offsetY = ((y - middleY) / middleY) * 100;
+
+        console.log(offsetX, offsetY)
+
+        element.style.setProperty("--rotateX", -1 * offsetY + "deg")
+        element.style.setProperty("--rotateY", offsetX + "deg")
+    }
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    const customStyles = {
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'transparent',
+          border: 'none'
+        },
+        overlay: {
+            backgroundColor: 'rgba(6, 7, 42, 0.805)'
+        }
+    };
   
     return (
         <div /* key={index} */ onLoad={getColors}>
             <div id='button-back' className='button-back' onClick={() => getBack()}>
                 <img className='button-back-img' src="https://cdn-icons-png.flaticon.com/512/5708/5708793.png" alt="" />
             </div>
-            
+
+            <Modal
+                isOpen={modalIsOpen}
+                style={customStyles}
+            >
+                <button 
+                    onClick={() => closeModal()}
+                    style={{
+                        margin: '2rem',
+                        backgroundColor: 'black',
+                        color: 'white',
+                        fontSize: '2rem',
+                        borderRadius: '0.5rem',
+                        cursor: 'pointer'
+                    }}
+                    >
+                    X
+                </button>
+                {/* <div 
+                    className="character--img-3d"
+                    onDragOver={(event) => controlled3d(event)}
+                >
+                    <img style={{height: '50rem'}} src={current.images.md} alt=""/>
+                </div> */}
+                <div 
+                    className={"character--withInfo--img-zoomed-container"} 
+                    >
+                    <img 
+                        className={'animate__animated animate__fadeIn character--withInfo--img-zoomed'} 
+                        src={current.images.md} alt="logo" 
+                    />                                                
+                </div>
+
+
+            </Modal>
             {/* <AnimationOnScroll initiallyVisible={true} animateIn="animate__fadeInUp" duration={3} animateOut="animate__fadeOut" > */}
-                {
+                {/* {
                     <div className='character--withInfo'>
                         <div 
                             className={imageSize === false ? "character--withInfo--img-container-img" : "character--withInfo--img-zoomed-container"} 
@@ -53,8 +138,52 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
                             <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
                         </div>
                     </div>
-                }
+                } */}
             {/* </AnimationOnScroll> */}
+            <div className='character--withInfo'>
+                {/* <div 
+                    className={imageSize === false ? "character--withInfo--img-container-img" : "character--withInfo--img-zoomed-container"} 
+                    onMouseDown={() => setImageSize(prev => !prev)}
+                    onDoubleClick={openModal}
+                    >
+                    <img 
+                        className={imageSize === false ? 'animate__animated animate__flip animate__delay-1s character--withInfo--img' : 'animate__animated animate__fadeIn character--withInfo--img-zoomed'} 
+                        style={imageSize === false ? {boxShadow: `rgb(${colorsArr.r}, ${colorsArr.g}, ${colorsArr.b}) 0px 10px 70px 4px`} : {}} 
+                        src={current.images.md} alt="logo" 
+                    />                                                
+                </div> */}
+                <div 
+                    className={"character--withInfo--img-container-img"} 
+                    // onMouseDown={() => setImageSize(prev => !prev)}
+                    onClick={openModal}
+                    >
+                    <img 
+                        className={'animate__animated animate__flip animate__delay-1s character--withInfo--img'} 
+                        style={{boxShadow: `rgb(${colorsArr.r}, ${colorsArr.g}, ${colorsArr.b}) 0px 10px 70px 4px`}} 
+                        src={current.images.md} alt="logo" 
+                    />                                                
+                </div>
+                
+                <div className='animate__animated animate__fadeIn animate__delay-3s character--withInfo--n-f-a'>
+                    <p className='character--withInfo--name'>Name: {current.name}</p>
+                    <p className='character--withInfo--fullname'>Full Name: {current.biography.fullName}</p>
+                    <div className='character--withInfo--alignment'>
+                        {current.biography.alignment==="good" &&
+                            <p className='character--alignment'>Alignment: SuperHero</p>
+                        }
+                        {
+                            current.biography.alignment==="bad" &&
+                            <p className='character--alignment'>Alignment: Super Villain</p>
+                        }
+                        {
+                            current.biography.alignment==="neutral" &&
+                            <p className='character--alignment'>Alignment: Anti-hero</p>
+                        }
+                        
+                    </div>
+                    <p className='character--withInfo--publisher'>Publisher: {current.biography.publisher}</p>
+                </div>
+            </div>
             
             {/* <AnimationOnScroll initiallyVisible={false} animateIn="animate__fadeInUp" duration={4} animateOut="animate__fadeOut" > */}
                 <section id='character--withInfo--info' className='character--withInfo--info character--withInfo--info-transition'>

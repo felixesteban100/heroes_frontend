@@ -475,6 +475,46 @@ AnimationOnScroll{
   /* position: relative; */
 }
 
+.character--img-3d{
+  width: fit-content;
+  justify-self: center;
+
+  padding: 1rem;
+  border-radius: 1rem;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: 
+  perspective(5000px)
+  rotateY(var(--rotateY))
+  rotateX(var(--rotateX));
+}
+
+.character--img-3d > * {
+  box-shadow: 0 0 3rem currentColor;
+}
+
+.character--img-3d::before,
+.character--img-3d::after{
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+}
+
+.character--img-3d::before{
+  inset: 0.75rem;
+  background: black;
+  transform: translateZ(-49px);
+  filter: blur(15px);
+  opacity: 0.5;
+}
+
+/* gradient thingy */
+.character--img-3d::after{
+  inset: -1rem;
+  background: linear-gradient(-45deg, rgba(217, 217, 147, 0.114), rgba(70, 70, 103, 0.622));
+  transform: translateZ(-50px);
+}
+
 .character--withInfo--img{
   /* width: 25%;
   height: 55%; */
@@ -486,8 +526,8 @@ AnimationOnScroll{
   /* position: absolute; */
 }
 
+
 .character--withInfo--img-zoomed-container{
-  /* display:inline-block; */
   width: 30vw;
   height: auto;
   position:relative;
