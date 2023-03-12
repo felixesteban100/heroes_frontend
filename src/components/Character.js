@@ -27,6 +27,7 @@ function Character() {
     const [side, setSide] = useState("All")
     const [universe, setUniverse] = useState("All")
     const [team, setTeam] = useState("All")
+    const [gender, setGender] = useState("All")
 
     const [character, setCharacter] = React.useState([])
     const [imageSize, setImageSize] = React.useState(false)
@@ -56,32 +57,35 @@ function Character() {
         const saveSide = localStorage.getItem('side')
         const saveUniverse = localStorage.getItem('universe')
         const saveTeam = localStorage.getItem('team')
+        const saveGender = localStorage.getItem('gender')
         const saveByComics = localStorage.getItem('bycomics')
         const saveFilterSystemButtons = localStorage.getItem('filterButtons')
         let saveHowMany = localStorage.getItem('howManyRef')
 
         saveHowMany = saveHowMany === null ? "" : saveHowMany
 
-        return {saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveFilterSystemButtons}
+        return {saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveGender, saveFilterSystemButtons}
     }
 
     //for the beginning
     if (firstLoad === false && (initialCharacters[0] === undefined) && data !== undefined) {
-        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveFilterSystemButtons } = gettingTheLocalStorageData()
+        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveGender, saveFilterSystemButtons } = gettingTheLocalStorageData()
 
         saveSide = saveSide ?? "All" 
         saveUniverse = saveUniverse ?? "All" 
         saveTeam = saveTeam ?? "All" 
         saveHowMany = saveHowMany ?? "" 
+        saveGender = saveGender ?? "All"
 
         setSide(saveSide)
         setUniverse(saveUniverse)
         setTeam(saveTeam)
         setHowMany(saveHowMany)
+        setGender(saveGender)
         const isTrueSet = (saveFilterSystemButtons === 'true')
         setFilterSystemButtons(isTrueSet)
 
-        filterData("begin", saveByComics, saveTeam, saveUniverse, saveSide, saveHowMany)
+        filterData("begin", saveByComics, saveTeam, saveUniverse, saveSide, saveHowMany, saveGender)
 
         const saveCharacters = JSON.parse(localStorage.getItem('initialcharacters'))
         if (saveCharacters !== undefined && saveCharacters !== null) {
@@ -90,15 +94,16 @@ function Character() {
     }
     //for the beginning
 
-    function filterData(where, bycomicsSended, teamSended, universeSended, sideSended, howManySended){
-        // console.log(`////from ${where}//// \n bycomicsSended: ${bycomicsSended}, teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended}`)
+    function filterData(where, bycomicsSended, teamSended, universeSended, sideSended, howManySended, genderSended){
+        // console.log(`////from ${where}//// \n bycomicsSended: ${bycomicsSended}, teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended} genderSended: ${genderSended}`)
 
         let selectedOnes = []
         let result = []
 
         if (teamSended === "All") {
             data.forEach((current, index) => {
-                let currentReturned = whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended)
+                const currentReturned = whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended, genderSended)
+                // console.log(currentReturned)
                 if (currentReturned !== undefined) {
                     selectedOnes.push(currentReturned.index)
                     result.push(currentReturned.current)
@@ -109,7 +114,7 @@ function Character() {
         if (teamSended !== "All") { 
             data.forEach((current, index) => {
                 if (current.connections.groupAffiliation.includes(teamSended)) {
-                    let currentReturned = whenTeamCoincide(current,index, sideSended, universeSended)
+                    let currentReturned = whenTeamCoincide(current, index, sideSended, universeSended, genderSended)
                     if (currentReturned !== undefined) {
                         selectedOnes.push(currentReturned.index)
                         result.push(currentReturned.current)
@@ -117,7 +122,7 @@ function Character() {
                 }
             }) 
         }
-        
+
         if (bycomicsSended === true) {
             result = []
             data.forEach((current) => {
@@ -140,6 +145,7 @@ function Character() {
             })
         }
 
+        
         // if ((teamSended === undefined || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true && (howManySended < 0 || howManySended === "")) {
         if ((howManySended < 0 || howManySended === "") && ((teamSended === undefined || teamSended === null) || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true) {
             let finalSelectedIndex = []
@@ -170,22 +176,28 @@ function Character() {
         }
     }
 
-    function whenTeamCoincide(current,index, sideSended, universeSended){
-        if (sideSended === "All" && universeSended === "All") return {"index": index, "current": current}
-        if (sideSended === 'All' && universeSended !== "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
-        if (sideSended !== 'All' && universeSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
-        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) return {"index": index, "current": current}
+    function whenTeamCoincide(current,index, sideSended, universeSended, genderSended){        
+        if (sideSended === "All" && universeSended === "All" && genderSended === "All") return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended === "All" && genderSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.alignment === sideSended) && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended !== "All" && genderSended !== "All" && (current.biography.publisher === universeSended) && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended === "All" && genderSended !== "All" && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
+        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended && current.appearance.gender === genderSended) return {"index": index, "current": current}
     }
 
-    function whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended){
-        if (sideSended === "All" && universeSended === "All") return {"index": index, "current": current}
-        if (sideSended === 'All' && universeSended !== "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
-        if (sideSended !== 'All' && universeSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+    function whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended, genderSended){
+        if (sideSended === "All" && universeSended === "All" && genderSended === "All") return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended === "All" && genderSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.alignment === sideSended) && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended !== "All" && genderSended !== "All" && (current.biography.publisher === universeSended) && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
+        if (sideSended === 'All' && universeSended === "All" && genderSended !== "All" && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
         /* if (side !== "All" && universe !== "All" && teams !== "All") */
-        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended) return {"index": index, "current": current}
+        if (current.biography.alignment === sideSended && current.biography.publisher === universeSended && current.appearance.gender === genderSended) return {"index": index, "current": current}
     }
 
-    function saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected){
+    function saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected){
         /* FOR TESTING PURPOSES */
         // console.log("---------------------------")
         // console.log(bycomicsSelected)
@@ -195,7 +207,7 @@ function Character() {
         // console.log(teamSelected)
         // console.log("---------------------------")
 
-        filterData("getCharacters", bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+        filterData("getCharacters", bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
         
         localStorage.setItem('bycomics', false)
         if (bycomicsSelected !== null && bycomicsSelected !== undefined) {
@@ -217,6 +229,11 @@ function Character() {
             localStorage.setItem('team', teamSelected)
         }
 
+        localStorage.setItem('gender', "All")
+        if (genderSelected !== null && genderSelected !== undefined) {
+            localStorage.setItem('gender', genderSelected)
+        }
+
         localStorage.setItem('howMany', 6)
         if (howManySelected === null) {
             localStorage.setItem('howMany', "")
@@ -228,9 +245,20 @@ function Character() {
     }
 
     function getCharacters(type, event){
-        let {saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveByComics: bycomicsSelected, saveHowMany: howManySelected} = gettingTheLocalStorageData()
+        let {saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveByComics: bycomicsSelected, saveHowMany: howManySelected, saveGender: genderSelected} = gettingTheLocalStorageData()
 
         switch(type){
+            case "gender":
+                bycomicsSelected = false
+                setGender(event.target.value)
+                genderSelected = event.target.value
+
+                if (universeSelected === "All" && universeSelected === "All") {
+                    howManySelected = 6
+                }
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+            break;
+
             case "side":
                 bycomicsSelected = false
                 setSide(event.target.value)
@@ -239,7 +267,7 @@ function Character() {
                 if (universeSelected === "All" && universeSelected === "All") {
                     howManySelected = 6
                 }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
             break;
 
             case "universe":
@@ -254,7 +282,7 @@ function Character() {
                 if (universeSelected === "All" && teamSelected === "All") {
                     howManySelected = 6
                 }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
             break;
 
             case "team":
@@ -265,7 +293,7 @@ function Character() {
                 if (event.target.value !== "All") {
                     setHowMany("")
                 }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
             break;
 
             case "how":
@@ -273,12 +301,12 @@ function Character() {
                 setHowMany(event.target.value)
                 howManySelected = event.target.value
 
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
             break;
 
             case "comics":
                 bycomicsSelected = !(bycomicsSelected === "true")
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected)
+                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
             break;
 
             case 'filterButtons': 
@@ -541,11 +569,12 @@ function Character() {
                         universe={universe}
                         side={side}
                         howMany={howMany}
+                        gender={gender}              
                         filterSystemButtons={filterSystemButtons}
                         getCharacters={getCharacters}
                         findByName={findByName}
                         namesFilterExact={namesFilterExact}
-                        setNamesFilterExact={setNamesFilterExact}              
+                        setNamesFilterExact={setNamesFilterExact}
                     />
                 }
                 

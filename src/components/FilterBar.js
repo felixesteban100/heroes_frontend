@@ -1,6 +1,6 @@
 import React from 'react'
 
-function FilterBar({characterRef, team, universe, side, filterSystemButtons, howMany, findByName, getCharacters, noCharacter, namesFilterExact, setNamesFilterExact}) {
+function FilterBar({characterRef, team, universe, side, filterSystemButtons, howMany, gender, findByName, getCharacters, noCharacter, namesFilterExact, setNamesFilterExact}) {
   
     const dcComicsTeams = [
         {
@@ -255,6 +255,12 @@ function FilterBar({characterRef, team, universe, side, filterSystemButtons, how
                         <option value="good">Hero 🦸‍♂️</option>
                         <option value="bad">Villain 🦹‍♂️</option>
                         <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
+                    </select>
+
+                    <select className='select-category' onChange={event => getCharacters("gender", event)} value={gender}>
+                        <option value="All">Both genders</option>
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
                     </select>
 
                     <select className='select-category' onChange={(event) => getCharacters("universe", event)} value={universe}>
