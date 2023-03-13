@@ -246,7 +246,7 @@ function FilterBar({characterRef, team, universe, side, filterSystemButtons, how
             {
                 filterSystemButtons === true &&
                 <div className='animate__animated animate__fadeIn find-container'>
-                    <button id='character--button' className='character--button' onClick={() => getCharacters("comics", "Nothing here")} >Get Comics</button>
+                    {/* <button id='character--button' className='character--button' onClick={() => getCharacters("comics", "Nothing here")} >Get Comics</button> */}
                     
                     <input className='input-howMany' type="number" value={howMany} onChange={(event) => getCharacters("how", event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
 

@@ -2,6 +2,7 @@
 *::before,
 *::after{
   box-sizing: border-box;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 html {
@@ -11,7 +12,7 @@ html {
 
 body {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  
   background-color: rgb(6, 7, 42);
   background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80');
   /* background: url('https://media.idownloadblog.com/wp-content/uploads/2019/12/Snowman-Tree-Red-scaled.png'); */

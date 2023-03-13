@@ -67,6 +67,7 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
             <Modal
                 isOpen={modalIsOpen}
                 style={customStyles}
+                onRequestClose={() => setIsOpen(false)}
             >
                 <button 
                     onClick={() => setIsOpen(false)}
