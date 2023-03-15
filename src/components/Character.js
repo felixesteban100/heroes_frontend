@@ -2,6 +2,7 @@ import React, { /* useCallback */ useRef, useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import FilterBar from '../components/FilterBar';
 import CharacterInfo from '../components/CharacterInfo'
+import Pagination from './Pagination';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import axios from 'axios'
@@ -33,6 +34,9 @@ function Character() {
     const [imageSize, setImageSize] = React.useState(false)
     const [selectedStat, setSelectedStat] = useState("Powerstats")
     const [lastWindowPosition, setLastWindowPosition] = useState() 
+
+    const [currentPage, setCurrentPage] = useState(0)
+
 
     const { isLoading, error, data } = useQuery('data', () => {
         return axios.get("https://heroes-backend.onrender.com")
@@ -242,6 +246,7 @@ function Character() {
             localStorage.setItem('howMany', howManySelected)
         }
         localStorage.setItem('filterButtons', filterSystemButtons)
+        setCurrentPage(0)
     }
 
     function getCharacters(type, event){
@@ -446,11 +451,13 @@ function Character() {
             if (charactersArr[0] === undefined && characterRef.current.value !== "") {
                 setFirstLoad(true)
             }
+            setCurrentPage(0)
         }, 800)
 
         if (charactersArr[0] !== undefined) {
             localStorage.setItem('initialcharacters', JSON.stringify(charactersArr))
         }
+        
     }
 
     function findByNameClick(idSended){
@@ -558,6 +565,8 @@ function Character() {
         });
     }
 
+
+
     return (
         <div className='character-module'>
             <QueryClientProvider client={queryClient}>
@@ -591,22 +600,13 @@ function Character() {
                 {
                     isLoading === false &&
                     (hideCharacters === false && initialCharacters[0] !== undefined && initialCharacters[0] !== null) &&
-                    // <AnimationOnScroll initiallyVisible={true} animateIn={"animate__fadeIn"} animateOut={"animate__fadeOut"} duration={2}>
-                        <div className='characters--container'>
-                            {
-                                initialCharacters.map((current, index)=> (
-                                    // <AnimationOnScroll key={index} initiallyVisible={true} animateIn={"animate__fadeIn"} animateOut={"animate__fadeOut"} duration={2}>
-                                        <div key={index} className={`animate__animated animate__fadeIn character`} onClick={() => findByNameClick(current.id)}>
-                                            <div className='character--img--container'>
-                                                <img className='character--img' src={current.images.md} alt="logo" />
-                                            </div>
-                                            <p className='character--name'>{current.name}</p>
-                                        </div>
-                                    // </AnimationOnScroll>
-                                ))
-                            }
-                        </div>
-                    // </AnimationOnScroll>
+                    <Pagination 
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        itemsPerPage={window.innerWidth < 1200 ? 4 : 3}
+                        initialCharacters={initialCharacters}
+                        findByNameClick={findByNameClick}
+                    />
                 }
 
                 {

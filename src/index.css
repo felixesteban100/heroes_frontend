@@ -426,6 +426,43 @@ option[value="Image Comics"]{
 }
 /* CHARACTERS LIST */
 
+/* PAGINATION */
+.pagination{
+  list-style-type: none;
+  color: white;
+  display: flex;
+  gap: 2rem;
+  font-size: 2rem;
+  width: fit-content;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.pagination > li {
+  cursor: pointer;
+  margin: 0 var(--margin);
+  border-radius: 6px;
+  background: #000000;
+  max-width: 4rem;
+  min-width: 4rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  padding: 10px;
+}
+
+.active-numberPage{
+  color: rgb(57, 189, 255);
+}
+
+.pagination li:hover:not(.active) {
+  /* background-color: #ddd; */
+  color: rgb(57, 189, 255);
+}
+/* PAGINATION */
 
 /* BACK BUTTON */
 .button-back{
