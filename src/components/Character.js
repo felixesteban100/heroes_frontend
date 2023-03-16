@@ -18,10 +18,10 @@ function Character() {
     const [hideCharacters, setHideCharacters] = useState(false)
     const [hideCharacter, setHideCharacter] = useState(true)
 
-    const [filterSystemButtons, setFilterSystemButtons] = useState(false)
+    // const [filterSystemButtons, setFilterSystemButtons] = useState(false)
 
     const characterRef = useRef('')
-    const [namesFilterExact, setNamesFilterExact] = useState(false)
+    const [namesFilterExact, setNamesFilterExact] = useState(true)
     
     const [howMany, setHowMany] = useState(6)
 
@@ -30,8 +30,8 @@ function Character() {
     const [team, setTeam] = useState("All")
     const [gender, setGender] = useState("All")
 
-    const [character, setCharacter] = React.useState([])
-    const [imageSize, setImageSize] = React.useState(false)
+    const [character, setCharacter] = useState([])
+    const [imageSize, setImageSize] = useState(false)
     const [selectedStat, setSelectedStat] = useState("Powerstats")
     const [lastWindowPosition, setLastWindowPosition] = useState() 
 
@@ -73,7 +73,7 @@ function Character() {
 
     //for the beginning
     if (firstLoad === false && (initialCharacters[0] === undefined) && data !== undefined) {
-        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveGender, saveFilterSystemButtons } = gettingTheLocalStorageData()
+        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveGender/* , saveFilterSystemButtons */ } = gettingTheLocalStorageData()
 
         saveSide = saveSide ?? "All" 
         saveUniverse = saveUniverse ?? "All" 
@@ -86,8 +86,8 @@ function Character() {
         setTeam(saveTeam)
         setHowMany(saveHowMany)
         setGender(saveGender)
-        const isTrueSet = (saveFilterSystemButtons === 'true')
-        setFilterSystemButtons(isTrueSet)
+        // const isTrueSet = (saveFilterSystemButtons === 'true')
+        // setFilterSystemButtons(isTrueSet)
 
         filterData("begin", saveByComics, saveTeam, saveUniverse, saveSide, saveHowMany, saveGender)
 
@@ -245,7 +245,7 @@ function Character() {
         if (howManySelected !== null && howManySelected !== undefined) {
             localStorage.setItem('howMany', howManySelected)
         }
-        localStorage.setItem('filterButtons', filterSystemButtons)
+        // localStorage.setItem('filterButtons', filterSystemButtons)
         setCurrentPage(0)
     }
 
@@ -314,10 +314,10 @@ function Character() {
                 saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
             break;
 
-            case 'filterButtons': 
-                setFilterSystemButtons(event);
-                localStorage.setItem('filterButtons', event)
-            break;
+            // case 'filterButtons': 
+            //     setFilterSystemButtons(event);
+            //     localStorage.setItem('filterButtons', event)
+            // break;
 
             default:
             break;
@@ -463,9 +463,9 @@ function Character() {
     function findByNameClick(idSended){
         setHideCharacters(true)
         setHideCharacter(false)
-        if (filterSystemButtons === false) {
-            characterRef.current.value = ""
-        }
+        // if (filterSystemButtons === false) {
+        //     characterRef.current.value = ""
+        // }
         const charactersArr = []
         data.forEach(charac => {
             if (idSended===charac.id) {
@@ -579,7 +579,7 @@ function Character() {
                         side={side}
                         howMany={howMany}
                         gender={gender}              
-                        filterSystemButtons={filterSystemButtons}
+                        /* filterSystemButtons={filterSystemButtons} */
                         getCharacters={getCharacters}
                         findByName={findByName}
                         namesFilterExact={namesFilterExact}
