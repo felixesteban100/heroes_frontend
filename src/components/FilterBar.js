@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function FilterBar({characterRef, team, universe, side, filterSystemButtons, howMany, gender, findByName, getCharacters, noCharacter, namesFilterExact, setNamesFilterExact}) {
   
@@ -226,20 +226,33 @@ function FilterBar({characterRef, team, universe, side, filterSystemButtons, how
 
     const style = noCharacter === false ? { color: "red" } : {}
 
+    useEffect(() => {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === "Enter") {
+            findByName()
+          }
+        })
+    }, [findByName])
+
     return (
         <div>
             {
                 filterSystemButtons === false &&
                 <div className='animate__animated animate__fadeIn find-container'>
-                    <input className="find-by-name" type="text" placeholder='Enter name or names' ref={characterRef} style={style}/>
-                    <button id='character--button' className='character--button' onClick={findByName} >Find character</button>
-                    {
-                        namesFilterExact ?
-                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Exact Name</button>
-                        :
-                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Include Name</button>
-                    }
-                    <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", true)}>Find by category</button>
+                    <div className='find-container-searchBar'>
+                        <input className="find-by-name" type="text" placeholder='Batman | Batman, Robin' ref={characterRef} style={style}/>
+                        <button id='character--button' className='character--button' onClick={findByName} >Find</button>
+                    </div>
+                    <br />
+                    <div className='find-container-searchBar'>
+                        {
+                            namesFilterExact ?
+                            <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Find exact Name</button>
+                            :
+                            <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Find Include Name</button>
+                        }
+                        <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", true)}>Find by category</button>
+                    </div>
                 </div>
             }
             
@@ -247,81 +260,99 @@ function FilterBar({characterRef, team, universe, side, filterSystemButtons, how
                 filterSystemButtons === true &&
                 <div className='animate__animated animate__fadeIn find-container'>
                     {/* <button id='character--button' className='character--button' onClick={() => getCharacters("comics", "Nothing here")} >Get Comics</button> */}
+                    <div className='input-label-container'>
+                        <label className='label-filterBar' htmlFor=""># Heroes</label>
+                        <input className='select-category' type="number" value={howMany} onChange={(event) => getCharacters("how", event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
+                    </div>
+
+                    <div className='input-label-container'>
+                        <label className='label-filterBar' htmlFor="">Alignment</label>
+                        <select className='select-category' onChange={event => getCharacters("side", event)} value={side}>
+                            <option value="All">All sides</option>
+                            <option value="good">Hero 🦸‍♂️</option>
+                            <option value="bad">Villain 🦹‍♂️</option>
+                            <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
+                        </select>
+                    </div>
+
                     
-                    <input className='input-howMany' type="number" value={howMany} onChange={(event) => getCharacters("how", event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
-
-                    <select className='select-category' onChange={event => getCharacters("side", event)} value={side}>
-                        <option value="All">All sides</option>
-                        <option value="good">Hero 🦸‍♂️</option>
-                        <option value="bad">Villain 🦹‍♂️</option>
-                        <option value="neutral">Anti-hero 🦸‍♂️🦹‍♂️</option>
-                    </select>
-
-                    <select className='select-category' onChange={event => getCharacters("gender", event)} value={gender}>
-                        <option value="All">Both genders</option>
-                        <option value="Female">Female</option>
-                        <option value="Male">Male</option>
-                    </select>
-
-                    <select className='select-category' onChange={(event) => getCharacters("universe", event)} value={universe}>
-                        <option className='all' value="All">All universes</option>
-                        <option className='marvel' value="Marvel Comics">Marvel</option>
-                        <option className='dc' value="DC Comics">DC</option>
-                        <option className='shueisha' value="Shueisha">Shueisha</option>
-                        <option className='dark-horse' value="Dark Horse Comics">Dark Horse Comics</option>
-                        <option className='george-lucas' value="George Lucas">George Lucas</option>
-                        <option className='idwPublishing' value="IDW Publishing">IDW Publishing</option>
-                        <option className='imagecomics' value="Image Comics">Image Comics</option>                        
-                    </select>
-
-                    {
-                        (universe === "All" || universe === "George Lucas" || universe === "Image Comics" || universe === "Shueisha") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
-                            <option value="All">All Teams</option>
+                    <div className='input-label-container'>
+                        <label className='label-filterBar' htmlFor="">Gender</label>
+                        <select className='select-category' onChange={event => getCharacters("gender", event)} value={gender}>
+                            <option value="All">Both genders</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
                         </select>
-                    }
+                    </div>
 
-                    {
-                        (universe === "Marvel Comics" && universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
-                            <option value="All">All Teams</option>
-                            {
-                                marvelComicsTeams.map((current, index) => (
-                                    // <option key={index} value={current.value}><p className='option-text'>{current.name}</p></option>
-                                    <option key={index} value={current.value} className='option-text'>{current.name}</option>
-                                ))
-                            }
+                    <div className='input-label-container'>
+                        <label className='label-filterBar' htmlFor="">Universe</label>
+                        <select className='select-category' onChange={(event) => getCharacters("universe", event)} value={universe}>
+                            <option className='all' value="All">All universes</option>
+                            <option className='marvel' value="Marvel Comics">Marvel</option>
+                            <option className='dc' value="DC Comics">DC</option>
+                            <option className='shueisha' value="Shueisha">Shueisha</option>
+                            <option className='dark-horse' value="Dark Horse Comics">Dark Horse Comics</option>
+                            <option className='george-lucas' value="George Lucas">George Lucas</option>
+                            <option className='idwPublishing' value="IDW Publishing">IDW Publishing</option>
+                            <option className='imagecomics' value="Image Comics">Image Comics</option>                        
                         </select>
-                    }
+                    </div>
 
-                    {
-                        (universe === "DC Comics" && universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
-                            <option value="All">All Teams</option>
-                            {
-                                dcComicsTeams.map((current, index) => (
-                                    <option key={index} value={current.value}>{current.name}</option>
-                                ))
-                            }
-                        </select>
-                    }
+                    <div className='input-label-container'>
+                        <label className='label-filterBar' htmlFor="">Teams</label>
+                        {
+                            (universe === "All" || universe === "George Lucas" || universe === "Image Comics" || universe === "Shueisha") &&
+                            <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
+                                <option value="All">All Teams</option>
+                            </select>
+                        }
 
-                    {
-                        (universe === "Dark Horse Comics" && universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
-                            <option value="All">All Teams</option>
-                            <option value="Incredible Family">Incredible Family</option>
-                        </select>
-                    }
+                        {
+                            (universe === "Marvel Comics" && universe !== "All") &&
+                            <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
+                                <option value="All">All Teams</option>
+                                {
+                                    marvelComicsTeams.map((current, index) => (
+                                        // <option key={index} value={current.value}><p className='option-text'>{current.name}</p></option>
+                                        <option key={index} value={current.value} className='option-text'>{current.name}</option>
+                                    ))
+                                }
+                            </select>
+                        }
 
-                    {
-                        (universe === "IDW Publishing"&& universe !== "All") &&
-                        <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
-                            <option value="All">All Teams</option>
-                            <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
-                        </select>
-                    }
-                    <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", false)}>Find by name</button>
+                        {
+                            (universe === "DC Comics" && universe !== "All") &&
+                            <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
+                                <option value="All">All Teams</option>
+                                {
+                                    dcComicsTeams.map((current, index) => (
+                                        <option key={index} value={current.value}>{current.name}</option>
+                                    ))
+                                }
+                            </select>
+                        }
+
+                        {
+                            (universe === "Dark Horse Comics" && universe !== "All") &&
+                            <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
+                                <option value="All">All Teams</option>
+                                <option value="Incredible Family">Incredible Family</option>
+                            </select>
+                        }
+
+                        {
+                            (universe === "IDW Publishing"&& universe !== "All") &&
+                            <select className='select-category' name="" id="" onChange={(event) => getCharacters("team", event)} value={team}>
+                                <option value="All">All Teams</option>
+                                <option value="Teenage Mutant Ninja Turtles">Teenage Mutant Ninja Turtles</option>
+                            </select>
+                        }
+                    </div>
+                    <div className='input-label-container'>
+                        <label className='label-filterBar' htmlFor="">&nbsp;</label>
+                        <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", false)}>Find by name</button>
+                    </div>
                 </div> 
             }
             
