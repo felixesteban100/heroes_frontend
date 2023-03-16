@@ -11,8 +11,9 @@ function Toggle({ label, toggled, onClick }){
     return (
         <label className='toggle-label'>
             <input className='toggle-input' type="checkbox" defaultChecked={isToggled} onClick={callback} />
-            <span className='toggle-span' />
-            {/* <strong>{label}</strong> */}
+            <span className='toggle-span'>
+                <strong className='toggle-strong'>{label}</strong>
+            </span>
         </label>
     )
 }

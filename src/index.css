@@ -207,7 +207,6 @@ body {
 
 
 /* FILTER  */
-
 .find-container{
   width: 100%;
   height: fit-content;
@@ -267,52 +266,24 @@ body {
 }
 
 /* TOGGLE */
-.toggle-label {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 30px;
-
-  /* added */
-  top: -3px;
+.checkToggle{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  background-color: #000000;
+  height: 100%;
+  border-radius: 0.5rem;
 }
-
-.toggle-input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+.toggle-input{
+  height: 2rem;
+  width: 2rem;
+  margin-right: 1rem;
+  color: white;
 }
-
-.toggle-span {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #000000;
-  transition: 0.3s;
-  border-radius: 30px;
-  border: 1px solid gray;
-}
-.toggle-span:before {
-  position: absolute;
-  content: "";
-  height: 25px;
-  width: 25px;
-  left: 3px;
-  bottom: 2.6px;
-  background-color: #fff;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-
-.toggle-input:checked + .toggle-span {
-  background-color: #3a56f8;
-}
-
-.toggle-input:checked + .toggle-span:before {
-  transform: translateX(29px);
+.toggle-label{
+  font-size: 2vw;
+  color: white;
 }
 /* TOGGLE */
 
@@ -772,8 +743,8 @@ AnimationOnScroll{
   width: 95vw;
   background-color: var(--character--withInfo-background);
   text-align: center;
-  /* margin: 0 auto;
-  margin-bottom: 3rem;
+  margin: 0 auto;
+  /* margin-bottom: 3rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -858,6 +829,7 @@ AnimationOnScroll{
   animation: shine 10s infinite forwards;
   /* animation-delay: 150s; */
 }
+
 
 /* .thumbs-wrapper{
   margin-right: 5rem;
@@ -1069,7 +1041,21 @@ AnimationOnScroll{
   .input-howMany{
     font-size: 4vw;
   }
+
+  /* TOGGLE */
+  .toggle-input{
+    height: 1.5rem;
+    width: 2rem;
+    margin-right: 0.2rem;
+    color: white;
+  }
+  .toggle-label{
+    font-size: 4vw;
+    color: white;
+  }
   
+  /* TOGGLE */
+
   .select-category{
     font-size: 4vw;
   }
@@ -1218,8 +1204,116 @@ AnimationOnScroll{
 
 @media (max-width: 600px){
   .find-container-toggle{
-    margin: 1.5rem 0 0 0;
+    margin: 2rem 0 0 0;
   }
 }
 
 /* MEDIA QUERY */
+
+
+
+
+
+/* NORMAL */
+/* .toggle-label {
+  position: relative;
+  display: inline-block;
+  width: 10rem;
+  height: 20rem;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-span {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000000;
+  transition: 0.3s;
+  border-radius: 0.5rem;
+  border: 1px solid gray;
+  height: 140%;
+}
+.toggle-span:before {
+  position: absolute;
+  content: "";
+  height: 145%;
+  width: 15%;
+  left: 1px;
+  bottom: -8px;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  transition: 0.3s;
+}
+.toggle-strong{
+  color: white;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.4rem;
+  font-size: 1vw;
+}
+
+.toggle-input:checked + .toggle-span {
+  background-color: #3a56f8;
+}
+
+.toggle-input:checked + .toggle-span:before {
+  transform: translateX(8.5rem);
+} */
+/* NORMAL */
+
+/* RESPONSIVE */
+/* .toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .toggle-span {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000000;
+    transition: 0.3s;
+    border-radius: 0.5rem;
+    border: 1px solid gray;
+  }
+  .toggle-span:before {
+    position: absolute;
+    content: "";
+    height: 110%;
+    width: 15%;
+    left: 1px;
+    bottom: -1px;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    transition: 0.3s;
+  }
+  .toggle-strong{
+    color: white;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.4rem;
+    font-size: 4vw;
+  }
+  .toggle-input:checked + .toggle-span:before {
+    transform: translateX(20%);
+  } */
+/* RESPONSIVE */

@@ -16,7 +16,7 @@ function Carousel3d(props) {
   })
 
   return (
-    <div>
+    // <div>
       <div id='character--withInfo-comics' className='character--withInfo-comics'>
         <p className='character--withInfo--title'>Comics</p>
         <br />
@@ -26,7 +26,7 @@ function Carousel3d(props) {
           {comics}
         </Carousel>
       </div>
-    </div>
+    // </div>
   )
 }
 

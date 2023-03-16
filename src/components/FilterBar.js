@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Toggle  from './Toggle'
+// import Toggle  from './Toggle'
 
 function FilterBar({characterRef, team, universe, side, /* filterSystemButtons, */ howMany, gender, findByName, getCharacters, noCharacter, namesFilterExact, setNamesFilterExact}) {
   
@@ -346,21 +346,14 @@ function FilterBar({characterRef, team, universe, side, /* filterSystemButtons, 
                 </div>
 
                 <div className='input-label-container'>
-                    <label className='label-filterBar' htmlFor=""></label>
-                    <div className='find-container-toggle'>
-                        {
-                            namesFilterExact ?
-                            <label className='label-filterBar' htmlFor="">Exact name</label>
-                            :
-                            <label className='label-filterBar' htmlFor="">Exact name</label>
-                        }
-                        <Toggle
-                            label="Toggle me"
-                            toggled={!namesFilterExact}
-                            onClick={() => setNamesFilterExact(prev => !prev)}
-                        />
+                    <label className='label-filterBar' htmlFor="">&nbsp;</label>
+                    <div className='checkToggle'>
+                        <input className="toggle-input" id='toggle-input' type="checkbox" defaultChecked={!namesFilterExact} onClick={() => setNamesFilterExact(prev => !prev)} />
+                        <label htmlFor="toggle-input" className='toggle-label'>Exact name</label>
                     </div>
                 </div>
+
+
             </div>
         </div>
   )
@@ -368,6 +361,19 @@ function FilterBar({characterRef, team, universe, side, /* filterSystemButtons, 
 
 export default FilterBar
 
+/* <div className='find-container-toggle'>
+                        {
+                            namesFilterExact ?
+                            <label className='label-filterBar' htmlFor="">Exact name</label>
+                            :
+                            <label className='label-filterBar' htmlFor="">Exact name</label>
+                        }
+                        <Toggle
+                            label={namesFilterExact ? "Exact name" : "Contain name"}
+                            toggled={!namesFilterExact}
+                            onClick={() => setNamesFilterExact(prev => !prev)}
+                        />
+                    </div> */
 
  /* {
                 filterSystemButtons === true &&
