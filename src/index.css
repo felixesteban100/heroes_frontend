@@ -262,7 +262,8 @@ body {
   border-bottom: 2px solid var(--input-howMany-border-color);
   transition: all 2s ease-in-out;
   width: 70%;
-  padding: 0.5rem;
+  padding: 1rem;
+  padding-left: 2rem;
 }
 
 /* TOGGLE */
@@ -830,6 +831,9 @@ AnimationOnScroll{
   /* animation-delay: 150s; */
 }
 
+.thumbs{
+  padding: 0;
+}
 
 /* .thumbs-wrapper{
   margin-right: 5rem;
@@ -1019,11 +1023,12 @@ AnimationOnScroll{
     width: 100%;
     display: grid;
     grid-template-columns: 70% auto;
+    margin: 0 auto;
     margin-top: 2rem;
     /* justify-content:center; */
     /* align-items: center; */
     /* width: 100vw; */
-    gap: 2rem;
+    gap: 1rem;
   }
   .find-container-toggle{
     margin: 3rem 0 0 0;
@@ -1070,7 +1075,7 @@ AnimationOnScroll{
     list-style-type: none;
     color: white;
     display: flex;
-    gap: 0rem;
+    gap: 5px;
     width: fit-content;
     margin: 0 auto;
     margin-bottom: 2rem;

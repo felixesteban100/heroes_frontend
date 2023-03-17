@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React/* , { useEffect } */ from 'react'
 // import Toggle  from './Toggle'
 
-function FilterBar({characterRef, team, universe, side, /* filterSystemButtons, */ howMany, gender, findByName, getCharacters, noCharacter, namesFilterExact, setNamesFilterExact}) {
+function FilterBar({characterName, team, universe, side, howMany, gender,  getCharacters, exits, namesFilterExact, setNamesFilterExact}) {
   
     const dcComicsTeams = [
         {
@@ -225,39 +225,28 @@ function FilterBar({characterRef, team, universe, side, /* filterSystemButtons, 
         },
     ]
 
-    const style = noCharacter === false ? { color: "red" } : {}
+    const style = exits === false ? { color: "red" } : {}
 
-    useEffect(() => {
-        document.addEventListener('keydown', (e) => {
-          if (e.key === "Enter") {
-            findByName()
-          }
-        })
-    }, [findByName])
+    // useEffect(() => {
+    //     document.addEventListener('keydown', (e) => {
+    //       if (e.key === "Enter") {
+    //         getCharacters("byName", e)
+    //       }
+    //     })
+    // }, [getCharacters])
 
     return (
         <div>
             <div className='animate__animated animate__fadeIn'>
                 <div className='find-container-searchBar'>
-                    <input className="find-by-name" type="text" placeholder='Batman, Robin, Spider-Man ...' ref={characterRef} style={style}/>
-                    <button id='character--button' className='character--button' onClick={findByName} >Find</button>
+                    <input className="find-by-name" type="text" placeholder='Batman, Robin, Spider-Man ...' value={characterName} style={style} onChange={(event) => getCharacters("byName", event)}/>
+                    {/* <button id='character--button' className='character--button' onClick={(event) => getCharacters("byName", event)} >Find</button> */}
                 </div>
-                
-                {/* <div className='find-container-searchBar'>
-                    {
-                        namesFilterExact ?
-                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Find exact Name</button>
-                        :
-                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Find Include Name</button>
-                    }
-                </div> */}
-                {/* <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", true)}>Find by category</button> */}
-                {/* <button id='character--button' className='character--button' onClick={() => getCharacters("comics", "Nothing here")} >Get Comics</button> */}
             </div>            
             <div className='animate__animated animate__fadeIn find-container-inside'>
                 <div className='input-label-container'>
                     <label className='label-filterBar' htmlFor=""># Heroes</label>
-                    <input className='select-category' type="number" value={howMany} onChange={(event) => getCharacters("how", event)} placeholder={(team !== "All" || universe !== "All" || side !== "All") ? 'All' : 6} max={100} min={0}/>
+                    <input className='select-category' type="number" value={howMany} min={1} onChange={(event) => getCharacters("how", event)} max={100}/>
                 </div>
 
                 <div className='input-label-container'>
@@ -360,6 +349,17 @@ function FilterBar({characterRef, team, universe, side, /* filterSystemButtons, 
 }
 
 export default FilterBar
+
+ /* <div className='find-container-searchBar'>
+                    {
+                        namesFilterExact ?
+                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Find exact Name</button>
+                        :
+                        <button className='character--button' onClick={() => setNamesFilterExact(prev => !prev)}>Find Include Name</button>
+                    }
+                </div> */
+                /* <button id='character--button' className='character--button' onClick={() => getCharacters("filterButtons", true)}>Find by category</button> */
+                /* <button id='character--button' className='character--button' onClick={() => getCharacters("comics", "Nothing here")} >Get Comics</button> */
 
 /* <div className='find-container-toggle'>
                         {

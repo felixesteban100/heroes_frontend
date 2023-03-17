@@ -1,4 +1,4 @@
-import React, { /* useCallback */ useRef, useState } from 'react'
+import React, { /* useCallback */ useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import FilterBar from '../components/FilterBar';
 import CharacterInfo from '../components/CharacterInfo'
@@ -13,17 +13,14 @@ const queryClient = new QueryClient()
 
 function Character() {
     const [initialCharacters, setInitialCharacters] = useState([])
-    const [firstLoad, setFirstLoad] = useState(false)
 
     const [hideCharacters, setHideCharacters] = useState(false)
     const [hideCharacter, setHideCharacter] = useState(true)
 
-    // const [filterSystemButtons, setFilterSystemButtons] = useState(false)
-
-    const characterRef = useRef('')
+    const [characterName, setCharacterName] = useState("")
     const [namesFilterExact, setNamesFilterExact] = useState(true)
     
-    const [howMany, setHowMany] = useState(6)
+    const [howMany, setHowMany] = useState("")
 
     const [side, setSide] = useState("All")
     const [universe, setUniverse] = useState("All")
@@ -35,7 +32,9 @@ function Character() {
     const [selectedStat, setSelectedStat] = useState("Powerstats")
     const [lastWindowPosition, setLastWindowPosition] = useState() 
 
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(3)
+
+    const [exits, setExits] = useState(true)
 
 
     const { isLoading, error, data } = useQuery('data', () => {
@@ -58,38 +57,34 @@ function Character() {
     })
 
     function gettingTheLocalStorageData(){
+        const saveName = localStorage.getItem('name')
         const saveSide = localStorage.getItem('side')
         const saveUniverse = localStorage.getItem('universe')
         const saveTeam = localStorage.getItem('team')
         const saveGender = localStorage.getItem('gender')
-        const saveByComics = localStorage.getItem('bycomics')
-        const saveFilterSystemButtons = localStorage.getItem('filterButtons')
-        let saveHowMany = localStorage.getItem('howManyRef')
+        const saveHowMany = localStorage.getItem('howMany')
 
-        saveHowMany = saveHowMany === null ? "" : saveHowMany
-
-        return {saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveGender, saveFilterSystemButtons}
+        return {saveName, saveSide, saveUniverse, saveTeam, saveHowMany, saveGender}
     }
 
     //for the beginning
-    if (firstLoad === false && (initialCharacters[0] === undefined) && data !== undefined) {
-        let { saveSide, saveUniverse, saveTeam, saveByComics, saveHowMany, saveGender/* , saveFilterSystemButtons */ } = gettingTheLocalStorageData()
-
+    if ((initialCharacters[0] === undefined) && data !== undefined) {
+        let { saveName, saveSide, saveUniverse, saveTeam, saveHowMany, saveGender } = gettingTheLocalStorageData()
+        saveName = saveName ?? ""
         saveSide = saveSide ?? "All" 
         saveUniverse = saveUniverse ?? "All" 
         saveTeam = saveTeam ?? "All" 
-        saveHowMany = saveHowMany ?? "" 
+        saveHowMany = parseInt(saveHowMany) ?? 3
         saveGender = saveGender ?? "All"
 
+        setCharacterName(saveName)
         setSide(saveSide)
         setUniverse(saveUniverse)
         setTeam(saveTeam)
         setHowMany(saveHowMany)
         setGender(saveGender)
-        // const isTrueSet = (saveFilterSystemButtons === 'true')
-        // setFilterSystemButtons(isTrueSet)
 
-        filterData("begin", saveByComics, saveTeam, saveUniverse, saveSide, saveHowMany, saveGender)
+        filterData("begin", saveName, saveTeam, saveUniverse, saveSide, saveHowMany, saveGender)
 
         const saveCharacters = JSON.parse(localStorage.getItem('initialcharacters'))
         if (saveCharacters !== undefined && saveCharacters !== null) {
@@ -98,16 +93,50 @@ function Character() {
     }
     //for the beginning
 
-    function filterData(where, bycomicsSended, teamSended, universeSended, sideSended, howManySended, genderSended){
-        // console.log(`////from ${where}//// \n bycomicsSended: ${bycomicsSended}, teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended} genderSended: ${genderSended}`)
+    function setData(result, where){
+        setInitialCharacters(result) 
+        setExits(true)
+        if (where !== "begin") localStorage.setItem('initialcharacters', JSON.stringify(result)) 
+        // setFirstLoad(true)
+    }
+
+    function filterData(where, nameSended, teamSended, universeSended, sideSended, howManySended, genderSended){
+        // console.log(`////from ${where}//// \n nameSended: ${nameSended} teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended} genderSended: ${genderSended}`)
+
+        setInitialCharacters([undefined])
 
         let selectedOnes = []
         let result = []
 
+        let firstFilter = []
+
+        if (where === "byName" || nameSended !== "") {
+            let name = [nameSended]
+
+            if (nameSended.includes(",")) {
+                name = nameSended.split(",").map(current => current.trim())
+            }
+
+            name.forEach((currentName) => {
+                data.forEach(charac => {
+                    const name = charac.name.toLowerCase();
+                    const nameintro = currentName.toLowerCase();
+                    let answer
+                    if(namesFilterExact) answer = name.includes(nameintro)
+                    if(!namesFilterExact) answer = name === nameintro
+        
+                    if (answer === true) {
+                        firstFilter.push(organizeCharacterData(charac))
+                    }
+                })
+            })
+        }
+
+        if(where !== "byName" && nameSended === "") firstFilter = data
+
         if (teamSended === "All") {
-            data.forEach((current, index) => {
+            firstFilter.forEach((current, index) => {
                 const currentReturned = whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended, genderSended)
-                // console.log(currentReturned)
                 if (currentReturned !== undefined) {
                     selectedOnes.push(currentReturned.index)
                     result.push(currentReturned.current)
@@ -116,7 +145,7 @@ function Character() {
         }
         
         if (teamSended !== "All") { 
-            data.forEach((current, index) => {
+            firstFilter.forEach((current, index) => {
                 if (current.connections.groupAffiliation.includes(teamSended)) {
                     let currentReturned = whenTeamCoincide(current, index, sideSended, universeSended, genderSended)
                     if (currentReturned !== undefined) {
@@ -126,63 +155,24 @@ function Character() {
                 }
             }) 
         }
-
-        if (bycomicsSended === true) {
-            result = []
-            data.forEach((current) => {
-                if (current.comics !== undefined) {
-                    result.push(current)
-                }
-            })
-        }
-
-        if ((howManySended > 0 || howManySended !== "") && bycomicsSended !== true) {
-            let finalSelectedIndex = []
-            for(let i = 0; i < howManySended; i++){
-                finalSelectedIndex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
-            } 
-            result = []
-            data.forEach((current, index) => {
-                if (finalSelectedIndex.includes(index)) {
-                    result.push(current)
-                }
-            })
-        }
-
         
-        // if ((teamSended === undefined || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true && (howManySended < 0 || howManySended === "")) {
-        if ((howManySended < 0 || howManySended === "") && ((teamSended === undefined || teamSended === null) || teamSended === "All") && sideSended === "All" && universeSended === "All" && bycomicsSended !== true) {
-            let finalSelectedIndex = []
-            for(let i = 0; i < 6; i++){
-                finalSelectedIndex.push(selectedOnes[Math.floor(Math.random()*selectedOnes.length)])
-            } 
-            result = []
-            data.forEach((current, index) => {
-                if (finalSelectedIndex.includes(index)) {
-                    result.push(current)
-                }
-            })
-        }
-
         for (let i = result.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [result[i], result[j]] = [result[j], result[i]];
         }
 
-        setInitialCharacters([undefined])
-
-        if (result[0] !== undefined) {
-            setInitialCharacters(result)
-        }
-
-        if (result[0] !== undefined && where !== "begin") {
-            localStorage.setItem('initialcharacters', JSON.stringify(result))
-        }
+        console.log(result)
+        
+        if(isNaN(howManySended) === false) result = result.slice(0, (howManySended ?? result.length))
+        
+        setExits(false)
+        if (result[0] !== undefined) setData(result, where)
     }
 
     function whenTeamCoincide(current,index, sideSended, universeSended, genderSended){        
         if (sideSended === "All" && universeSended === "All" && genderSended === "All") return {"index": index, "current": current}
         if (sideSended !== 'All' && universeSended === "All" && genderSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended === "All" && genderSended !== "All" && (current.biography.alignment === sideSended) && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
         if (sideSended !== 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.alignment === sideSended) && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
         if (sideSended === 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
         if (sideSended === 'All' && universeSended !== "All" && genderSended !== "All" && (current.biography.publisher === universeSended) && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
@@ -193,90 +183,68 @@ function Character() {
     function whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended, genderSended){
         if (sideSended === "All" && universeSended === "All" && genderSended === "All") return {"index": index, "current": current}
         if (sideSended !== 'All' && universeSended === "All" && genderSended === "All" && (current.biography.alignment === sideSended)) return {"index": index, "current": current}
+        if (sideSended !== 'All' && universeSended === "All" && genderSended !== "All" && (current.biography.alignment === sideSended) && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
         if (sideSended !== 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.alignment === sideSended) && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
         if (sideSended === 'All' && universeSended !== "All" && genderSended === "All" && (current.biography.publisher === universeSended)) return {"index": index, "current": current}
         if (sideSended === 'All' && universeSended !== "All" && genderSended !== "All" && (current.biography.publisher === universeSended) && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
         if (sideSended === 'All' && universeSended === "All" && genderSended !== "All" && (current.appearance.gender === genderSended)) return {"index": index, "current": current}
-        /* if (side !== "All" && universe !== "All" && teams !== "All") */
         if (current.biography.alignment === sideSended && current.biography.publisher === universeSended && current.appearance.gender === genderSended) return {"index": index, "current": current}
     }
 
-    function saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected){
+    function saveAndFilter(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected){
         /* FOR TESTING PURPOSES */
         // console.log("---------------------------")
-        // console.log(bycomicsSelected)
-        // console.log(howManySelected)
-        // console.log(sideSelected)
-        // console.log(universeSelected)
+        // console.log(nameSelected)
         // console.log(teamSelected)
+        // console.log(universeSelected)
+        // console.log(sideSelected)
+        // console.log(howManySelected)
+        // console.log(genderSelected)
         // console.log("---------------------------")
 
-        filterData("getCharacters", bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+        localStorage.setItem('side', (sideSelected ?? "All"))
+
+        localStorage.setItem('universe', (universeSelected ?? "All"))
+
+        localStorage.setItem('team', (teamSelected ?? "All"))
+
+        localStorage.setItem('gender', (genderSelected ?? "All"))
+  
+        localStorage.setItem('howMany', (howManySelected ?? 0))
         
-        localStorage.setItem('bycomics', false)
-        if (bycomicsSelected !== null && bycomicsSelected !== undefined) {
-            localStorage.setItem('bycomics', bycomicsSelected)
-        }
+        localStorage.setItem('name', (nameSelected ?? ""))
 
-        localStorage.setItem('side', "All")
-        if (sideSelected !== null && sideSelected !== undefined) {
-            localStorage.setItem('side', sideSelected)
-        }
-
-        localStorage.setItem('universe', "All")
-        if (universeSelected !== null && universeSelected !== undefined) {
-            localStorage.setItem('universe', universeSelected)
-        }
-
-        localStorage.setItem('team', "All")
-        if (teamSelected !== null && teamSelected !== undefined) {
-            localStorage.setItem('team', teamSelected)
-        }
-
-        localStorage.setItem('gender', "All")
-        if (genderSelected !== null && genderSelected !== undefined) {
-            localStorage.setItem('gender', genderSelected)
-        }
-
-        localStorage.setItem('howMany', 6)
-        if (howManySelected === null) {
-            localStorage.setItem('howMany', "")
-        }
-        if (howManySelected !== null && howManySelected !== undefined) {
-            localStorage.setItem('howMany', howManySelected)
-        }
-        // localStorage.setItem('filterButtons', filterSystemButtons)
         setCurrentPage(0)
+
+        filterData(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
     }
 
     function getCharacters(type, event){
-        let {saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveByComics: bycomicsSelected, saveHowMany: howManySelected, saveGender: genderSelected} = gettingTheLocalStorageData()
+        let { saveName: nameSelected, saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveHowMany: howManySelected, saveGender: genderSelected } = gettingTheLocalStorageData()
 
+        console.log("gettingTheLocalStorageData", gettingTheLocalStorageData())
+
+        let where 
         switch(type){
+            case "byName":
+                setCharacterName(event.target.value)    
+                nameSelected = event.target.value
+                where = "byName"
+            break;
+
             case "gender":
-                bycomicsSelected = false
                 setGender(event.target.value)
                 genderSelected = event.target.value
-
-                if (universeSelected === "All" && universeSelected === "All") {
-                    howManySelected = 6
-                }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+                where = "gender"
             break;
 
             case "side":
-                bycomicsSelected = false
                 setSide(event.target.value)
                 sideSelected = event.target.value
-
-                if (universeSelected === "All" && universeSelected === "All") {
-                    howManySelected = 6
-                }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+                where = "side"
             break;
 
             case "universe":
-                bycomicsSelected = false
                 setUniverse(event.target.value)
                 universeSelected = event.target.value
 
@@ -284,44 +252,27 @@ function Character() {
                 if (event.target.value !== "All") {
                     teamSelected = "All"
                 }
-                if (universeSelected === "All" && teamSelected === "All") {
-                    howManySelected = 6
-                }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+                where = "universe"
             break;
 
             case "team":
-                bycomicsSelected = false
                 setTeam(event.target.value)
                 teamSelected = event.target.value
-                
-                if (event.target.value !== "All") {
-                    setHowMany("")
-                }
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+                where = "team"
             break;
 
             case "how":
-                bycomicsSelected = false
-                setHowMany(event.target.value)
-                howManySelected = event.target.value
+                setHowMany(parseInt(event.target.value))
+                howManySelected = parseInt(event.target.value)
 
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+                where = "how"
             break;
-
-            case "comics":
-                bycomicsSelected = !(bycomicsSelected === "true")
-                saveAndFilter(bycomicsSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
-            break;
-
-            // case 'filterButtons': 
-            //     setFilterSystemButtons(event);
-            //     localStorage.setItem('filterButtons', event)
-            // break;
 
             default:
             break;
         }
+
+        saveAndFilter(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
     }
 
     function changeStat(event){
@@ -409,63 +360,11 @@ function Character() {
             // boxShadowColor: getAverageRGB(charac.images.md)
         }
     }
-    
-    function findByName(){
-        const charactersArr = []
-        let names = [characterRef.current.value]
-
-        if (characterRef.current.value.includes(",")) {
-            names = characterRef.current.value
-            .split(",")
-            .map(current => current.trim())
-        }
-
-        names.forEach((currentName) => {
-            data.forEach(charac => {
-                const name = charac.name.toLowerCase();
-                const nameintro = currentName.toLowerCase();
-                let result
-                if(namesFilterExact) result = name.includes(nameintro)
-                if(!namesFilterExact) result = name === nameintro
-    
-                if (result === true) {
-                    charactersArr.push(organizeCharacterData(charac))
-                }
-            })
-        })
-
-        for (let i = charactersArr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [charactersArr[i], charactersArr[j]] = [charactersArr[j], charactersArr[i]];
-        }
-        setTimeout(() => {
-            setHideCharacters(true)
-            setInitialCharacters(charactersArr)
-        }, 300);
-
-        setTimeout(() => {
-            setHideCharacters(false)
-        }, 500);
-
-        setTimeout(() => {
-            if (charactersArr[0] === undefined && characterRef.current.value !== "") {
-                setFirstLoad(true)
-            }
-            setCurrentPage(0)
-        }, 800)
-
-        if (charactersArr[0] !== undefined) {
-            localStorage.setItem('initialcharacters', JSON.stringify(charactersArr))
-        }
-        
-    }
 
     function findByNameClick(idSended){
         setHideCharacters(true)
         setHideCharacter(false)
-        // if (filterSystemButtons === false) {
-        //     characterRef.current.value = ""
-        // }
+
         const charactersArr = []
         data.forEach(charac => {
             if (idSended===charac.id) {
@@ -565,25 +464,22 @@ function Character() {
         });
     }
 
-
-
     return (
         <div className='character-module'>
             <QueryClientProvider client={queryClient}>
                 {
                     hideCharacter === true &&
                     <FilterBar 
-                        characterRef={characterRef}
+                        characterName={characterName}
                         team={team}
                         universe={universe}
                         side={side}
                         howMany={howMany}
                         gender={gender}              
-                        /* filterSystemButtons={filterSystemButtons} */
                         getCharacters={getCharacters}
-                        findByName={findByName}
                         namesFilterExact={namesFilterExact}
                         setNamesFilterExact={setNamesFilterExact}
+                        exits={exits}
                     />
                 }
                 
@@ -611,7 +507,7 @@ function Character() {
 
                 {
                     isLoading === false &&
-                    (hideCharacters === false && initialCharacters[0] === undefined && firstLoad === true) &&
+                    (hideCharacters === false && initialCharacters[0] === undefined) &&
                     <div className='character--withInfo-unknown'>
                         <img className='animate__animated animate__fadeIn character--withInfo--img--unknown'  src="https://www.pngitem.com/pimgs/m/52-526033_unknown-person-icon-png-transparent-png.png" alt="logo" />                                                    
                         <p className='animate__animated animate__fadeIn animate__delay-1s character--withInfo--unknown--info'>Sorry but we don't have that character </p>
