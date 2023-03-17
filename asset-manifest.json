@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/heroes_frontend/static/css/main.e4380146.css",
-    "main.js": "/heroes_frontend/static/js/main.1cc0e76a.js",
+    "main.css": "/heroes_frontend/static/css/main.f5d100d3.css",
+    "main.js": "/heroes_frontend/static/js/main.42fe2795.js",
     "index.html": "/heroes_frontend/index.html",
-    "main.e4380146.css.map": "/heroes_frontend/static/css/main.e4380146.css.map",
-    "main.1cc0e76a.js.map": "/heroes_frontend/static/js/main.1cc0e76a.js.map"
+    "main.f5d100d3.css.map": "/heroes_frontend/static/css/main.f5d100d3.css.map",
+    "main.42fe2795.js.map": "/heroes_frontend/static/js/main.42fe2795.js.map"
   },
   "entrypoints": [
-    "static/css/main.e4380146.css",
-    "static/js/main.1cc0e76a.js"
+    "static/css/main.f5d100d3.css",
+    "static/js/main.42fe2795.js"
   ]
 }
