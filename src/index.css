@@ -189,10 +189,11 @@ body {
   top: 0;
   width: 100%;
   overflow: hidden;
+  padding: 0.5vw;
 }
 
 .header--logo{
-  height: 35px;
+  height: 4vw;
 }
 
 .header--logo:hover{
@@ -272,9 +273,10 @@ body {
   justify-content: flex-start;
   align-items: center;
   margin: 0;
-  background-color: #000000;
+  /* background-color: #000000; */
   height: 100%;
   border-radius: 0.5rem;
+  /* padding: 1rem 2rem 1rem 2rem; */
 }
 .toggle-input{
   height: 2rem;
@@ -978,7 +980,11 @@ AnimationOnScroll{
 
 /* MEDIA QUERY */
 @media (max-width: 1200px){
-  
+  /* HEADER */
+  .header--logo{
+    height: 6vw;
+  }
+
   /* CHARACTERS LIST RESPONSIVE */
   .characters--container{
     grid-template-columns: repeat(2, 40vw);
@@ -1210,6 +1216,9 @@ AnimationOnScroll{
 @media (max-width: 600px){
   .find-container-toggle{
     margin: 2rem 0 0 0;
+  }
+  .header--logo{
+    height: 10vw;
   }
 }
 

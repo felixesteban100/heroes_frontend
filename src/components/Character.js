@@ -1,5 +1,6 @@
 import React, { /* useCallback */ useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
+import Header from '../components/Header';
 import FilterBar from '../components/FilterBar';
 import CharacterInfo from '../components/CharacterInfo'
 import Pagination from './Pagination';
@@ -226,6 +227,24 @@ function Character() {
 
         let where 
         switch(type){
+            case "marvel":
+                setUniverse("Marvel Comics")
+                universeSelected = "Marvel Comics"
+
+                setTeam("All")
+                teamSelected = "All"
+                where = "marvel"
+            break;
+
+            case "dc":
+                setUniverse("DC Comics")
+                universeSelected = "DC Comics"
+
+                setTeam("All")
+                teamSelected = "All"
+                where = "dc"
+            break;
+
             case "byName":
                 setCharacterName(event.target.value)    
                 nameSelected = event.target.value
@@ -466,6 +485,9 @@ function Character() {
 
     return (
         <div className='character-module'>
+            <Header 
+                getCharacters={getCharacters}
+            />
             <QueryClientProvider client={queryClient}>
                 {
                     hideCharacter === true &&

@@ -1,6 +1,5 @@
 import React from 'react'
 import Character from './components/Character';
-import Header from './components/Header';
 import './index.css';
 
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -10,7 +9,6 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <div className="App">
-      <Header />
       <QueryClientProvider client={queryClient}>
         <Character />
       </QueryClientProvider>

@@ -240,13 +240,17 @@ function FilterBar({characterName, team, universe, side, howMany, gender,  getCh
             <div className='animate__animated animate__fadeIn'>
                 <div className='find-container-searchBar'>
                     <input className="find-by-name" type="text" placeholder='Batman, Robin, Spider-Man ...' value={characterName} style={style} onChange={(event) => getCharacters("byName", event)}/>
+                    <div className='checkToggle'>
+                        <input className="toggle-input" id='toggle-input' type="checkbox" onChange={(event) => getCharacters("none", event)} defaultChecked={!namesFilterExact} onClick={() => setNamesFilterExact(prev => !prev)} />
+                        <label htmlFor="toggle-input" className='toggle-label'>Exact name</label>
+                    </div>
                     {/* <button id='character--button' className='character--button' onClick={(event) => getCharacters("byName", event)} >Find</button> */}
                 </div>
             </div>            
             <div className='animate__animated animate__fadeIn find-container-inside'>
                 <div className='input-label-container'>
                     <label className='label-filterBar' htmlFor=""># Heroes</label>
-                    <input className='select-category' type="number" value={howMany} min={1} onChange={(event) => getCharacters("how", event)} max={100}/>
+                    <input className='select-category' type="number" placeholder={howMany === 0 && "All"} value={howMany} min={1} onChange={(event) => getCharacters("how", event)} max={100}/>
                 </div>
 
                 <div className='input-label-container'>
@@ -334,13 +338,13 @@ function FilterBar({characterName, team, universe, side, howMany, gender,  getCh
                     }
                 </div>
 
-                <div className='input-label-container'>
+                {/* <div className='input-label-container'>
                     <label className='label-filterBar' htmlFor="">&nbsp;</label>
                     <div className='checkToggle'>
-                        <input className="toggle-input" id='toggle-input' type="checkbox" defaultChecked={!namesFilterExact} onClick={() => setNamesFilterExact(prev => !prev)} />
+                        <input className="toggle-input" id='toggle-input' type="checkbox" onChange={(event) => getCharacters("none", event)} defaultChecked={!namesFilterExact} onClick={() => setNamesFilterExact(prev => !prev)} />
                         <label htmlFor="toggle-input" className='toggle-label'>Exact name</label>
                     </div>
-                </div>
+                </div> */}
 
 
             </div>
