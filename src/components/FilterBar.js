@@ -250,7 +250,7 @@ function FilterBar({characterName, team, universe, side, howMany, gender,  getCh
             <div className='animate__animated animate__fadeIn find-container-inside'>
                 <div className='input-label-container'>
                     <label className='label-filterBar' htmlFor=""># of Heroes</label>
-                    <input className='select-category' type="number" placeholder={howMany === 0 && "All"} value={howMany} min={1} onChange={(event) => getCharacters("how", event)} max={100}/>
+                    <input className='select-category' type="number" placeholder={howMany === 0 && "All"} value={howMany > 0 ? howMany : ""} min={1} onChange={(event) => getCharacters("how", event)} max={100}/>
                 </div>
 
                 <div className='input-label-container'>

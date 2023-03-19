@@ -13,6 +13,7 @@ import 'animate.css';
 const queryClient = new QueryClient()
 
 function Character() {
+
     const [initialCharacters, setInitialCharacters] = useState([])
 
     const [hideCharacters, setHideCharacters] = useState(false)
@@ -75,7 +76,7 @@ function Character() {
         saveSide = saveSide ?? "All" 
         saveUniverse = saveUniverse ?? "All" 
         saveTeam = saveTeam ?? "All" 
-        saveHowMany = parseInt(saveHowMany) ?? 3
+        saveHowMany = parseInt(saveHowMany) ?? NaN
         saveGender = saveGender ?? "All"
 
         setCharacterName(saveName)
@@ -101,23 +102,23 @@ function Character() {
     }
 
     function filterData(where, nameSended, teamSended, universeSended, sideSended, howManySended, genderSended){
-        // console.log(`////from ${where}//// \n nameSended: ${nameSended} teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended} genderSended: ${genderSended}`)
+        console.log(`////from ${where}//// \n nameSended: ${nameSended} teamSended: ${teamSended}, universeSended: ${universeSended}, sideSended: ${sideSended}, howManySended: ${howManySended} genderSended: ${genderSended}`)
 
         setInitialCharacters([undefined])
 
         let result = []
         let firstFilter = []
 
-        if (where === "byName" || nameSended !== "") firstFilter = getCharactersByNameSended(nameSended)
+        if (nameSended === "") firstFilter = data
 
-        if (where !== "byName" && nameSended === "") firstFilter = data
+        if (nameSended !== "") firstFilter = getCharactersByNameSended(nameSended)
 
         if (teamSended === "All") result = getCharactersByTeamNotSended(firstFilter, sideSended, universeSended, genderSended, teamSended)
-        
+
         if (teamSended !== "All") result = getCharactersByTeamSended(firstFilter, sideSended, universeSended, genderSended, teamSended)
         
-        if (isNaN(howManySended) === false) result = result.slice(0, (howManySended ?? result.length))
-        
+        if (!isNaN(howManySended) && howManySended > 0) result = result.slice(0, howManySended)
+
         result = shuffleCharacters(result)
 
         setExits(false)
@@ -143,6 +144,7 @@ function Character() {
             })
         })
 
+        console.log("resultArr", resultArr)
         return resultArr
     }
 
@@ -228,8 +230,6 @@ function Character() {
 
     function getCharacters(type, event){
         let { saveName: nameSelected, saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveHowMany: howManySelected, saveGender: genderSelected } = gettingTheLocalStorageData()
-
-        console.log("gettingTheLocalStorageData", gettingTheLocalStorageData())
 
         let where 
         switch(type){
@@ -520,7 +520,7 @@ function Character() {
             />
             <QueryClientProvider client={queryClient}>
                 {
-                    hideCharacter === true &&
+                    (isLoading === false && hideCharacter === true) &&
                     <FilterBar 
                         characterName={characterName}
                         team={team}
