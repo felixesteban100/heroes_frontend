@@ -3,26 +3,6 @@ import ReactPaginate from 'react-paginate';
 import { CharactersCards } from './CharactersCards';
 
 function Pagination({ currentPage, setCurrentPage, itemsPerPage, initialCharacters, findByNameClick}) {   
-    // console.log(currentPage)
-    // // console.log(initialCharacters)
-
-    // const [itemOffset, setItemOffset] = useState(0);
-
-    // const endOffset = itemOffset + itemsPerPage;
-    
-    // const currentItems = initialCharacters.slice(itemOffset, endOffset);
-    
-    // console.log(currentItems)
-
-    // const pageCount = Math.ceil(initialCharacters.length / itemsPerPage);
-    
-    // const handlePageClick = (event) => {
-    //     console.log(event.selected)
-    //     setCurrentPage(event.selected)
-    //     const newOffset = (event.selected * itemsPerPage) % initialCharacters.length;
-    //     // console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
-    //     setItemOffset(newOffset);
-    // };
 
     const pageCount = useMemo(() => {
         return Math.ceil(initialCharacters.length / itemsPerPage); 
@@ -41,21 +21,22 @@ function Pagination({ currentPage, setCurrentPage, itemsPerPage, initialCharacte
     return (
         <div>
             <CharactersCards 
-                // currentCharacters={currentItems}
                 currentCharacters={paginatedData}
                 findByNameClick={findByNameClick}
             />
             <ReactPaginate
+                breakLabel="..."
                 nextLabel=">"
                 onPageChange={(event) => handlePageChange(event.selected)}
-                pageRangeDisplayed={1}
+                pageRangeDisplayed={(window.innerWidth < 1200 ? 1 : 3)}
                 pageCount={pageCount}
                 previousLabel="<"
-                // renderOnZeroPageCount={null}
+                renderOnZeroPageCount={null}
                 className={`pagination`}
                 activeClassName={`active-numberPage`}
                 forcePage={currentPage}
                 // initialPage={0}
+                // pageRangeDisplayed={3}
             />
             {/* <ReactPaginate
                 // breakLabel="..."

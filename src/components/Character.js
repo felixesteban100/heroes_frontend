@@ -33,7 +33,7 @@ function Character() {
     const [selectedStat, setSelectedStat] = useState("Powerstats")
     const [lastWindowPosition, setLastWindowPosition] = useState() 
 
-    const [currentPage, setCurrentPage] = useState(3)
+    const [currentPage, setCurrentPage] = useState(0)
 
     const [exits, setExits] = useState(true)
 
@@ -98,7 +98,6 @@ function Character() {
         setInitialCharacters(result) 
         setExits(true)
         if (where !== "begin") localStorage.setItem('initialcharacters', JSON.stringify(result)) 
-        // setFirstLoad(true)
     }
 
     function filterData(where, nameSended, teamSended, universeSended, sideSended, howManySended, genderSended){
@@ -106,69 +105,76 @@ function Character() {
 
         setInitialCharacters([undefined])
 
-        let selectedOnes = []
         let result = []
-
         let firstFilter = []
 
-        if (where === "byName" || nameSended !== "") {
-            let name = [nameSended]
+        if (where === "byName" || nameSended !== "") firstFilter = getCharactersByNameSended(nameSended)
 
-            if (nameSended.includes(",")) {
-                name = nameSended.split(",").map(current => current.trim())
+        if (where !== "byName" && nameSended === "") firstFilter = data
+
+        if (teamSended === "All") result = getCharactersByTeamNotSended(firstFilter, sideSended, universeSended, genderSended, teamSended)
+        
+        if (teamSended !== "All") result = getCharactersByTeamSended(firstFilter, sideSended, universeSended, genderSended, teamSended)
+        
+        if (isNaN(howManySended) === false) result = result.slice(0, (howManySended ?? result.length))
+        
+        result = shuffleCharacters(result)
+
+        setExits(false)
+        if (result[0] !== undefined) setData(result, where)
+    }
+
+    function getCharactersByNameSended(nameSended){
+        let resultArr = []
+        let name = [nameSended]
+        if (nameSended.includes(",")) name = nameSended.split(",").map(current => current.trim())
+
+        name.forEach((currentName) => {
+            data.forEach(charac => {
+                const name = charac.name.toLowerCase();
+                const nameintro = currentName.toLowerCase();
+                let answer
+                if(namesFilterExact) answer = name.includes(nameintro)
+                if(!namesFilterExact) answer = name === nameintro
+    
+                if (answer === true) {
+                    resultArr.push(organizeCharacterData(charac))
+                }
+            })
+        })
+
+        return resultArr
+    }
+
+    function getCharactersByTeamNotSended(firstFilter, sideSended, universeSended, genderSended, teamSended){
+        let resultArr = []
+        firstFilter.forEach((current, index) => {
+            const currentReturned = whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended, genderSended)
+            if (currentReturned !== undefined) resultArr.push(currentReturned.current)
+
+        })
+        return resultArr
+    }
+
+    function getCharactersByTeamSended(firstFilter, sideSended, universeSended, genderSended, teamSended){
+        let resultArr = []
+        firstFilter.forEach((current, index) => {
+            if (current.connections.groupAffiliation.includes(teamSended)) {
+                let currentReturned = whenTeamCoincide(current, index, sideSended, universeSended, genderSended)
+                if (currentReturned !== undefined) resultArr.push(currentReturned.current)
             }
+        }) 
+        return resultArr
+    }
 
-            name.forEach((currentName) => {
-                data.forEach(charac => {
-                    const name = charac.name.toLowerCase();
-                    const nameintro = currentName.toLowerCase();
-                    let answer
-                    if(namesFilterExact) answer = name.includes(nameintro)
-                    if(!namesFilterExact) answer = name === nameintro
-        
-                    if (answer === true) {
-                        firstFilter.push(organizeCharacterData(charac))
-                    }
-                })
-            })
-        }
-
-        if(where !== "byName" && nameSended === "") firstFilter = data
-
-        if (teamSended === "All") {
-            firstFilter.forEach((current, index) => {
-                const currentReturned = whenItNotNecessaryThatTheTeamCoincide(current, index, sideSended, universeSended, genderSended)
-                if (currentReturned !== undefined) {
-                    selectedOnes.push(currentReturned.index)
-                    result.push(currentReturned.current)
-                }
-            })
-        }
-        
-        if (teamSended !== "All") { 
-            firstFilter.forEach((current, index) => {
-                if (current.connections.groupAffiliation.includes(teamSended)) {
-                    let currentReturned = whenTeamCoincide(current, index, sideSended, universeSended, genderSended)
-                    if (currentReturned !== undefined) {
-                        selectedOnes.push(currentReturned.index)
-                        result.push(currentReturned.current)
-                    }
-                }
-            }) 
-        }
-        
+    function shuffleCharacters(result){
         for (let i = result.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [result[i], result[j]] = [result[j], result[i]];
         }
-
-        console.log(result)
-        
-        if(isNaN(howManySended) === false) result = result.slice(0, (howManySended ?? result.length))
-        
-        setExits(false)
-        if (result[0] !== undefined) setData(result, where)
+        return result
     }
+
 
     function whenTeamCoincide(current,index, sideSended, universeSended, genderSended){        
         if (sideSended === "All" && universeSended === "All" && genderSended === "All") return {"index": index, "current": current}
@@ -299,37 +305,28 @@ function Character() {
     }
 
     function getPublisherImg(publisher){
-        let img = ""
         switch (publisher) {
             case "Marvel Comics":
-                img = "https://media.tenor.com/yuMS24ShcxQAAAAC/marvel-studios.gif"
-            break;
+                return "https://media.tenor.com/yuMS24ShcxQAAAAC/marvel-studios.gif"
 
             case "DC Comics":
-                img = "https://img.wattpad.com/136b18152c06ba98fc0975c35e8718b1b5d71f75/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f3852596d354861383930497349513d3d2d3339363830323632332e313462343261626138353034393866363334393330313331313336322e676966"
-            break;
-
+                return "https://img.wattpad.com/136b18152c06ba98fc0975c35e8718b1b5d71f75/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f3852596d354861383930497349513d3d2d3339363830323632332e313462343261626138353034393866363334393330313331313336322e676966"
+            
             case "George Lucas":
-                img = "https://bestanimations.com/media/star-wars/1037554235star-wars-animated-gif-32.gif"
-            break;
+                return "https://bestanimations.com/media/star-wars/1037554235star-wars-animated-gif-32.gif"
 
             case 'IDW Publishing':
-                img ="https://static.wikia.nocookie.net/silent/images/8/85/Idwlogo.png" 
-            break;
+                return"https://static.wikia.nocookie.net/silent/images/8/85/Idwlogo.png" 
 
             case "Dark Horse Comics":
-                img = "https://1000logos.net/wp-content/uploads/2020/09/Dark-Horse-Comics-Logo-1991.png"
-            break;
-
+                return "https://1000logos.net/wp-content/uploads/2020/09/Dark-Horse-Comics-Logo-1991.png"
+            
             case "Shueisha":
-                img = "https://static.wikia.nocookie.net/logopedia/images/5/5f/Shueisha_Logo_with_English_text.png/revision/latest?cb=20211106075538"
-            break;
-        
+                return "https://static.wikia.nocookie.net/logopedia/images/5/5f/Shueisha_Logo_with_English_text.png/revision/latest?cb=20211106075538"
+            
             default:
-                img = "https://images.generation-msx.nl/company/0388910c.png"
-            break;
+                return "https://images.generation-msx.nl/company/0388910c.png"
         }
-        return img
     }
 
     function organizeCharacterData(charac, comics, alteregos, occupation, groups){
@@ -383,93 +380,119 @@ function Character() {
     function findByNameClick(idSended){
         setHideCharacters(true)
         setHideCharacter(false)
+        setCharacter(getCharacterArr(idSended))
+        setLastWindowPosition(window.pageYOffset)
+        scrollTop()
+    }
 
+    function getCharacterArr(idSended){
         const charactersArr = []
-        data.forEach(charac => {
-            if (idSended===charac.id) {
-                let occupation = charac.work.occupation.split(",").map((current) => current.split(";"))
-                let occupationArr = []
-                occupation = occupation.map(current => {   
-                    occupationArr.push(...current)
-                    return current
-                })
-                occupation = occupationArr.map(occupation => {
-                    if(occupation.charAt(0) === " "){
-                        return occupation.charAt(1).toUpperCase() + occupation.slice(2)
-                    }
-                    return occupation.charAt(0).toUpperCase() + occupation.slice(1)
-                })
-
-                let groups = charac.connections.groupAffiliation.split(",").map((current) => current.split(";"))
-                let groupsArr = []
-                groups = groups.map(current => {   
-                    groupsArr.push(...current)
-                    return current
-                })
-                groups = groupsArr.map(groups => {
-                    if(groups.charAt(0) === " "){
-                        return groups.charAt(1).toUpperCase() + groups.slice(2)
-                    }
-                    return groups.charAt(0).toUpperCase() + groups.slice(1)
-                })
-
-                let alteregos = ["-"]
-                if (charac.biography.alterEgos !== undefined) {
-                    if((charac.biography.alterEgos !== "No alter egos found." || charac.biography.alterEgos !== "-") && charac.biography.alterEgos.includes(",")){
-                        alteregos = charac.biography.alterEgos.split(",")
-                    }
-                }
-
-                let comics = charac.comics !== undefined ? charac.comics : []
-
-                if(charac.comics === undefined){
-                    switch(charac.biography.publisher){
-                        case "Marvel Comics":
-                            comics = [
-                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
-                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
-                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
-                                "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg"
-                            ]
-                        break;
-                        case "DC Comics":
-                            comics = [
-                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
-                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
-                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
-                                "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg"
-                            ]
-                        break;
-                        case "Shueisha":
-                            comics = [
-                                "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg",
-                                "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg",
-                                "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg",
-                                "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg"
-                            ]
-                        break;
-                        default:
-                            comics = [
-                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
-                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
-                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
-                                "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000"
-                            ]
-                        break;
-                    }
-                }
+        console.log(data)
+        data.forEach((charac) => {
+            if (idSended === charac.id) {
+                const occupation = organizedOccupationProperty(charac.work.occupation)
+                const groups = organizedGroupsProperty(charac.connections.groupAffiliation)
+                const alteregos = organizedAlterEgosProperty(charac.biography.alterEgos)
+                const comics = organizedComicsProperty(charac.comics, charac.biography.publisher)
                 charactersArr.push(organizeCharacterData(charac, comics, alteregos, occupation, groups))
             }             
         })
+        return charactersArr
+    }
 
-        setLastWindowPosition(window.pageYOffset)
+    function organizedOccupationProperty(occupation){
+        let occupationArr1 = occupation.split(",").map((current) => current.split(";"))
+        let occupationArr2 = []
+        occupationArr1 = occupationArr1.map(current => {   
+            occupationArr2.push(...current)
+            return current
+        })
+        return occupationArr2.map(current => {
+            if(current.charAt(0) === " "){
+                return current.charAt(1).toUpperCase() + current.slice(2)
+            }
+            return current.charAt(0).toUpperCase() + current.slice(1)
+        })
+    }
 
-        setCharacter(charactersArr)
+    function organizedGroupsProperty(groups){
+        let groupsArr1 = groups.split(",").map((current) => current.split(";"))
+        let groupsArr2 = []
+        groupsArr1 = groupsArr1.map(current => {   
+            groupsArr2.push(...current)
+            return current
+        })
+        return groupsArr2.map(current => {
+            if(current.charAt(0) === " "){
+                return current.charAt(1).toUpperCase() + current.slice(2)
+            }
+            return current.charAt(0).toUpperCase() + current.slice(1)
+        })
+    }
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+    function organizedAlterEgosProperty(alterEgos){
+        if (alterEgos !== undefined) {
+            if((alterEgos !== "No alter egos found." || alterEgos !== "-") && alterEgos.includes(",")){
+                return alterEgos.split(",")
+            }
+        }
+        return ["-"]
+    }
+
+    function organizedComicsProperty(comics, publisher){
+        if(comics === undefined){
+            switch(publisher){
+                case "Marvel Comics":
+                return [
+                    "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
+                    "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
+                    "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg",
+                    "https://i.annihil.us/u/prod/marvel/i/mg/5/04/5d5d4cbf869ff/clean.jpg"
+                ]
+            
+                case "DC Comics":
+                return [
+                    "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
+                    "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
+                    "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg",
+                    "http://www.moviepostersetc.com/_staticProxy/content/ff808081163c05b001169d6655243ae9/Justice_League_of_America_poster_Issue_1.jpg"
+                ]
+            
+                case "Shueisha":
+                return [
+                    "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg",
+                    "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg",
+                    "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg",
+                    "https://cdn.animenewsnetwork.com/hotlink/thumbnails/max1000x1500/cms/interest/134237/jump_1833_fixw_640_hq.jpg"
+                ]
+
+                case "IDW Publishing":
+                return [
+                    "https://images.squarespace-cdn.com/content/v1/593f201de3df288fc6465e6f/1643902801105-VUT092WGQWT7VUD66Y8M/Teenage+Mutant+Ninja+Turtles+Reborn+Vol.+1.jpg?format=1000w",
+                    "https://d1466nnw0ex81e.cloudfront.net/n_iv/600/2066186.jpg",
+                    "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/81j8N4V4pIL.jpg",
+                    "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/91L4+Vf8YWL._AC_UF1000,1000_QL80_.jpg"
+                ]
+
+                case "George Lucas":
+                return [
+                    "https://static.wikia.nocookie.net/starwars/images/c/c0/StarWars1977-80.jpg/revision/latest?cb=20210930204523",
+                    "https://cdn.marvel.com/u/prod/marvel/i/mg/c/00/5ff32d6aad522/clean.jpg",
+                    "https://tools.toywiz.com/_images/_webp/_products/lg/apr221023.webp",
+                    "https://i0.wp.com/MynockManor.com/wp-content/uploads/2020/11/Star-Wars-11-Full-Cover-Vol-2.jpeg?ssl=1",
+                    "https://storage.googleapis.com/hipcomic/p/007ce152f644d7971541cb74253b82cf.jpg"
+                ]
+            
+                default:
+                return [
+                    "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
+                    "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
+                    "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000",
+                    "https://img.freepik.com/free-vector/comics-poster-template_225004-800.jpg?w=2000"
+                ]
+            
+            }
+        }
     }
 
     function getBack(){
@@ -479,6 +502,13 @@ function Character() {
 
         window.scrollTo({
             top: lastWindowPosition,
+            behavior: "smooth"
+        });
+    }
+
+    function scrollTop(){
+        window.scrollTo({
+            top: 0,
             behavior: "smooth"
         });
     }
