@@ -59,14 +59,14 @@ function Character() {
     })
 
     function gettingTheLocalStorageData(){
-        const saveName = localStorage.getItem('name')
-        const saveSide = localStorage.getItem('side')
-        const saveUniverse = localStorage.getItem('universe')
-        const saveTeam = localStorage.getItem('team')
-        const saveGender = localStorage.getItem('gender')
-        const saveHowMany = localStorage.getItem('howMany')
-
-        return {saveName, saveSide, saveUniverse, saveTeam, saveHowMany, saveGender}
+        return {
+            saveName: localStorage.getItem('name'), 
+            saveSide: localStorage.getItem('side'), 
+            saveUniverse: localStorage.getItem('universe'), 
+            saveTeam: localStorage.getItem('team'), 
+            saveHowMany: localStorage.getItem('howMany'), 
+            saveGender: localStorage.getItem('gender')
+        }
     }
 
     //for the beginning
