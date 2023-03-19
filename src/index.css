@@ -530,6 +530,10 @@ option[value="Image Comics"]{
   color: rgb(57, 189, 255);
 }
 
+.pagination > ul{
+  padding: 0;
+}
+
 .pagination li:hover:not(.active) {
   /* background-color: #ddd; */
   color: rgb(57, 189, 255);

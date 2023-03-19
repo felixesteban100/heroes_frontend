@@ -17,12 +17,12 @@ function FilterBar({characterName, team, universe, side, howMany, gender,  getCh
             value: "Batman Family",
         },
         {
-            name: "Birds of Prey",
-            value: "Birds of Prey",
-        },
-        {
             name: "Crimebusters / Watchmen",
             value: "Crimebusters",
+        },
+        {
+            name: "Crime Syndicate",
+            value: "Crime Syndicate",
         },
         {
             name: "Flash Family / Speedsters",
@@ -55,6 +55,10 @@ function FilterBar({characterName, team, universe, side, howMany, gender,  getCh
         {
             name: "Lanterns Corps (All)",
             value: "Lantern Corps",
+        },
+        {
+            name: "The Terrifics",
+            value: "The Terrifics",
         },
         {
             name:  "Legion of Super-Heroes",
