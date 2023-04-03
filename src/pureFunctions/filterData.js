@@ -1,6 +1,6 @@
-import getCharactersByNameSended from '../normal_js/getCharactersByNameSended'
-import getCharactersByTeamNotSended from '../normal_js/getCharactersByTeamNotSended'
-import getCharactersByTeamSended from '../normal_js/getCharactersByTeamSended'
+import getCharactersByNameSended from '../pureFunctions/getCharactersByNameSended'
+import getCharactersByTeamNotSended from '../pureFunctions/getCharactersByTeamNotSended'
+import getCharactersByTeamSended from '../pureFunctions/getCharactersByTeamSended'
 
 function shuffleCharacters(result){
     for (let i = result.length - 1; i > 0; i--) {

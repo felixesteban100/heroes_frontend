@@ -189,11 +189,11 @@ body {
   top: 0;
   width: 100%;
   overflow: hidden;
-  padding: 0.5vw;
+  /* padding: 0.5vw; */
 }
 
 .header--logo{
-  height: 4vw;
+  height: 2vw;
 }
 
 .header--logo:hover{
@@ -412,7 +412,7 @@ option[value="Image Comics"]{
   justify-content: center;
   margin-top: 2rem;
   gap: 1rem;
-  padding-bottom: 5rem;
+  padding-bottom: 1.5rem;
   /* transition: all .5s ease-in-out; */
 }
 

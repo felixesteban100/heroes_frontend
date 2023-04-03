@@ -1,6 +1,6 @@
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
 
-
-function saveAndFilter(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected){
+function saveOnLocalStorage(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected){
     /* FOR TESTING PURPOSES */
     // console.log("---------------------------")
     // console.log(nameSelected)
@@ -24,4 +24,6 @@ function saveAndFilter(where, nameSelected, teamSelected, universeSelected, side
     localStorage.setItem('name', (nameSelected ?? ""))
 }
 
-export default saveAndFilter
+export default saveOnLocalStorage
+
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/

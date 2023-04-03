@@ -1,4 +1,4 @@
-import React, { /* useCallback */ useState } from 'react'
+import { useState } from 'react'
 import { useQuery, QueryClient, QueryClientProvider } from 'react-query';
 import Header from '../components/Header';
 import FilterBar from '../components/FilterBar';
@@ -11,10 +11,21 @@ import 'animate.css';
 // import { AnimationOnScroll } from 'react-animation-on-scroll';
 
 // import created functions 
-import gettingTheLocalStorageData from '../normal_js/gettingTheLocalStorageData' 
-import getCharacterArr from '../normal_js/getCharacterArr'
-import saveAndFilter from '../normal_js/saveAndFilter'
-import filterData from '../normal_js/filterData'
+import getCharacterArr from '../pureFunctions/getCharacterArr'
+import filterData from '../pureFunctions/filterData'
+
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+// import gettingTheLocalStorageData from '../pureFunctions/gettingTheLocalStorageData' 
+// import saveOnLocalStorage from '../pureFunctions/saveOnLocalStorage'
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+
+/* this will be necessary*/
+import useLocalStorage from '../customHooks/useLocalStorage';
+/* this will be necessary*/
+
+
+
+
 
 const queryClient = new QueryClient()
 
@@ -24,15 +35,26 @@ function Character() {
     const [hideCharacters, setHideCharacters] = useState(false)
     const [hideCharacter, setHideCharacter] = useState(true)
 
-    const [characterName, setCharacterName] = useState("")
     const [namesFilterExact, setNamesFilterExact] = useState(true)
-    
-    const [howMany, setHowMany] = useState("")
 
-    const [side, setSide] = useState("All")
-    const [universe, setUniverse] = useState("All")
-    const [team, setTeam] = useState("All")
-    const [gender, setGender] = useState("All")
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+    // const [characterName, setCharacterName] = useState("")
+    // const [howMany, setHowMany] = useState("")
+    // const [side, setSide] = useState("All")
+    // const [universe, setUniverse] = useState("All")
+    // const [team, setTeam] = useState("All")
+    // const [gender, setGender] = useState("All")
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+
+
+/* this will be necessary*/
+    const [characterName, setCharacterName] = useLocalStorage("name", "")
+    const [howMany, setHowMany] = useLocalStorage("howMany","")
+    const [side, setSide] = useLocalStorage("side", "All")
+    const [universe, setUniverse] = useLocalStorage("universe", "All")
+    const [team, setTeam] = useLocalStorage("team", "All")
+    const [gender, setGender] = useLocalStorage("gender", "All")
+/* this will be necessary*/
 
     const [character, setCharacter] = useState([])
     const [imageSize, setImageSize] = useState(false)
@@ -65,22 +87,29 @@ function Character() {
 
     // for the beginning
     if ((initialCharacters[0] === undefined) && data !== undefined) {
-        let { saveName, saveSide, saveUniverse, saveTeam, saveHowMany, saveGender } = gettingTheLocalStorageData()
-        saveName = saveName ?? ""
-        saveSide = saveSide ?? "All" 
-        saveUniverse = saveUniverse ?? "All" 
-        saveTeam = saveTeam ?? "All" 
-        saveHowMany = parseInt(saveHowMany) ?? NaN
-        saveGender = saveGender ?? "All"
 
-        setCharacterName(saveName)
-        setSide(saveSide)
-        setUniverse(saveUniverse)
-        setTeam(saveTeam)
-        setHowMany(saveHowMany)
-        setGender(saveGender)
+    /* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+        // let { saveName, saveSide, saveUniverse, saveTeam, saveHowMany, saveGender } = gettingTheLocalStorageData()
+        // saveName = saveName ?? ""
+        // saveSide = saveSide ?? "All" 
+        // saveUniverse = saveUniverse ?? "All" 
+        // saveTeam = saveTeam ?? "All" 
+        // saveHowMany = parseInt(saveHowMany) ?? NaN
+        // saveGender = saveGender ?? "All"
 
-        const resultByFilterData = filterData("begin", saveName, saveTeam, saveUniverse, saveSide, saveHowMany, saveGender, data, namesFilterExact)
+        // setCharacterName(saveName)
+        // setSide(saveSide)
+        // setUniverse(saveUniverse)
+        // setTeam(saveTeam)
+        // setHowMany(saveHowMany)
+        // setGender(saveGender)
+        // const resultByFilterData = filterData("begin", saveName, saveTeam, saveUniverse, saveSide, saveHowMany, saveGender, data, namesFilterExact)
+    /* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+        
+    /* this will be necessary */
+        const resultByFilterData = filterData("begin", characterName, team, universe, side, howMany, gender, data, namesFilterExact)
+    /* this will be necessary */
+
         if (resultByFilterData[0] !== undefined) setData(resultByFilterData, "begin")
 
         const saveCharacters = JSON.parse(localStorage.getItem('initialcharacters'))
@@ -97,7 +126,19 @@ function Character() {
     }
 
     function getCharacters(type, event){
-        let { saveName: nameSelected, saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveHowMany: howManySelected, saveGender: genderSelected } = gettingTheLocalStorageData()
+    /* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+        // let { saveName: nameSelected, saveSide: sideSelected, saveUniverse: universeSelected, saveTeam: teamSelected, saveHowMany: howManySelected, saveGender: genderSelected } = gettingTheLocalStorageData()
+    /* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+
+    /* this will be necessary*/
+        let nameSelected = characterName;
+        let sideSelected = side;
+        let universeSelected = universe;
+        let teamSelected = team;
+        let howManySelected = howMany;
+        let genderSelected = gender;
+    /* this will be necessary*/
+
 
         let where 
         switch(type){
@@ -165,9 +206,14 @@ function Character() {
             break;
         }
 
-        saveAndFilter(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+    /* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+        // saveOnLocalStorage(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected)
+    /* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+        
+
         setCurrentPage(0)
         const resultByFilterData = filterData(where, nameSelected, teamSelected, universeSelected, sideSelected, howManySelected, genderSelected, data, namesFilterExact)
+        
         setExits(false)
         if (resultByFilterData[0] !== undefined) setData(resultByFilterData, where)
     }  

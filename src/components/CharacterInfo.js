@@ -93,6 +93,8 @@ function CharacterInfo({index, current, imageSize, setImageSize, getBack, select
 
 
             </Modal>
+
+            
             <div className='character--withInfo'>
                 {/* <div 
                     className={imageSize === false ? "character--withInfo--img-container-img" : "character--withInfo--img-zoomed-container"} 

@@ -1,3 +1,6 @@
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/
+
+
 function gettingTheLocalStorageData(){
     return {
         saveName: localStorage.getItem('name'), 
@@ -10,3 +13,5 @@ function gettingTheLocalStorageData(){
 }
 
 export default gettingTheLocalStorageData
+
+/* THIS WON'T BE NECESSARY WHEN I USE THE useLocalStorage (custom hook)*/

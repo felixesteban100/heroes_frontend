@@ -76,7 +76,8 @@ function organizedAlterEgosProperty(alterEgos){
 function organizedGroupsProperty(groups){
     let groupsArr1 = groups.split(",").map((current) => current.split(";"))
     let groupsArr2 = []
-    groupsArr1 = groupsArr1.map(current => {   
+    
+    groupsArr1.forEach(current => {   
         groupsArr2.push(...current)
         return current
     })
@@ -91,7 +92,7 @@ function organizedGroupsProperty(groups){
 function organizedOccupationProperty(occupation){
     let occupationArr1 = occupation.split(",").map((current) => current.split(";"))
     let occupationArr2 = []
-    occupationArr1 = occupationArr1.map(current => {   
+    occupationArr1.forEach(current => {   
         occupationArr2.push(...current)
         return current
     })
